@@ -25,10 +25,10 @@ import lombok.experimental.Accessors;
  * @Version: V1.0
  */
 @Data
-@TableName("user_designer")
+@TableName("design_user_designer")
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="user_designer对象", description="设计师")
+@ApiModel(value="design_user_designer对象", description="设计师")
 public class UserDesigner implements Serializable {
     private static final long serialVersionUID = 1L;
 

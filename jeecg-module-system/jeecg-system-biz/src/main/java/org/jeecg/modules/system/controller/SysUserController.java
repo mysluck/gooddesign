@@ -69,7 +69,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/sys/user")
-@Api(tags="用户")
+@Api(tags="好设计-用户(登录)")
 public class SysUserController {
 
     @Autowired
