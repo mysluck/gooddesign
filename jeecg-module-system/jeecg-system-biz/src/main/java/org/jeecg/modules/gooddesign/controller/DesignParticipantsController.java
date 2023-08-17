@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.modules.gooddesign.entity.UserParticipants;
-import org.jeecg.modules.gooddesign.entity.vo.UserParticipantsVO;
+import org.jeecg.modules.gooddesign.entity.DesignParticipants;
+import org.jeecg.modules.gooddesign.entity.vo.DesignParticipantsVO;
 import org.jeecg.modules.gooddesign.service.IUserParticipantsService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -34,7 +34,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 @RestController
 @RequestMapping("/designParticipants")
 @Slf4j
-public class UserParticipantsController extends JeecgController<UserParticipants, IUserParticipantsService> {
+public class DesignParticipantsController extends JeecgController<DesignParticipants, IUserParticipantsService> {
     @Autowired
     private IUserParticipantsService userParticipantsService;
 
@@ -49,15 +49,15 @@ public class UserParticipantsController extends JeecgController<UserParticipants
      */
     @ApiOperation(value = "设计师-分页列表查询", notes = "设计师-分页列表查询")
     @GetMapping(value = "/list")
-    public Result<IPage<UserParticipants>> queryPageList(UserParticipantsVO userParticipantsvo,
-                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                         HttpServletRequest req) {
-        UserParticipants userParticipants = new UserParticipants();
+    public Result<IPage<DesignParticipants>> queryPageList(DesignParticipantsVO userParticipantsvo,
+                                                           @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                           @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                           HttpServletRequest req) {
+        DesignParticipants userParticipants = new DesignParticipants();
         BeanUtils.copyProperties(userParticipantsvo, userParticipants);
-        QueryWrapper<UserParticipants> queryWrapper = QueryGenerator.initQueryWrapper(userParticipants, req.getParameterMap());
-        Page<UserParticipants> page = new Page<UserParticipants>(pageNo, pageSize);
-        IPage<UserParticipants> pageList = userParticipantsService.page(page, queryWrapper);
+        QueryWrapper<DesignParticipants> queryWrapper = QueryGenerator.initQueryWrapper(userParticipants, req.getParameterMap());
+        Page<DesignParticipants> page = new Page<DesignParticipants>(pageNo, pageSize);
+        IPage<DesignParticipants> pageList = userParticipantsService.page(page, queryWrapper);
         return Result.OK(pageList);
     }
 
@@ -70,8 +70,8 @@ public class UserParticipantsController extends JeecgController<UserParticipants
     @AutoLog(value = "设计师-添加")
     @ApiOperation(value = "设计师-添加", notes = "设计师-添加")
     @PostMapping(value = "/add")
-    public Result<String> add(@RequestBody UserParticipantsVO userParticipantsvo) {
-        UserParticipants userParticipants = new UserParticipants();
+    public Result<String> add(@RequestBody DesignParticipantsVO userParticipantsvo) {
+        DesignParticipants userParticipants = new DesignParticipants();
         BeanUtils.copyProperties(userParticipantsvo, userParticipants);
         userParticipantsService.save(userParticipants);
         return Result.OK("添加成功！");
@@ -86,8 +86,8 @@ public class UserParticipantsController extends JeecgController<UserParticipants
     @AutoLog(value = "设计师-编辑")
     @ApiOperation(value = "设计师-编辑", notes = "设计师-编辑")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
-    public Result<String> edit(@RequestBody UserParticipantsVO userParticipantsvo) {
-        UserParticipants userParticipants = new UserParticipants();
+    public Result<String> edit(@RequestBody DesignParticipantsVO userParticipantsvo) {
+        DesignParticipants userParticipants = new DesignParticipants();
         BeanUtils.copyProperties(userParticipantsvo, userParticipants);
         userParticipantsService.updateById(userParticipants);
         return Result.OK("编辑成功!");
@@ -130,8 +130,8 @@ public class UserParticipantsController extends JeecgController<UserParticipants
     //@AutoLog(value = "设计师-通过id查询")
     @ApiOperation(value = "设计师-通过id查询", notes = "设计师-通过id查询")
     @GetMapping(value = "/queryById")
-    public Result<UserParticipants> queryById(@RequestParam(name = "id", required = true) String id) {
-        UserParticipants userParticipants = userParticipantsService.getById(id);
+    public Result<DesignParticipants> queryById(@RequestParam(name = "id", required = true) String id) {
+        DesignParticipants userParticipants = userParticipantsService.getById(id);
         if (userParticipants == null) {
             return Result.error("未找到对应数据");
         }
@@ -145,8 +145,8 @@ public class UserParticipantsController extends JeecgController<UserParticipants
      * @param userParticipants
      */
     @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, UserParticipants userParticipants) {
-        return super.exportXls(request, userParticipants, UserParticipants.class, "设计师");
+    public ModelAndView exportXls(HttpServletRequest request, DesignParticipants userParticipants) {
+        return super.exportXls(request, userParticipants, DesignParticipants.class, "设计师");
     }
 
     /**
@@ -158,7 +158,7 @@ public class UserParticipantsController extends JeecgController<UserParticipants
      */
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
-        return super.importExcel(request, response, UserParticipants.class);
+        return super.importExcel(request, response, DesignParticipants.class);
     }
 
 }

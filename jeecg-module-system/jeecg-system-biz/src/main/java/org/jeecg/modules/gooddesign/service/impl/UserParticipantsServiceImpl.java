@@ -1,7 +1,7 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
-import org.jeecg.modules.gooddesign.entity.UserParticipants;
-import org.jeecg.modules.gooddesign.mapper.UserParticipantsMapper;
+import org.jeecg.modules.gooddesign.entity.DesignParticipants;
+import org.jeecg.modules.gooddesign.mapper.DesignParticipantsMapper;
 import org.jeecg.modules.gooddesign.service.IUserParticipantsService;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +14,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  * @Version: V1.0
  */
 @Service
-public class UserParticipantsServiceImpl extends ServiceImpl<UserParticipantsMapper, UserParticipants> implements IUserParticipantsService {
+public class UserParticipantsServiceImpl extends ServiceImpl<DesignParticipantsMapper, DesignParticipants> implements IUserParticipantsService {
 
 }

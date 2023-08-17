@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="设计师-参赛人员", description="设计师-参赛人员")
-public class UserParticipantsVO implements Serializable {
+public class DesignParticipantsVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	/**主键*/

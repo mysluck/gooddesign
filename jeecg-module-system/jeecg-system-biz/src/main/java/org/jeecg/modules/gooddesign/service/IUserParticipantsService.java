@@ -1,6 +1,6 @@
 package org.jeecg.modules.gooddesign.service;
 
-import org.jeecg.modules.gooddesign.entity.UserParticipants;
+import org.jeecg.modules.gooddesign.entity.DesignParticipants;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,6 +9,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @Date:   2023-08-17
  * @Version: V1.0
  */
-public interface IUserParticipantsService extends IService<UserParticipants> {
+public interface IUserParticipantsService extends IService<DesignParticipants> {
 
 }

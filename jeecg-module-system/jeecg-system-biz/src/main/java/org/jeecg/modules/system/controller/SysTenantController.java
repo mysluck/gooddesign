@@ -69,7 +69,7 @@ public class SysTenantController {
      * @param req
      * @return
      */
-    //@RequiresPermissions("system:tenant:list")
+    ////@RequiresPermissions("system:tenant:list")
     @PermissionData(pageComponent = "system/TenantList")
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public Result<IPage<SysTenant>> queryPageList(SysTenant sysTenant, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
@@ -108,7 +108,7 @@ public class SysTenantController {
      * @return
      */
     @GetMapping("/recycleBinPageList")
-    //@RequiresPermissions("system:tenant:recycleBinPageList")
+    ////@RequiresPermissions("system:tenant:recycleBinPageList")
     public Result<IPage<SysTenant>> recycleBinPageList(SysTenant sysTenant, @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
                                                        @RequestParam(name="pageSize", defaultValue="10") Integer pageSize, HttpServletRequest req){
         Result<IPage<SysTenant>> result = new Result<IPage<SysTenant>>();
@@ -124,7 +124,7 @@ public class SysTenantController {
      * @param
      * @return
      */
-    //@RequiresPermissions("system:tenant:add")
+    ////@RequiresPermissions("system:tenant:add")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Result<SysTenant> add(@RequestBody SysTenant sysTenant) {
         Result<SysTenant> result = new Result();
@@ -146,7 +146,7 @@ public class SysTenantController {
      * @param
      * @return
      */
-    //@RequiresPermissions("system:tenant:edit")
+    ////@RequiresPermissions("system:tenant:edit")
     @RequestMapping(value = "/edit", method ={RequestMethod.PUT, RequestMethod.POST})
     public Result<SysTenant> edit(@RequestBody SysTenant tenant) {
         Result<SysTenant> result = new Result();
@@ -169,7 +169,7 @@ public class SysTenantController {
      * @param id
      * @return
      */
-    //@RequiresPermissions("system:tenant:delete")
+    ////@RequiresPermissions("system:tenant:delete")
     @RequestMapping(value = "/delete", method ={RequestMethod.DELETE, RequestMethod.POST})
     public Result<?> delete(@RequestParam(name="id",required=true) String id) {
         //------------------------------------------------------------------
@@ -197,7 +197,7 @@ public class SysTenantController {
      * @param ids
      * @return
      */
-    //@RequiresPermissions("system:tenant:deleteBatch")
+    ////@RequiresPermissions("system:tenant:deleteBatch")
     @RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
     public Result<?> deleteBatch(@RequestParam(name="ids",required=true) String ids) {
         Result<?> result = new Result<>();
@@ -281,7 +281,7 @@ public class SysTenantController {
      * 查询有效的 租户数据
      * @return
      */
-    //@RequiresPermissions("system:tenant:queryList")
+    ////@RequiresPermissions("system:tenant:queryList")
     @RequestMapping(value = "/queryList", method = RequestMethod.GET)
     public Result<List<SysTenant>> queryList(@RequestParam(name="ids",required=false) String ids) {
         Result<List<SysTenant>> result = new Result<List<SysTenant>>();
@@ -307,7 +307,7 @@ public class SysTenantController {
      * @return
      */
     @GetMapping(value = "/packList")
-    //@RequiresPermissions("system:tenant:packList")
+    ////@RequiresPermissions("system:tenant:packList")
     public Result<IPage<SysTenantPack>> queryPackPageList(SysTenantPack sysTenantPack,
                                                           @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                           @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
@@ -329,7 +329,7 @@ public class SysTenantController {
      * @return
      */
     @PostMapping(value = "/addPackPermission")
-    //@RequiresPermissions("system:tenant:add:pack")
+    ////@RequiresPermissions("system:tenant:add:pack")
     public Result<String> addPackPermission(@RequestBody SysTenantPack sysTenantPack) {
         sysTenantPackService.addPackPermission(sysTenantPack);
         return Result.ok("创建租户产品包成功");
@@ -342,7 +342,7 @@ public class SysTenantController {
      * @return
      */
     @PutMapping(value = "/editPackPermission")
-    //@RequiresPermissions("system:tenant:edit:pack")
+    ////@RequiresPermissions("system:tenant:edit:pack")
     public Result<String> editPackPermission(@RequestBody SysTenantPack sysTenantPack) {
         sysTenantPackService.editPackPermission(sysTenantPack);
         return Result.ok("修改租户产品包成功");
@@ -355,7 +355,7 @@ public class SysTenantController {
      * @return
      */
     @DeleteMapping("/deletePackPermissions")
-    //@RequiresPermissions("system:tenant:delete:pack")
+    ////@RequiresPermissions("system:tenant:delete:pack")
     public Result<String> deletePackPermissions(@RequestParam(value = "ids") String ids) {
         sysTenantPackService.deletePackPermissions(ids);
         return Result.ok("删除租户产品包成功");
@@ -398,7 +398,7 @@ public class SysTenantController {
      * @return
      */
     @PutMapping("/invitationUserJoin")
-    //@RequiresPermissions("system:tenant:invitation:user")
+    ////@RequiresPermissions("system:tenant:invitation:user")
     public Result<String> invitationUserJoin(@RequestParam("ids") String ids, @RequestParam("phone") String phone){
         sysTenantService.invitationUserJoin(ids,phone);
         return Result.ok("邀请用户成功");
@@ -413,7 +413,7 @@ public class SysTenantController {
      * @return
      */
     @RequestMapping(value = "/getTenantUserList", method = RequestMethod.GET)
-    //@RequiresPermissions("system:tenant:user:list")
+    ////@RequiresPermissions("system:tenant:user:list")
     public Result<IPage<SysUser>> getTenantUserList(SysUser user,
                                                     @RequestParam(name="pageNo", defaultValue="1") Integer pageNo,
                                                     @RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
@@ -434,7 +434,7 @@ public class SysTenantController {
      * @return
      */
     @PutMapping("/leaveTenant")
-    //@RequiresPermissions("system:tenant:leave")
+    ////@RequiresPermissions("system:tenant:leave")
     public Result<String> leaveTenant(@RequestParam("userIds") String userIds,
                                       @RequestParam("tenantId") String tenantId){
         Result<String> result = new Result<>();
@@ -541,7 +541,7 @@ public class SysTenantController {
      * @return
      */
     @GetMapping("/getUserTenantPageList")
-    //@RequiresPermissions("system:tenant:tenantPageList")
+    ////@RequiresPermissions("system:tenant:tenantPageList")
     public Result<IPage<SysUserTenantVo>> getUserTenantPageList(@RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                                 @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                                 @RequestParam(name = "userTenantStatus") String userTenantStatus,
@@ -562,7 +562,7 @@ public class SysTenantController {
      * @return
      */
     @GetMapping("/getTenantListByUserId")
-    //@RequiresPermissions("system:tenant:getTenantListByUserId")
+    ////@RequiresPermissions("system:tenant:getTenantListByUserId")
     public Result<List<SysUserTenantVo>> getTenantListByUserId(@RequestParam(name = "userTenantStatus", required = false) String userTenantStatus) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         List<String> list = null;
@@ -578,7 +578,7 @@ public class SysTenantController {
      * 更新用户租户关系状态【低代码应用专用接口】
      */
     @PutMapping("/updateUserTenantStatus")
-    //@RequiresPermissions("system:tenant:updateUserTenantStatus")
+    ////@RequiresPermissions("system:tenant:updateUserTenantStatus")
     public Result<String> updateUserTenantStatus(@RequestBody SysUserTenant userTenant) {
         String tenantId = TenantContext.getTenant();
         if (oConvertUtils.isEmpty(tenantId)) {
@@ -595,7 +595,7 @@ public class SysTenantController {
      * @return
      */
     @PutMapping("/cancelTenant")
-    //@RequiresPermissions("system:tenant:cancelTenant")
+    ////@RequiresPermissions("system:tenant:cancelTenant")
     public Result<String> cancelTenant(@RequestBody SysTenant sysTenant, HttpServletRequest request) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         SysTenant tenant = sysTenantService.getById(sysTenant.getId());
@@ -653,7 +653,7 @@ public class SysTenantController {
      * @return
      */
     @DeleteMapping("/deleteLogicDeleted")
-    //@RequiresPermissions("system:tenant:deleteTenantLogic")
+    ////@RequiresPermissions("system:tenant:deleteTenantLogic")
     public Result<String> deleteTenantLogic(@RequestParam("ids") String ids){
         sysTenantService.deleteTenantLogic(ids);
         return Result.ok("彻底删除成功");
@@ -665,7 +665,7 @@ public class SysTenantController {
      * @return
      */
     @PutMapping("/revertTenantLogic")
-    //@RequiresPermissions("system:tenant:revertTenantLogic")
+    ////@RequiresPermissions("system:tenant:revertTenantLogic")
     public Result<String> revertTenantLogic(@RequestParam("ids") String ids){
         sysTenantService.revertTenantLogic(ids);
         return Result.ok("还原成功");
