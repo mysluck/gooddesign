@@ -223,9 +223,9 @@ public class SysUser implements Serializable {
     /**
      * 用户身份 0发起人 1评委
      */
-    @Excel(name = "用户身份 0发起人 1评委", width = 15)
-    @ApiModelProperty(value = "用户身份 0发起人 1评委")
-    private String userType;
+    @Excel(name = "用户身份 1超级管理员 2专家评委", width = 15)
+    @ApiModelProperty(value = "用户身份 1超级管理员 2专家评委")
+    private Integer roleId;
 
     /**
      * 序号

@@ -144,7 +144,7 @@ public class SysAnnouncementController {
 			result.success("添加成功！");
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
-			result.error500("操作失败");
+			result.error500(e.getMessage());
 		}
 		return result;
 	}

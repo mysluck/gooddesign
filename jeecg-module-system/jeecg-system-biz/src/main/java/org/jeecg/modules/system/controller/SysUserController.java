@@ -183,7 +183,7 @@ public class SysUserController {
             result.success("添加成功！");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            result.error500("操作失败");
+            result.error500(e.getMessage());
         }
         return result;
     }
@@ -210,7 +210,7 @@ public class SysUserController {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            result.error500("操作失败");
+            result.error500(e.getMessage());
         }
         return result;
     }
@@ -338,6 +338,140 @@ public class SysUserController {
         return sysUserService.changePassword(sysUser);
     }
 
+    /**
+     * 查询指定用户和部门关联的数据
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/userDepartList", method = RequestMethod.GET)
+    public Result<List<DepartIdModel>> getUserDepartsList(@RequestParam(name = "userId", required = true) String userId) {
+        Result<List<DepartIdModel>> result = new Result<>();
+        try {
+            List<DepartIdModel> depIdModelList = this.sysUserDepartService.queryDepartIdsOfUser(userId);
+            if (depIdModelList != null && depIdModelList.size() > 0) {
+                result.setSuccess(true);
+                result.setMessage("查找成功");
+                result.setResult(depIdModelList);
+            } else {
+                result.setSuccess(false);
+                result.setMessage("查找失败");
+            }
+            return result;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setSuccess(false);
+            result.setMessage("查找过程中出现了异常: " + e.getMessage());
+            return result;
+        }
+
+    }
+
+    /**
+     * 生成在添加用户情况下没有主键的问题,返回给前端,根据该id绑定部门数据
+     *
+     * @return
+     */
+    @RequestMapping(value = "/generateUserId", method = RequestMethod.GET)
+    public Result<String> generateUserId() {
+        Result<String> result = new Result<>();
+        System.out.println("我执行了,生成用户ID==============================");
+        String userId = UUID.randomUUID().toString().replace("-", "");
+        result.setSuccess(true);
+        result.setResult(userId);
+        return result;
+    }
+
+    /**
+     * 根据部门id查询用户信息
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/queryUserByDepId", method = RequestMethod.GET)
+    public Result<List<SysUser>> queryUserByDepId(@RequestParam(name = "id", required = true) String id, @RequestParam(name = "realname", required = false) String realname) {
+        Result<List<SysUser>> result = new Result<>();
+        //List<SysUser> userList = sysUserDepartService.queryUserByDepId(id);
+        SysDepart sysDepart = sysDepartService.getById(id);
+        List<SysUser> userList = sysUserDepartService.queryUserByDepCode(sysDepart.getOrgCode(), realname);
+
+        //批量查询用户的所属部门
+        //step.1 先拿到全部的 useids
+        //step.2 通过 useids，一次性查询用户的所属部门名字
+        List<String> userIds = userList.stream().map(SysUser::getId).collect(Collectors.toList());
+        if (userIds != null && userIds.size() > 0) {
+            Map<String, String> useDepNames = sysUserService.getDepNamesByUserIds(userIds);
+            userList.forEach(item -> {
+                //TODO 临时借用这个字段用于页面展示
+                item.setOrgCodeTxt(useDepNames.get(item.getId()));
+            });
+        }
+
+        try {
+            result.setSuccess(true);
+            result.setResult(userList);
+            return result;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            result.setSuccess(false);
+            return result;
+        }
+    }
+
+    /**
+     * 用户选择组件 专用  根据用户账号或部门分页查询
+     *
+     * @param departId
+     * @param username
+     * @return
+     */
+    @RequestMapping(value = "/queryUserComponentData", method = RequestMethod.GET)
+    public Result<IPage<SysUser>> queryUserComponentData(
+            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "departId", required = false) String departId,
+            @RequestParam(name = "realname", required = false) String realname,
+            @RequestParam(name = "username", required = false) String username,
+            @RequestParam(name = "id", required = false) String id) {
+        //update-begin-author:taoyan date:2022-7-14 for: VUEN-1702【禁止问题】sql注入漏洞
+        String[] arr = new String[]{departId, realname, username, id};
+        SqlInjectionUtil.filterContent(arr, SymbolConstant.SINGLE_QUOTATION_MARK);
+        //update-end-author:taoyan date:2022-7-14 for: VUEN-1702【禁止问题】sql注入漏洞
+        IPage<SysUser> pageList = sysUserDepartService.queryDepartUserPageList(departId, username, realname, pageSize, pageNo, id);
+        return Result.OK(pageList);
+    }
+
+    /**
+     * 导出excel
+     *
+     * @param request
+     * @param sysUser
+     */
+    //@RequiresPermissions("system:user:export")
+    @RequestMapping(value = "/exportXls")
+    public ModelAndView exportXls(SysUser sysUser, HttpServletRequest request) {
+        // Step.1 组装查询条件
+        QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(sysUser, request.getParameterMap());
+        //Step.2 AutoPoi 导出Excel
+        ModelAndView mv = new ModelAndView(new JeecgEntityExcelView());
+        //update-begin--Author:kangxiaolin  Date:20180825 for：[03]用户导出，如果选择数据则只导出相关数据--------------------
+        String selections = request.getParameter("selections");
+        if (!oConvertUtils.isEmpty(selections)) {
+            queryWrapper.in("id", selections.split(","));
+        }
+        //update-end--Author:kangxiaolin  Date:20180825 for：[03]用户导出，如果选择数据则只导出相关数据----------------------
+        List<SysUser> pageList = sysUserService.list(queryWrapper);
+
+        //导出文件名称
+        mv.addObject(NormalExcelConstants.FILE_NAME, "用户列表");
+        mv.addObject(NormalExcelConstants.CLASS, SysUser.class);
+        LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        ExportParams exportParams = new ExportParams("用户列表数据", "导出人:" + user.getRealname(), "导出信息");
+        exportParams.setImageBasePath(upLoadPath);
+        mv.addObject(NormalExcelConstants.PARAMS, exportParams);
+        mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
+        return mv;
+    }
 
     /**
      * 通过excel导入数据
