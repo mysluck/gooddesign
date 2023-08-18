@@ -1,18 +1,17 @@
 package org.jeecg.modules.gooddesign.controller;
 
-import java.util.Arrays;
-import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
-import lombok.extern.slf4j.Slf4j;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesDTO;
@@ -21,10 +20,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.jeecg.common.aspect.annotation.AutoLog;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Date;
 
 /**
  * @Description: 设计师
@@ -32,7 +32,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
  * @Date: 2023-08-17
  * @Version: V1.0
  */
-@Api(tags = "好设计-设计师（创始人、评委）")
+@Api(tags = "好设计-发现设计")
 @RestController
 @RequestMapping("/designerJudges")
 @Slf4j
@@ -68,11 +68,16 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
      * @param userDesigner
      * @return
      */
-    @AutoLog(value = "设计师-添加")
-    @ApiOperation(value = "设计师-添加", notes = "设计师-添加")
+    @AutoLog(value = "发现设计-添加")
+    @ApiOperation(value = "发现设计-添加", notes = "发现设计-添加")
     //@RequiresPermissions("user_designer:add")
     @PostMapping(value = "/add")
     public Result<String> add(@RequestBody DesignJudgesDTO userDesignerDTO) {
+
+        if (userDesignerService.checkSortNoExist(userDesignerDTO.getSort())) {
+            return Result.OK("编码存在，请修改编码！");
+
+        }
         DesignJudges userDesigner = new DesignJudges();
         BeanUtils.copyProperties(userDesignerDTO, userDesigner);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
@@ -80,6 +85,13 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
         userDesigner.setCreateTime(new Date());
         userDesignerService.save(userDesigner);
         return Result.OK("添加成功！");
+    }
+
+    @AutoLog(value = "发现设计-设计师编码检查")
+    @ApiOperation(value = "发现设计-设计师编码检查", notes = "发现设计-设计师编码检查,true:编码存在，false：编码不存在")
+    @GetMapping(value = "/checkSortNoExist")
+    public Result<Boolean> checkSortNoExist(@Param("sort") Integer sort) {
+        return Result.OK(userDesignerService.checkSortNoExist(sort));
     }
 
     /**
@@ -91,7 +103,7 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
     @AutoLog(value = "设计师-编辑")
     @ApiOperation(value = "设计师-编辑", notes = "设计师-编辑")
     //@RequiresPermissions("user_designer:edit")
-    @RequestMapping(value = "/edit", method = {RequestMethod.PUT, RequestMethod.POST})
+    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignJudges userDesigner) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
 
@@ -111,7 +123,7 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
     @ApiOperation(value = "设计师-通过id删除", notes = "设计师-通过id删除")
     //@RequiresPermissions("user_designer:delete")
     @DeleteMapping(value = "/delete")
-    public Result<String> delete(@RequestParam(name = "id", required = true) String id) {
+    public Result<String> delete(@RequestParam(name = "id", required = true) Integer id) {
         userDesignerService.removeById(id);
         return Result.OK("删除成功!");
     }

@@ -6,9 +6,16 @@ import org.jeecg.modules.gooddesign.entity.DesignJudges;
 /**
  * @Description: 设计师
  * @Author: jeecg-boot
- * @Date:   2023-08-17
+ * @Date: 2023-08-17
  * @Version: V1.0
  */
 public interface IUserDesignerService extends IService<DesignJudges> {
 
+    /**
+     * 检查编码是否存在
+     *
+     * @param sort
+     * @return
+     */
+    boolean checkSortNoExist(Integer sort);
 }
