@@ -162,8 +162,6 @@ public class DesignPartnersController extends JeecgController<DesignPartners, ID
 
         }
         return Result.OK("编码已存在，请勿添加！", true);
-
-
     }
 
 }

@@ -18,10 +18,8 @@ import org.jeecg.modules.gooddesign.service.IDesignContentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -166,30 +164,5 @@ public class DesignContentController extends JeecgController<DesignContent, IDes
         return Result.OK(list.get(0));
     }
 
-
-    /**
-     * 导出excel
-     *
-     * @param request
-     * @param designContent
-     */
-    //@RequiresPermissions("gooddesign:design_content:exportXls")
-    @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, DesignContent designContent) {
-        return super.exportXls(request, designContent, DesignContent.class, "文本描述");
-    }
-
-    /**
-     * 通过excel导入数据
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    //@RequiresPermissions("gooddesign:design_content:importExcel")
-    @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
-        return super.importExcel(request, response, DesignContent.class);
-    }
 
 }
