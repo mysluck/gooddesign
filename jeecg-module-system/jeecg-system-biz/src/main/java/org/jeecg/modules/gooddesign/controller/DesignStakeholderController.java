@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
@@ -12,18 +13,19 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
 import org.jeecg.modules.gooddesign.entity.DesignStakeholder;
+import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderVO;
+import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
 import org.jeecg.modules.gooddesign.service.IDesignStakeholderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 相关人员（推荐委员、发现大使、观点讲者）
@@ -31,11 +33,13 @@ import java.util.Date;
  * @Date: 2023-08-19
  * @Version: V1.0
  */
-@Api(tags = "好设计-相关人员（推荐委员、发现大使、观点讲者）")
+@Api(tags = "好设计-设计壮游-编辑（推荐委员、发现大使、观点讲者）")
 @RestController
 @RequestMapping("/designStakeholder")
 @Slf4j
 public class DesignStakeholderController extends JeecgController<DesignStakeholder, IDesignStakeholderService> {
+    @Autowired
+    IDesignMainStakeholderService designMainStakeholderService;
     @Autowired
     private IDesignStakeholderService designStakeholderService;
 
@@ -148,29 +152,42 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
         return Result.OK(designStakeholder);
     }
 
-    /**
-     * 导出excel
-     *
-     * @param request
-     * @param designStakeholder
-     */
-    //@RequiresPermissions("gooddesign:design_stakeholder:exportXls")
-    @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, DesignStakeholder designStakeholder) {
-        return super.exportXls(request, designStakeholder, DesignStakeholder.class, "相关人员");
+
+    @ApiOperation(value = "相关人员-列表查询-关联编辑壮游", notes = "相关人员-列表查询-关联编辑壮游判断是否以添加")
+    @GetMapping(value = "/listByMain")
+    public Result<List<DesignStakeholderMainVO>> listByMain(@RequestParam(name = "mainId") @ApiParam("当前编辑壮游ID") Integer mainId,
+                                                            @RequestParam(name = "type") @ApiParam("查询类型 1推荐委员 2发现大使 3观点讲者") Integer type,
+                                                            HttpServletRequest req) {
+
+
+        QueryWrapper<DesignStakeholder> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("type", type);
+        List<DesignStakeholder> designStakeholders = designStakeholderService.list(queryWrapper);
+
+
+        QueryWrapper<DesignMainStakeholder> mainStakeholderQueryWrapper = new QueryWrapper();
+        mainStakeholderQueryWrapper.eq("main_id", mainId);
+        mainStakeholderQueryWrapper.eq("type", type);
+        List<DesignMainStakeholder> mainStakeholders = designMainStakeholderService.list(mainStakeholderQueryWrapper);
+        List<Integer> stakeholderIds = mainStakeholders != null ? mainStakeholders.stream().map(DesignMainStakeholder::getStakeholderId).collect(Collectors.toList()) : new ArrayList<>();
+
+
+        if (designStakeholders != null) {
+            List<DesignStakeholderMainVO> result = designStakeholders.stream().map(designStakeholder -> {
+                DesignStakeholderMainVO designStakeholderMainVO = new DesignStakeholderMainVO();
+                BeanUtils.copyProperties(designStakeholder, designStakeholderMainVO);
+                if (stakeholderIds != null && stakeholderIds.contains(designStakeholder.getId())) {
+                    designStakeholderMainVO.setRecentAdd(1);
+                } else {
+                    designStakeholderMainVO.setRecentAdd(0);
+                }
+                return designStakeholderMainVO;
+            }).collect(Collectors.toList());
+            result.sort(Comparator.comparing(DesignStakeholderMainVO::getRecentAdd).reversed());
+            return Result.OK(result);
+        }
+        return Result.OK(new ArrayList<>());
     }
 
-    /**
-     * 通过excel导入数据
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    //@RequiresPermissions("gooddesign:design_stakeholder:importExcel")
-    @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
-    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
-        return super.importExcel(request, response, DesignStakeholder.class);
-    }
 
 }
