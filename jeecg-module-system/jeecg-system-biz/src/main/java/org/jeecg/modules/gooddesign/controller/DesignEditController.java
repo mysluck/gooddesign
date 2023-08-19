@@ -22,7 +22,7 @@ import java.util.List;
  * @Date: 2023-08-18
  * @Version: V1.0
  */
-@Api(tags = "好设计-编辑壮游")
+@Api(tags = "好设计-设计壮游-编辑（年份、城市）")
 @RestController
 @RequestMapping("/designEdit")
 @Slf4j
