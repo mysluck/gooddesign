@@ -211,16 +211,16 @@ jeecg:
     #数据字典是否进行saas数据隔离，自己看自己的字典
     saas: false
   #xxl-job配置
-  xxljob:
-    enabled: false
-    adminAddresses: http://127.0.0.1:9080/xxl-job-admin
-    appname: ${spring.application.name}
-    accessToken: ''
-    address: 127.0.0.1:30007
-    ip: 127.0.0.1
-    port: 30007
-    logPath: logs/jeecg/job/jobhandler/
-    logRetentionDays: 30
+#  xxljob:
+#    enabled: false
+#    adminAddresses: http://127.0.0.1:9080/xxl-job-admin
+#    appname: ${spring.application.name}
+#    accessToken: ''
+#    address: 127.0.0.1:30007
+#    ip: 127.0.0.1
+#    port: 30007
+#    logPath: logs/jeecg/job/jobhandler/
+#    logRetentionDays: 30
   #分布式锁配置
   redisson:
     address: 127.0.0.1:6379
