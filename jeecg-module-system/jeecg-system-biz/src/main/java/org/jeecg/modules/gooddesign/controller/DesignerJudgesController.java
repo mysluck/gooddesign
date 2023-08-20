@@ -68,8 +68,8 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
      * @param userDesigner
      * @return
      */
-    @AutoLog(value = "发现设计-添加")
-    @ApiOperation(value = "发现设计-添加", notes = "发现设计-添加")
+    @AutoLog(value = "发现设计-添加设计师")
+    @ApiOperation(value = "发现设计-添加设计师", notes = "发现设计-添加设计师")
     //@RequiresPermissions("user_designer:add")
     @PostMapping(value = "/add")
     public Result<String> add(@RequestBody DesignJudgesDTO userDesignerDTO) {

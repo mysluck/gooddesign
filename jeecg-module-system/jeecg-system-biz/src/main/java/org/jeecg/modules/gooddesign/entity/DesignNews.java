@@ -1,22 +1,18 @@
 package org.jeecg.modules.gooddesign.entity;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.jeecgframework.poi.excel.annotation.Excel;
-import org.jeecg.common.aspect.annotation.Dict;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jeecgframework.poi.excel.annotation.Excel;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.io.Serializable;
 
 /**
  * @Description: 咨询中心
@@ -52,9 +48,7 @@ public class DesignNews implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "更新日期")
     private java.util.Date updateTime;
-	/**所属部门*/
-    @ApiModelProperty(value = "所属部门")
-    private java.lang.String sysOrgCode;
+
 	/**标题*/
 	@Excel(name = "标题", width = 15)
     @ApiModelProperty(value = "标题")
@@ -69,10 +63,7 @@ public class DesignNews implements Serializable {
 	@Excel(name = "发布状态，0:未发布 1:已发布", width = 15)
     @ApiModelProperty(value = "发布状态，0:未发布 1:已发布")
     private java.lang.Integer publishStatus;
-	/**是否删除 0：未删除 1：已删除*/
-	@Excel(name = "是否删除 0：未删除 1：已删除", width = 15)
-    @ApiModelProperty(value = "是否删除 0：未删除 1：已删除")
-    private java.lang.Integer isDel;
+
 	/**新闻内容*/
 	@Excel(name = "新闻内容", width = 15)
     @ApiModelProperty(value = "新闻内容")

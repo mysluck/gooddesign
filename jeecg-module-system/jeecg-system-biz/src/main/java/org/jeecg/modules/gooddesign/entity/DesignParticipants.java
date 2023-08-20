@@ -1,19 +1,19 @@
 package org.jeecg.modules.gooddesign.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.jeecgframework.poi.excel.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jeecgframework.poi.excel.annotation.Excel;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description: 设计师
@@ -49,13 +49,7 @@ public class DesignParticipants implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "更新日期")
     private Date updateTime;
-	/**所属部门*/
-    @ApiModelProperty(value = "所属部门")
-    private String sysOrgCode;
-	/**是否删除*/
-	@Excel(name = "是否删除", width = 15)
-    @ApiModelProperty(value = "是否删除")
-    private Integer isDel;
+
 	/**姓名*/
 	@Excel(name = "姓名", width = 15)
     @ApiModelProperty(value = "姓名")
@@ -107,5 +101,5 @@ public class DesignParticipants implements Serializable {
 	/**邮箱*/
 	@Excel(name = "邮箱", width = 15)
     @ApiModelProperty(value = "邮箱")
-    private String email;
+        private String email;
 }

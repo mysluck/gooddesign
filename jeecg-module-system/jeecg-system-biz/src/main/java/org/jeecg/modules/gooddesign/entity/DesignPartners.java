@@ -48,10 +48,7 @@ public class DesignPartners implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "更新日期")
     private java.util.Date updateTime;
-	/**是否删除 0未删除 1已删除*/
-	@Excel(name = "是否删除 0未删除 1已删除", width = 15)
-    @ApiModelProperty(value = "是否删除 0未删除 1已删除")
-    private Integer isDel;
+
 	/**名称*/
 	@Excel(name = "名称", width = 15)
     @ApiModelProperty(value = "名称")

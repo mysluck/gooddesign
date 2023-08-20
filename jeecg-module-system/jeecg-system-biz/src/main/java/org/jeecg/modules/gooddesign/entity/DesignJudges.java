@@ -50,10 +50,7 @@ public class DesignJudges implements Serializable {
     @ApiModelProperty(value = "更新日期")
     private Date updateTime;
 
-	/**是否删除*/
-	@Excel(name = "是否删除", width = 15)
-    @ApiModelProperty(value = "是否删除")
-    private Integer isDel;
+
 	/**姓名*/
 	@Excel(name = "姓名", width = 15)
     @ApiModelProperty(value = "姓名")
