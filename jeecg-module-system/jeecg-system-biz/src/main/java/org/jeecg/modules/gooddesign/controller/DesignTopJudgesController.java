@@ -12,8 +12,10 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
+import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 好设计-发现100-设计师信息
@@ -31,11 +36,13 @@ import java.util.Date;
  */
 @Api(tags = "好设计-发现100-设计师信息")
 @RestController
-@RequestMapping("/gooddesign/designTopJudges")
+@RequestMapping("/designTopJudges")
 @Slf4j
 public class DesignTopJudgesController extends JeecgController<DesignTopJudges, IDesignTopJudgesService> {
     @Autowired
     private IDesignTopJudgesService designTopJudgesService;
+    @Autowired
+    IDesignActivityService designActivityService;
 
     /**
      * 分页列表查询
@@ -56,6 +63,24 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         QueryWrapper<DesignTopJudges> queryWrapper = QueryGenerator.initQueryWrapper(designTopJudges, req.getParameterMap());
         Page<DesignTopJudges> page = new Page<DesignTopJudges>(pageNo, pageSize);
         IPage<DesignTopJudges> pageList = designTopJudgesService.page(page, queryWrapper);
+        List<DesignTopJudges> records = pageList.getRecords();
+        List<Integer> activityIds = records.stream().map(DesignTopJudges::getActivityId).collect(Collectors.toList());
+        QueryWrapper<DesignActivity> designActivityWrapper = new QueryWrapper();
+        designActivityWrapper.in("id", activityIds);
+        List<DesignActivity> list = designActivityService.list(designActivityWrapper);
+
+        Map<Integer, DesignActivity> designActivityMap = list.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
+
+        records.stream().forEach(designTopJudge -> {
+            Integer activityId = designTopJudge.getActivityId();
+            if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {
+                DesignActivity designActivity = designActivityMap.get(activityId);
+                designTopJudge.setActivityName(designActivity.getActivityName());
+                designTopJudge.setPublishTime(designActivity.getPublishTime());
+            }
+        });
+
+        pageList.setRecords(records);
         return Result.OK(pageList);
     }
 

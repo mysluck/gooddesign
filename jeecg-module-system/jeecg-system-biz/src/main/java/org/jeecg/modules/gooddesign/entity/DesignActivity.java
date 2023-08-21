@@ -25,7 +25,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="design_activity对象", description="好设计-跨年启停")
-public class DesignActivity implements Serializable {
+public class  DesignActivity implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	/**主键*/
