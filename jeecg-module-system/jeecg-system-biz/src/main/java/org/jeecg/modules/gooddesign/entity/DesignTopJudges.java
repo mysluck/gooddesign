@@ -133,4 +133,6 @@ public class DesignTopJudges implements Serializable {
     @ApiModelProperty(value = "开始时间")
     private Date publishTime;
 
+    @ApiModelProperty(value = "筛选状态 通过1 不通过0")
+    private Integer  screenStatus;
 }
