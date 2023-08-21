@@ -1,6 +1,7 @@
 package org.jeecg.modules.gooddesign.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -124,11 +125,11 @@ public class DesignTopJudges implements Serializable {
     @ApiModelProperty(value = "活动ID")
     private Integer activityId;
 
-    @Transient
+    @TableField(exist = false)
     @ApiModelProperty(value = "活动名称")
     private String activityName;
 
-    @Transient
+    @TableField(exist = false)
     @ApiModelProperty(value = "开始时间")
     private Date publishTime;
 
