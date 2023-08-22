@@ -205,6 +205,10 @@ jeecg:
     minio_name: ??
     minio_pass: ??
     bucketName: otatest
+  qiniu:
+    accessKey: ZO5zgV4ch3XayYZc4sBBkDr_eT8xY0wA1vHj7C_9
+    secretKey: 2aHB_p8bBH1NtPmFf0wWb-g-BHgEr0It2-lSvbIZ
+    bucketName: design
   #大屏报表参数设置
   jmreport:
     mode: dev
