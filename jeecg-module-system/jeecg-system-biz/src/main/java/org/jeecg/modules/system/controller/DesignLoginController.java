@@ -206,6 +206,7 @@ public class DesignLoginController {
      * @param response
      * @return
      */
+    @ApiOperation("登出接口")
     @RequestMapping(value = "/logout")
     public Result<Object> logout(HttpServletRequest request, HttpServletResponse response) {
         //用户退出逻辑
@@ -236,6 +237,7 @@ public class DesignLoginController {
 
 
 
+    @ApiOperation("获取验证码")
     @GetMapping(value = "/sms")
     public Result<String> smsLogin(@RequestParam @ApiParam("手机号") String mobile, @RequestParam @ApiParam("模板 1注册 2登录") String smsmode) {
         Result<String> result = new Result<String>();
@@ -322,94 +324,31 @@ public class DesignLoginController {
         return Result.OK();
     }
 
-
-    /**
-     * 后台生成图形验证码 ：有效
-     *
-     * @param response
-     * @param key
-     */
-    @ApiOperation("获取验证码")
-    @GetMapping(value = "/randomImage/{key}")
-    public Result<String> randomImage(HttpServletResponse response, @PathVariable("key") String key) {
-        Result<String> res = new Result<String>();
-        try {
-            //生成验证码
-            String code = RandomUtil.randomString(BASE_CHECK_CODES, 4);
-            //存到redis中
-            String lowerCaseCode = code.toLowerCase();
-
-            //update-begin-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
-            // 加入密钥作为混淆，避免简单的拼接，被外部利用，用户自定义该密钥即可
-            String origin = lowerCaseCode + key + jeecgBaseConfig.getSignatureSecret();
-            String realKey = Md5Util.md5Encode(origin, "utf-8");
-            //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
-
-            redisUtil.set(realKey, lowerCaseCode, 60);
-            log.info("获取验证码，Redis key = {}，checkCode = {}", realKey, code);
-            //返回前端
-            String base64 = RandImageUtil.generate(code);
-            res.setSuccess(true);
-            res.setResult(base64);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            res.error500("获取验证码失败,请检查redis配置!");
-            return res;
-        }
-        return res;
-    }
-
-    /**
-     * 图形验证码
-     *
-     * @param sysLoginModel
-     * @return
-     */
-    @RequestMapping(value = "/checkCaptcha", method = RequestMethod.POST)
-    public Result<?> checkCaptcha(@RequestBody SysLoginModel sysLoginModel) {
-        String captcha = sysLoginModel.getCaptcha();
-        String checkKey = sysLoginModel.getCheckKey();
-        if (captcha == null) {
-            return Result.error("验证码无效");
-        }
-        String lowerCaseCaptcha = captcha.toLowerCase();
-        String realKey = Md5Util.md5Encode(lowerCaseCaptcha + checkKey, "utf-8");
-        Object checkCode = redisUtil.get(realKey);
-        if (checkCode == null || !checkCode.equals(lowerCaseCaptcha)) {
-            return Result.error("验证码错误");
-        }
-        return Result.ok();
-    }
-
-
     /**
      * 登录失败超出次数5 返回true
-     *
      * @param username
      * @return
      */
-    private boolean isLoginFailOvertimes(String username) {
+    private boolean isLoginFailOvertimes(String username){
         String key = CommonConstant.LOGIN_FAIL + username;
         Object failTime = redisUtil.get(key);
-        if (failTime != null) {
+        if(failTime!=null){
             Integer val = Integer.parseInt(failTime.toString());
-            if (val > 5) {
+            if(val>5){
                 return true;
             }
         }
         return false;
     }
-
     /**
      * 记录登录失败次数
-     *
      * @param username
      */
-    private void addLoginFailOvertimes(String username) {
+    private void addLoginFailOvertimes(String username){
         String key = CommonConstant.LOGIN_FAIL + username;
         Object failTime = redisUtil.get(key);
         Integer val = 0;
-        if (failTime != null) {
+        if(failTime!=null){
             val = Integer.parseInt(failTime.toString());
         }
         // 1小时
