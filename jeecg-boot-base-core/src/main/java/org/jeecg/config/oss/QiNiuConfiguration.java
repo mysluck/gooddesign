@@ -1,10 +1,8 @@
 package org.jeecg.config.oss;
 
 import lombok.Data;
-import org.jeecg.common.util.oss.OssBootUtil;
 import org.jeecg.common.util.qiniu.Auth;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +14,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-//@ConditionalOnProperty(prefix = "jeecg.qiniu", name = "endpoint")
 @ConfigurationProperties(prefix = "jeecg.qiniu")
-
 public class QiNiuConfiguration {
 
     @Value("${jeecg.qiniu.accessKey}")
@@ -30,9 +26,4 @@ public class QiNiuConfiguration {
     @Value("${jeecg.qiniu.staticDomain:}")
     private String staticDomain;
 
-
-    @Bean
-    public void initQiniuBootConfiguration() {
-        Auth.create(accessKeyId, accessKeySecret);
-    }
 }

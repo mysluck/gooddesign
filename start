@@ -1,0 +1,1 @@
+nohup java -jar jeecg-system-start-3.5.3.jar >catalina.out 2>&1 &
