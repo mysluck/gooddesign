@@ -1,4 +1,4 @@
-package org.jeecg.modules.system.controller;
+package org.jeecg.modules.gooddesign.controller;
 
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;

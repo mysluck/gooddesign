@@ -22,33 +22,16 @@ import java.util.Date;
  * @Version: V1.0
  */
 @Data
-@TableName("design_find_activity")
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="design_find_activity对象", description="好设计-发现设计-活动")
+@ApiModel(value="好设计-发现设计-活动", description="好设计-发现设计-活动")
 public class DesignFindActivityVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	/**主键*/
-	@TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "主键")
     private Integer id;
-	/**创建人*/
-    @ApiModelProperty(value = "创建人")
-    private String createBy;
-	/**创建日期*/
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "创建日期")
-    private Date createTime;
-	/**更新人*/
-    @ApiModelProperty(value = "更新人")
-    private String updateBy;
-	/**更新日期*/
-	@JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "更新日期")
-    private Date updateTime;
+
 	/**活动名称*/
 	@Excel(name = "活动名称", width = 15)
     @ApiModelProperty(value = "活动名称")
