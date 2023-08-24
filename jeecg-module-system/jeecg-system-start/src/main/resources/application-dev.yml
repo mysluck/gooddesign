@@ -189,8 +189,9 @@ jeecg:
     excludeUrls: /test/jeecgDemo/demo3,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
   #阿里云oss存储和大鱼短信秘钥配置
   oss:
-    accessKey: ??
-    secretKey: ??
+    accessKey: LTAI5tJCgwKWe6ZhsxmHqKfv
+    secretKey: Xwl8OXTspo4BQaFcGqvET69cXmb4mo
+#    secretKey: wiEe83GEbdX1RKZwiXTWBXQIEVe6WB
     endpoint: oss-cn-beijing.aliyuncs.com
     bucketName: jeecgdev
   # ElasticSearch 6设置
