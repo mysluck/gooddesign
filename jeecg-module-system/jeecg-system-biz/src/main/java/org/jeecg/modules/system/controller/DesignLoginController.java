@@ -44,7 +44,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/design/sys")
-@Api(tags = "好设计用户登录")
+@Api(tags = "好设计-用户登录")
 @Slf4j
 public class DesignLoginController {
     @Autowired
