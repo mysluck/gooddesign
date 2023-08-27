@@ -13,10 +13,12 @@ import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMain;
+import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
 import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainBasicVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainMovieVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainAddVO;
+import org.jeecg.modules.gooddesign.service.IDesignMainMovieService;
 import org.jeecg.modules.gooddesign.service.IDesignMainService;
 import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
 import org.springframework.beans.BeanUtils;
@@ -45,6 +47,8 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     IDesignMainStakeholderService designMainStakeholderService;
     @Autowired
     private IDesignMainService designMainService;
+    @Autowired
+    private IDesignMainMovieService designMainMovieService;
 
     /**
      * 分页列表查询
@@ -134,11 +138,12 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     @ApiOperation(value = "设计壮游-编辑壮游-现场视频-添加", notes = "设计壮游-编辑壮游-现场视频-添加")
     @PostMapping(value = "/addMovie")
     public Result<DesignMain> addMovie(@RequestBody DesignMainMovieVO designMainMovieVO) {
-        DesignMain designMain = new DesignMain();
-        BeanUtils.copyProperties(designMainMovieVO, designMain);
-
-        designMainService.updateById(designMain);
-        return Result.OK(designMain);
+        DesignMainMovie designMainMovie = new DesignMainMovie();
+        designMainMovie.setMainId(designMainMovieVO.getId());
+        designMainMovie.setMovieUrl(designMainMovieVO.getMovieUrl());
+        designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
+        designMainMovieService.save(designMainMovie);
+        return Result.OK("添加成功！");
     }
 
 
