@@ -17,7 +17,16 @@ public enum DySmsEnum {
 	/**会议通知*/
 	MEET_NOTICE_TEMPLATE_CODE("SMS_201480469","JEECG","username,title,minute,time"),
 	/**我的计划通知*/
-	PLAN_NOTICE_TEMPLATE_CODE("SMS_201470515","JEECG","username,title,time");
+	PLAN_NOTICE_TEMPLATE_CODE("SMS_201470515","JEECG","username,title,time"),
+    //测试
+	DESIGN_DEMO("SMS_462720345","好设计","code"),
+    //登录
+    DESIGN_LOGIN("SMS_462680393","好设计","code"),
+    //注册
+    DESIGN_REGISTER("SMS_462720345","好设计","code"),
+
+    ;
+
 
 	/**
 	 * 短信模板编码

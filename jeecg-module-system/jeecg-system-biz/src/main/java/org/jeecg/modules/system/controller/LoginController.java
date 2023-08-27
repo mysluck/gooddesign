@@ -44,7 +44,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/sys")
-@Api(tags="用户登录")
+@Api(tags="用户登录",hidden = true)
 @Slf4j
 public class LoginController {
 	@Autowired

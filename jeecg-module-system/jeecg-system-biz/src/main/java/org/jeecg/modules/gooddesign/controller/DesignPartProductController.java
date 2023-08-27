@@ -97,7 +97,7 @@ public class DesignPartProductController extends JeecgController<DesignPartProdu
 	@AutoLog(value = "参赛者设计师作品-编辑")
 	@ApiOperation(value="参赛者设计师作品-编辑", notes="参赛者设计师作品-编辑")
 	//@RequiresPermissions("gooddesign:design_part_product:edit")
-	@RequestMapping(value = "/edit", method = {RequestMethod.PUT,RequestMethod.POST})
+	@RequestMapping(value = "/edit", method = {RequestMethod.POST})
 	public Result<String> edit(@RequestBody DesignPartProduct designPartProduct) {
 		designPartProductService.updateById(designPartProduct);
 		return Result.OK("编辑成功!");

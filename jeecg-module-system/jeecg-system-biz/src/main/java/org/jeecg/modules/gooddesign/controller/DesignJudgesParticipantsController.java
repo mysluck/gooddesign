@@ -86,7 +86,7 @@ public class DesignJudgesParticipantsController extends JeecgController<DesignJu
 	@AutoLog(value = "评委通过表，保存评委评分数据-编辑")
 	@ApiOperation(value="评委通过表，保存评委评分数据-编辑", notes="评委通过表，保存评委评分数据-编辑")
 	//@RequiresPermissions("gooddesign:design_judges_participants:edit")
-	@RequestMapping(value = "/edit", method = {RequestMethod.PUT,RequestMethod.POST})
+	@RequestMapping(value = "/edit", method = {RequestMethod.POST})
 	public Result<String> edit(@RequestBody DesignJudgesParticipants designJudgesParticipants) {
 		designJudgesParticipantsService.updateById(designJudgesParticipants);
 		return Result.OK("编辑成功!");

@@ -26,8 +26,9 @@ spring:
       max-request-size: 10MB
   mail:
     host: smtp.163.com
-    username: jeecgos@163.com
-    password: ??
+    username: 16619947603@163.com
+    password: YNKZUEVCUFOAMQBD
+#    password: Zzy897570
     properties:
       mail:
         smtp:
@@ -40,7 +41,7 @@ spring:
     job-store-type: jdbc
     initialize-schema: embedded
     #定时任务启动开关，true-开  false-关
-    auto-startup: true
+    auto-startup: false
     #延迟1秒启动定时任务
     startup-delay: 1s
     #启动时更新己存在的Job
@@ -131,7 +132,7 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://182.92.81.215:3306/good_design?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://127.0.0.1:3306/good_design?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
@@ -144,7 +145,7 @@ spring:
   #redis 配置
   redis:
     database: 0
-    host: 182.92.81.215
+    host: 127.0.0.1
     port: 6379
     password: ''
 #mybatis plus 设置
@@ -188,8 +189,9 @@ jeecg:
     excludeUrls: /test/jeecgDemo/demo3,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
   #阿里云oss存储和大鱼短信秘钥配置
   oss:
-    accessKey: ??
-    secretKey: ??
+    accessKey: LTAI5tJCgwKWe6ZhsxmHqKfv
+    secretKey: Xwl8OXTspo4BQaFcGqvET69cXmb4mo
+#    secretKey: wiEe83GEbdX1RKZwiXTWBXQIEVe6WB
     endpoint: oss-cn-beijing.aliyuncs.com
     bucketName: jeecgdev
   # ElasticSearch 6设置
@@ -205,6 +207,10 @@ jeecg:
     minio_name: ??
     minio_pass: ??
     bucketName: otatest
+  qiniu:
+    accessKey: ZO5zgV4ch3XayYZc4sBBkDr_eT8xY0wA1vHj7C_9
+    secretKey: 2aHB_p8bBH1NtPmFf0wWb-g-BHgEr0It2-lSvbIZ
+    bucketName: design
   #大屏报表参数设置
   jmreport:
     mode: dev

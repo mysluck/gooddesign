@@ -1,22 +1,19 @@
 package org.jeecg.modules.gooddesign.entity;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.jeecgframework.poi.excel.annotation.Excel;
-import org.jeecg.common.aspect.annotation.Dict;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jeecgframework.poi.excel.annotation.Excel;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Description: 设计师
@@ -52,21 +49,13 @@ public class DesignJudges implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "更新日期")
     private Date updateTime;
-	/**所属部门*/
-    @ApiModelProperty(value = "所属部门")
-    private String sysOrgCode;
-	/**是否删除*/
-	@Excel(name = "是否删除", width = 15)
-    @ApiModelProperty(value = "是否删除")
-    private Integer isDel;
+
+
 	/**姓名*/
 	@Excel(name = "姓名", width = 15)
     @ApiModelProperty(value = "姓名")
     private String realName;
-	/**用户名*/
-	@Excel(name = "用户名", width = 15)
-    @ApiModelProperty(value = "用户名")
-    private String userName;
+
 	/**用户描述*/
 	@Excel(name = "用户描述", width = 15)
     @ApiModelProperty(value = "用户描述")
@@ -83,12 +72,5 @@ public class DesignJudges implements Serializable {
 	@Excel(name = "序号", width = 15)
     @ApiModelProperty(value = "序号")
     private Integer sort;
-	/**密码*/
-	@Excel(name = "密码", width = 15)
-    @ApiModelProperty(value = "密码")
-    private String userPwd;
-	/**打分权重*/
-	@Excel(name = "打分权重", width = 15)
-    @ApiModelProperty(value = "打分权重")
-    private Integer weight;
+
 }
