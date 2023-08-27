@@ -80,7 +80,7 @@
 //	@AutoLog(value = "壮游字典（年份、城市）-编辑")
 //	@ApiOperation(value="壮游字典（年份、城市）-编辑", notes="壮游字典（年份、城市）-编辑")
 //	//@RequiresPermissions("gooddesign:design_extra_dict:edit")
-//	@RequestMapping(value = "/edit", method = {RequestMethod.PUT,RequestMethod.POST})
+//	@RequestMapping(value = "/edit", method = {RequestMethod.POST})
 //	public Result<String> edit(@RequestBody DesignExtraDict designExtraDict) {
 //		designExtraDictService.updateById(designExtraDict);
 //		return Result.OK("编辑成功!");

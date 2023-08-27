@@ -134,18 +134,6 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
         return Result.OK(designContent);
     }
 
-    @AutoLog(value = "设计壮游-编辑壮游-现场视频-添加")
-    @ApiOperation(value = "设计壮游-编辑壮游-现场视频-添加", notes = "设计壮游-编辑壮游-现场视频-添加")
-    @PostMapping(value = "/addMovie")
-    public Result<DesignMain> addMovie(@RequestBody DesignMainMovieVO designMainMovieVO) {
-        DesignMainMovie designMainMovie = new DesignMainMovie();
-        designMainMovie.setMainId(designMainMovieVO.getId());
-        designMainMovie.setMovieUrl(designMainMovieVO.getMovieUrl());
-        designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
-        designMainMovieService.save(designMainMovie);
-        return Result.OK("添加成功！");
-    }
-
 
     @AutoLog(value = "设计壮游-编辑壮游-相关人员映射表-添加")
     @ApiOperation(value = "设计壮游-编辑壮游-相关人员映射表-添加", notes = "编辑壮游-相关人员映射表-添加")

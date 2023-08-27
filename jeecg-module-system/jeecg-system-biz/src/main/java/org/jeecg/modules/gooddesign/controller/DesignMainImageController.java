@@ -26,7 +26,7 @@ import java.util.Arrays;
  * @Date:   2023-08-18
  * @Version: V1.0
  */
-@Api(tags="现场照片")
+@Api(tags="好设计-设计壮游-现场照片")
 @RestController
 @RequestMapping("/designMainImage")
 @Slf4j
@@ -80,7 +80,7 @@ public class DesignMainImageController extends JeecgController<DesignMainImage, 
 	@AutoLog(value = "现场照片-编辑")
 	@ApiOperation(value="现场照片-编辑", notes="现场照片-编辑")
 	//@RequiresPermissions("gooddesign:design_main_image:edit")
-	@RequestMapping(value = "/edit", method = {RequestMethod.PUT,RequestMethod.POST})
+	@RequestMapping(value = "/edit", method = {RequestMethod.POST})
 	public Result<String> edit(@RequestBody DesignMainImage designMainImage) {
 		designMainImageService.updateById(designMainImage);
 		return Result.OK("编辑成功!");

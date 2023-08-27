@@ -97,7 +97,7 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     @AutoLog(value = "相关人员-编辑")
     @ApiOperation(value = "相关人员-编辑", notes = "相关人员-编辑")
     //@RequiresPermissions("gooddesign:design_stakeholder:edit")
-    @RequestMapping(value = "/edit", method = {RequestMethod.PUT, RequestMethod.POST})
+    @RequestMapping(value = "/edit", method = { RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignStakeholderVO designStakeholderVO) {
         DesignStakeholder designStakeholder = new DesignStakeholder();
         BeanUtils.copyProperties(designStakeholderVO, designStakeholder);

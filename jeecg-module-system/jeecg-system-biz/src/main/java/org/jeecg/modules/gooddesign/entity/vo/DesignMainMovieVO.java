@@ -32,4 +32,7 @@ public class DesignMainMovieVO implements Serializable {
     @ApiModelProperty(value = "封面链接")
     private String imgCoverUrl;
 
+    @ApiModelProperty(value = "是否推荐 1推荐 0不推荐")
+    private int recommendedStatus;
+
 }

@@ -65,16 +65,5 @@ public class DesignMain implements Serializable {
     @Excel(name = "介绍", width = 15)
     @ApiModelProperty(value = "介绍")
     private String content;
-    /**是否推荐 1推荐 0不推荐*/
-    @Excel(name = "是否推荐 1推荐 0不推荐", width = 15)
-    @ApiModelProperty(value = "是否推荐 1推荐 0不推荐")
-    private Integer recommendedStatus;
-    /**视频链接*/
-    @Excel(name = "视频链接", width = 15)
-    @ApiModelProperty(value = "视频链接")
-    private String movieUrl;
-    /**封面链接*/
-    @Excel(name = "封面链接", width = 15)
-    @ApiModelProperty(value = "封面链接")
-    private String imgCoverUrl;
+
 }
