@@ -132,6 +132,7 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
+#          url: jdbc:mysql://182.92.81.215:3306/good_design?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
           url: jdbc:mysql://127.0.0.1:3306/good_design?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
           username: root
           password: 123456
@@ -189,8 +190,8 @@ jeecg:
     excludeUrls: /test/jeecgDemo/demo3,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
   #阿里云oss存储和大鱼短信秘钥配置
   oss:
-    accessKey: LTAI5tJCgwKWe6ZhsxmHqKfv
-    secretKey: Xwl8OXTspo4BQaFcGqvET69cXmb4mo
+    accessKey: TFRBSTV0SkNnd0tXZTZaaHN4bUhxS2Z2
+    secretKey: WHdsOE9YVHNwbzRCUWFGY0dxdkVUNjljWG1iNG1v
 #    secretKey: wiEe83GEbdX1RKZwiXTWBXQIEVe6WB
     endpoint: oss-cn-beijing.aliyuncs.com
     bucketName: jeecgdev

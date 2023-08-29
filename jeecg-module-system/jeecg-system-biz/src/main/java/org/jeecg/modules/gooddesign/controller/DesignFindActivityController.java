@@ -45,12 +45,12 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 /**
- * @Description: 好设计-发现设计-活动
+ * @Description: 好设计-设计壮游-活动
  * @Author: jeecg-boot
  * @Date: 2023-08-24
  * @Version: V1.0
  */
-@Api(tags = "好设计-发现设计-活动")
+@Api(tags = "好设计-设计壮游-首页活动")
 @RestController
 @RequestMapping("/designFindActivity")
 @Slf4j
@@ -67,8 +67,8 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
      * @param req
      * @return
      */
-    //@AutoLog(value = "好设计-发现设计-活动-分页列表查询")
-    @ApiOperation(value = "好设计-发现设计-活动-分页列表查询", notes = "好设计-发现设计-活动-分页列表查询")
+    //@AutoLog(value = "好设计-设计壮游-活动-分页列表查询")
+    @ApiOperation(value = "好设计-设计壮游-活动-分页列表查询", notes = "好设计-设计壮游-活动-分页列表查询")
     @GetMapping(value = "/list")
     public Result<IPage<DesignFindActivity>> queryPageList(DesignFindActivity designFindActivity,
                                                            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
@@ -86,8 +86,8 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
      * @param designFindActivity
      * @return
      */
-    @AutoLog(value = "好设计-发现设计-活动-添加")
-    @ApiOperation(value = "好设计-发现设计-活动-添加", notes = "好设计-发现设计-活动-添加")
+    @AutoLog(value = "好设计-设计壮游-活动-添加")
+    @ApiOperation(value = "好设计-设计壮游-活动-添加", notes = "好设计-设计壮游-活动-添加")
     //@RequiresPermissions("gooddesign:design_find_activity:add")
     @PostMapping(value = "/add")
     public Result<String> add(@RequestBody  DesignFindActivityVO designFindActivityVO) {
@@ -106,8 +106,8 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
      * @param designFindActivity
      * @return
      */
-    @AutoLog(value = "好设计-发现设计-活动-编辑")
-    @ApiOperation(value = "好设计-发现设计-活动-编辑", notes = "好设计-发现设计-活动-编辑")
+    @AutoLog(value = "好设计-设计壮游-活动-编辑")
+    @ApiOperation(value = "好设计-设计壮游-活动-编辑", notes = "好设计-设计壮游-活动-编辑")
     //@RequiresPermissions("gooddesign:design_find_activity:edit")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignFindActivityVO designFindActivityVO) {
@@ -126,8 +126,8 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
      * @param id
      * @return
      */
-    @AutoLog(value = "好设计-发现设计-活动-通过id删除")
-    @ApiOperation(value = "好设计-发现设计-活动-通过id删除", notes = "好设计-发现设计-活动-通过id删除")
+    @AutoLog(value = "好设计-设计壮游-活动-通过id删除")
+    @ApiOperation(value = "好设计-设计壮游-活动-通过id删除", notes = "好设计-设计壮游-活动-通过id删除")
     //@RequiresPermissions("gooddesign:design_find_activity:delete")
     @DeleteMapping(value = "/delete")
     public Result<String> delete(@RequestParam(name = "id", required = true) String id) {
@@ -141,8 +141,8 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
      * @param ids
      * @return
      */
-    @AutoLog(value = "好设计-发现设计-活动-批量删除")
-    @ApiOperation(value = "好设计-发现设计-活动-批量删除", notes = "好设计-发现设计-活动-批量删除")
+    @AutoLog(value = "好设计-设计壮游-活动-批量删除")
+    @ApiOperation(value = "好设计-设计壮游-活动-批量删除", notes = "好设计-设计壮游-活动-批量删除")
     //@RequiresPermissions("gooddesign:design_find_activity:deleteBatch")
     @DeleteMapping(value = "/deleteBatch")
     public Result<String> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
@@ -156,8 +156,8 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
      * @param id
      * @return
      */
-    //@AutoLog(value = "好设计-发现设计-活动-通过id查询")
-    @ApiOperation(value = "好设计-发现设计-活动-通过id查询", notes = "好设计-发现设计-活动-通过id查询")
+    //@AutoLog(value = "好设计-设计壮游-活动-通过id查询")
+    @ApiOperation(value = "好设计-设计壮游-活动-通过id查询", notes = "好设计-设计壮游-活动-通过id查询")
     @GetMapping(value = "/queryById")
     public Result<DesignFindActivity> queryById(@RequestParam(name = "id", required = true) String id) {
         DesignFindActivity designFindActivity = designFindActivityService.getById(id);
@@ -176,7 +176,7 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
     //@RequiresPermissions("gooddesign:design_find_activity:exportXls")
     @RequestMapping(value = "/exportXls")
     public ModelAndView exportXls(HttpServletRequest request, DesignFindActivity designFindActivity) {
-        return super.exportXls(request, designFindActivity, DesignFindActivity.class, "好设计-发现设计-活动");
+        return super.exportXls(request, designFindActivity, DesignFindActivity.class, "好设计-设计壮游-活动");
     }
 
     /**

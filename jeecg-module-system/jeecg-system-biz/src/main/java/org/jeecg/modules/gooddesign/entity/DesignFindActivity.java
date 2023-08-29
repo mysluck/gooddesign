@@ -59,11 +59,11 @@ public class DesignFindActivity implements Serializable {
 	/**年份*/
 	@Excel(name = "年份", width = 15)
     @ApiModelProperty(value = "年份")
-    private java.lang.String year;
+    private Integer yearId;
 	/**地点*/
 	@Excel(name = "地点", width = 15)
     @ApiModelProperty(value = "地点")
-    private java.lang.String city;
+    private Integer cityId;
 	/**状态（0未发布 1已发布）*/
 	@Excel(name = "状态（0未发布 1已发布）", width = 15)
     @ApiModelProperty(value = "状态（0未发布 1已发布）")
