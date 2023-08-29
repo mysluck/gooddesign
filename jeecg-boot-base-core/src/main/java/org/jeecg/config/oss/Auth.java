@@ -1,4 +1,4 @@
-package org.jeecg.common.util.qiniu;
+package org.jeecg.config.oss;
 
 /**
  * @Description:

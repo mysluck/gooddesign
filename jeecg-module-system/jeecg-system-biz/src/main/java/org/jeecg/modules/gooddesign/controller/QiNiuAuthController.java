@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.common.api.vo.Result;
-import org.jeecg.common.util.qiniu.Auth;
+import org.jeecg.config.oss.Auth;
 import org.jeecg.config.oss.QiNiuConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,7 @@ public class QiNiuAuthController {
     @GetMapping("/getToken")
     public Result getToken() {
         Auth auth = Auth.create(qiNiuConfiguration.getAccessKeyId(), qiNiuConfiguration.getAccessKeySecret());
-        String design = auth.uploadToken("design");
+        String design = auth.uploadToken("discovery-of-good-design");
         return Result.OK(design);
     }
 }
