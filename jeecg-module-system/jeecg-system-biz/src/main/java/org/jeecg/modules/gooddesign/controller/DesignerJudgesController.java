@@ -75,7 +75,7 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
     public Result<String> add(@RequestBody DesignJudgesDTO userDesignerDTO) {
 
         if (userDesignerService.checkSortNoExist(userDesignerDTO.getSort())) {
-            return Result.OK("编码存在，请修改编码！");
+            return Result.error("编码存在，请修改编码！");
 
         }
         DesignJudges userDesigner = new DesignJudges();
@@ -106,7 +106,9 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignJudges userDesigner) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-
+        if (null == userDesigner.getId()) {
+            return Result.error(500, "请传入ID!");
+        }
         userDesigner.setUpdateBy(sysUser.getUsername());
         userDesigner.setUpdateTime(new Date());
         userDesignerService.updateById(userDesigner);
