@@ -1,5 +1,8 @@
 package org.jeecg.modules.gooddesign.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -8,13 +11,16 @@ import org.apache.ibatis.annotations.Param;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.gooddesign.entity.DesignExtraDict;
+import org.jeecg.modules.gooddesign.entity.DesignJudges;
 import org.jeecg.modules.gooddesign.mapper.DesignExtraDictMapper;
 import org.jeecg.modules.gooddesign.service.IDesignExtraDictService;
 import org.jeecg.modules.gooddesign.service.IDesignFindActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.List;
 
@@ -62,7 +68,10 @@ public class DesignEditController extends JeecgController<DesignExtraDict, IDesi
 
     @ApiOperation(value = "编辑壮游-城市展示", notes = "编辑壮游-城市展示")
     @GetMapping(value = "/cityList")
-    public Result<List<DesignExtraDict>> cityList(@Param("年份ID") @ApiParam("年份ID") int id) {
+    public Result<List<DesignExtraDict>> cityList(@Param("年份ID") @ApiParam("年份ID") Integer id) {
+        if (id == null) {
+            return Result.error("请输入年份ID！");
+        }
         List<DesignExtraDict> list = designExtraDictService.list(id, 2);
         list.sort(Comparator.comparing(DesignExtraDict::getId).reversed());
         return Result.OK(list);
@@ -70,7 +79,10 @@ public class DesignEditController extends JeecgController<DesignExtraDict, IDesi
 
     @ApiOperation(value = "编辑壮游-添加城市", notes = "编辑壮游-添加城市")
     @GetMapping(value = "/addCity")
-    public Result<List<DesignExtraDict>> addCity(@Param("city") String city, @Param("年份ID") @ApiParam("年份ID") int id) {
+    public Result<List<DesignExtraDict>> addCity(@Param("city") String city, @Param("年份ID") @ApiParam("年份ID,必传") Integer id) {
+        if (id == null) {
+            return Result.error("请输入年份ID！");
+        }
         designExtraDictService.saveExtAndPid(2, city, id);
         return Result.OK("保存成功");
     }
@@ -83,6 +95,5 @@ public class DesignEditController extends JeecgController<DesignExtraDict, IDesi
         designExtraDictService.removeById(id);
         return Result.OK("删除成功!");
     }
-
 
 }

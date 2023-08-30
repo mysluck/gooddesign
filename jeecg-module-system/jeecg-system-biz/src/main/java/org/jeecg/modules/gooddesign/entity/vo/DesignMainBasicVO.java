@@ -30,13 +30,13 @@ public class DesignMainBasicVO implements Serializable {
 
     @Excel(name = "年份", width = 15)
     @ApiModelProperty(value = "年份")
-    private String year;
+    private int yearId;
     /**
      * 城市
      */
     @Excel(name = "城市", width = 15)
     @ApiModelProperty(value = "城市")
-    private String city;
+    private int cityId;
     /**
      * 标题
      */
