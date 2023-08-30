@@ -55,7 +55,7 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
     @Override
     public List<DesignExtraDict> list(int id, int type) {
         QueryWrapper<DesignExtraDict> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
+        queryWrapper.eq("parent_id", id);
         queryWrapper.eq("type", type);
         List<DesignExtraDict> list = this.list(queryWrapper);
         return list;
