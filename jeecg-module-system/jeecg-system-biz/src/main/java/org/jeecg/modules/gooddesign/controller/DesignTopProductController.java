@@ -31,7 +31,7 @@ import java.util.Date;
  */
 @Api(tags = "好设计-发现100-项目信息")
 @RestController
-@RequestMapping("/gooddesign/designTopProduct")
+@RequestMapping("/designTopProduct")
 @Slf4j
 public class DesignTopProductController extends JeecgController<DesignTopProduct, IDesignTopProductService> {
     @Autowired
