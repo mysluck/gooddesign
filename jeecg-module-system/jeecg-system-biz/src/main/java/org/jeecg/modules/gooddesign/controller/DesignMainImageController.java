@@ -75,8 +75,8 @@ public class DesignMainImageController extends JeecgController<DesignMainImage, 
     @AutoLog(value = "现场照片-批量添加")
     @ApiOperation(value = "现场照片-批量添加", notes = "现场照片-批量添加")
     //@RequiresPermissions("gooddesign:design_main_image:add")
-    @PostMapping(value = "/add")
-    public Result<String> add(@RequestBody List<DesignMainImage> designMainImages) {
+    @PostMapping(value = "/batchAdd")
+    public Result<String> batchAdd(@RequestBody List<DesignMainImage> designMainImages) {
         designMainImageService.saveBatch(designMainImages);
         return Result.OK("添加成功！");
     }
