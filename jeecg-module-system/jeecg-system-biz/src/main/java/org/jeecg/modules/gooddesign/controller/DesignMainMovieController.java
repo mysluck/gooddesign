@@ -23,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 设计壮游
@@ -75,6 +77,22 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
         designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
         designMainMovie.setRecommendedStatus(designMainMovieVO.getRecommendedStatus());
         designMainMovieService.save(designMainMovie);
+        return Result.OK("添加成功！");
+    }
+
+    @AutoLog(value = "设计壮游-编辑壮游-现场视频-批量添加")
+    @ApiOperation(value = "设计壮游-编辑壮游-现场视频-批量添加", notes = "设计壮游-编辑壮游-现场视频-批量添加")
+    @PostMapping(value = "/batchAdd")
+    public Result<String> addMovie(@RequestBody List<DesignMainMovieVO> designMainMovieVOs) {
+        List<DesignMainMovie> result = designMainMovieVOs.stream().map(designMainMovieVO -> {
+            DesignMainMovie designMainMovie = new DesignMainMovie();
+            designMainMovie.setMainId(designMainMovieVO.getId());
+            designMainMovie.setMovieUrl(designMainMovieVO.getMovieUrl());
+            designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
+            designMainMovie.setRecommendedStatus(designMainMovieVO.getRecommendedStatus());
+            return designMainMovie;
+        }).collect(Collectors.toList());
+        designMainMovieService.saveBatch(result);
         return Result.OK("添加成功！");
     }
 

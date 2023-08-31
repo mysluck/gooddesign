@@ -57,6 +57,7 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
                                                      @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                      HttpServletRequest req) {
         QueryWrapper<DesignJudges> queryWrapper = QueryGenerator.initQueryWrapper(userDesigner, req.getParameterMap());
+        queryWrapper.orderByAsc("sort");
         Page<DesignJudges> page = new Page<DesignJudges>(pageNo, pageSize);
         IPage<DesignJudges> pageList = userDesignerService.page(page, queryWrapper);
         return Result.OK(pageList);
@@ -65,7 +66,7 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
     /**
      * 添加
      *
-     * @param userDesigner
+     * @param
      * @return
      */
     @AutoLog(value = "发现设计-添加设计师")
