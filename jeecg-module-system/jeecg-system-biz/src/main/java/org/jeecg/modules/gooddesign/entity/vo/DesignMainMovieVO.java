@@ -26,6 +26,9 @@ public class DesignMainMovieVO implements Serializable {
     @ApiModelProperty(value = "主键")
     private Integer id;
 
+    @ApiModelProperty(value = "基础信息ID")
+    private Integer mainId;
+
     @ApiModelProperty(value = "视频链接")
     private String movieUrl;
     /**封面链接*/

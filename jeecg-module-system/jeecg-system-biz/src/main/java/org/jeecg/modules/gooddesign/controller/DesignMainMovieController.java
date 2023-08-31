@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMain;
 import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
 import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,11 +74,16 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     @ApiOperation(value = "设计壮游-编辑壮游-现场视频-添加", notes = "设计壮游-编辑壮游-现场视频-添加")
     @PostMapping(value = "/add")
     public Result<String> addMovie(@RequestBody DesignMainMovieVO designMainMovieVO) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+
+
         DesignMainMovie designMainMovie = new DesignMainMovie();
         designMainMovie.setMainId(designMainMovieVO.getId());
         designMainMovie.setMovieUrl(designMainMovieVO.getMovieUrl());
         designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
         designMainMovie.setRecommendedStatus(designMainMovieVO.getRecommendedStatus());
+        designMainMovie.setCreateBy(sysUser.getUsername());
+        designMainMovie.setCreateTime(new Date());
         designMainMovieService.save(designMainMovie);
         return Result.OK("添加成功！");
     }
@@ -84,12 +92,16 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     @ApiOperation(value = "设计壮游-编辑壮游-现场视频-批量添加", notes = "设计壮游-编辑壮游-现场视频-批量添加")
     @PostMapping(value = "/batchAdd")
     public Result<String> addMovie(@RequestBody List<DesignMainMovieVO> designMainMovieVOs) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+
         List<DesignMainMovie> result = designMainMovieVOs.stream().map(designMainMovieVO -> {
             DesignMainMovie designMainMovie = new DesignMainMovie();
-            designMainMovie.setMainId(designMainMovieVO.getId());
+            designMainMovie.setMainId(designMainMovieVO.getMainId());
             designMainMovie.setMovieUrl(designMainMovieVO.getMovieUrl());
             designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
             designMainMovie.setRecommendedStatus(designMainMovieVO.getRecommendedStatus());
+            designMainMovie.setCreateBy(sysUser.getUsername());
+            designMainMovie.setCreateTime(new Date());
             return designMainMovie;
         }).collect(Collectors.toList());
         designMainMovieService.saveBatch(result);
@@ -107,8 +119,11 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     @ApiOperation(value = "设计壮游-编辑", notes = "设计壮游-编辑")
     //@RequiresPermissions("gooddesign:design_main_image:edit")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
-    public Result<String> edit(@RequestBody DesignMainMovie DesignMainMovie) {
-        designMainMovieService.updateById(DesignMainMovie);
+    public Result<String> edit(@RequestBody DesignMainMovie designMainMovie) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        designMainMovie.setUpdateBy(sysUser.getUsername());
+        designMainMovie.setUpdateTime(new Date());
+        designMainMovieService.updateById(designMainMovie);
         return Result.OK("编辑成功!");
     }
 

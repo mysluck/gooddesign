@@ -82,6 +82,7 @@ public class ShiroConfig_bak {
         filterChainDefinitionMap.put("/sys/login", "anon"); //登录接口排除
         filterChainDefinitionMap.put("/sys/mLogin", "anon"); //登录接口排除
         filterChainDefinitionMap.put("/sys/logout", "anon"); //登出接口排除
+        filterChainDefinitionMap.put("/monitor/alive", "anon"); //服务监控
         filterChainDefinitionMap.put("/sys/thirdLogin/**", "anon"); //第三方登录
         filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串
         filterChainDefinitionMap.put("/sys/sms", "anon");//短信验证码

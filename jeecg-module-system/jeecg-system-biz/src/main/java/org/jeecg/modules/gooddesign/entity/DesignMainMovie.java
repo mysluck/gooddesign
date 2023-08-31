@@ -32,7 +32,7 @@ public class DesignMainMovie implements Serializable {
     /**
      * 主键
      */
-    @TableId(type = IdType.ASSIGN_ID)
+    @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "主键")
     private String id;
     /**
