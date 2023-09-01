@@ -67,6 +67,7 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                    HttpServletRequest req) {
         QueryWrapper<DesignMain> queryWrapper = QueryGenerator.initQueryWrapper(designMain, req.getParameterMap());
+        queryWrapper.orderByDesc("id");
         Page<DesignMain> page = new Page<DesignMain>(pageNo, pageSize);
         IPage<DesignMain> pageList = designMainService.page(page, queryWrapper);
         return Result.OK(pageList);
