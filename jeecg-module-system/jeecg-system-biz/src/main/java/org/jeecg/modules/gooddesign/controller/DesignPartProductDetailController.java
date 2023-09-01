@@ -43,7 +43,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
  * @Date:   2023-08-17
  * @Version: V1.0
  */
-@Api(tags="好设计-参赛者设计师实景图")
+@Api(tags="好设计-参赛者报名-设计师实景图")
 @RestController
 @RequestMapping("/designPartProductDetail")
 @Slf4j
