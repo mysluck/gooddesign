@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -138,4 +137,9 @@ public class DesignTopJudges implements Serializable {
 
     @ApiModelProperty(value = "肖像")
     private String userImgUrl;
+
+    @ApiModelProperty(value = "设计报奖编号")
+    private String designNo;
+
+
 }

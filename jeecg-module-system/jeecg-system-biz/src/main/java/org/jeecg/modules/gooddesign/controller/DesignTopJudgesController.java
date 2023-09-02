@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -15,6 +16,7 @@ import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -100,8 +103,14 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         bean.setCreateBy(sysUser.getUsername());
         bean.setCreateTime(new Date());
+        bean.setDesignNo(getDesignNo());
         designTopJudgesService.save(bean);
         return Result.OK("添加成功！");
+    }
+
+
+    private String getDesignNo() {
+        return "FX" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss");
     }
 
     /**
@@ -171,6 +180,19 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         }
         return Result.OK(designTopJudges);
     }
+
+
+
+    @ApiOperation(value = "好设计-发现100-top100得分数据", notes = "好设计-发现100-top100得分数据")
+    @GetMapping(value = "/queryTop100")
+    public Result<List<DesignTopProductVO>> queryTop100() {
+//        List<DesignTopProductVO> designTopProducts = designTopProductService.queryByTopJudgesId(id);
+//        if (designTopProducts == null) {
+//            return Result.error("未找到对应数据");
+//        }
+        return Result.OK();
+    }
+
 
 
 }

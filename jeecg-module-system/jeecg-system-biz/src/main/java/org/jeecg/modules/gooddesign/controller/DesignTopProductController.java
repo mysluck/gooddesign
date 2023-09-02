@@ -151,14 +151,6 @@ public class DesignTopProductController extends JeecgController<DesignTopProduct
     }
 
 
-    @ApiOperation(value = "好设计-发现100-项目信息-查询设计师所有作品", notes = "好设计-发现100-项目信息-查询设计师作品")
-    @GetMapping(value = "/queryByTopJudgesId")
-    public Result<List<DesignTopProductVO>> queryByTopJudgesId(@RequestParam(name = "id", required = true) Integer id) {
-        List<DesignTopProductVO> designTopProducts = designTopProductService.queryByTopJudgesId(id);
-        if (designTopProducts == null) {
-            return Result.error("未找到对应数据");
-        }
-        return Result.OK(designTopProducts);
-    }
+
 
 }
