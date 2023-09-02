@@ -79,4 +79,8 @@ public class DesignTopJudgesVO extends DesignTopJudges implements Serializable {
     @ApiModelProperty(value = "开始时间")
     private Date publishTime;
 
+
+    @ApiModelProperty(value = "肖像")
+    private String userImgUrl;
+
 }

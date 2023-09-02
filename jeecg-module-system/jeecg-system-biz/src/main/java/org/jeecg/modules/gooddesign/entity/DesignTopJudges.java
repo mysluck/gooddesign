@@ -134,5 +134,8 @@ public class DesignTopJudges implements Serializable {
     private Date publishTime;
 
     @ApiModelProperty(value = "筛选状态 通过1 不通过0")
-    private Integer  screenStatus;
+    private Integer screenStatus;
+
+    @ApiModelProperty(value = "肖像")
+    private String userImgUrl;
 }

@@ -56,4 +56,7 @@ public class DesignExtraDict implements Serializable {
 	@Excel(name = "内容", width = 15)
     @ApiModelProperty(value = "内容")
     private java.lang.String value;
+
+    @ApiModelProperty(value = "父亲ID")
+    private java.lang.Integer parentId;
 }

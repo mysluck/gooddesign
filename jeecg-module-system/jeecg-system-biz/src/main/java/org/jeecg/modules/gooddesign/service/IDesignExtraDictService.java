@@ -16,5 +16,7 @@ public interface IDesignExtraDictService extends IService<DesignExtraDict> {
 
     List<DesignExtraDict> list(int type);
 
+    List<DesignExtraDict> listByParentId(int parentId);
+
 
 }

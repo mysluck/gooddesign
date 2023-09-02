@@ -7,14 +7,18 @@ import org.apache.ibatis.annotations.Param;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.modules.gooddesign.entity.DesignExtraDict;
+import org.jeecg.modules.gooddesign.entity.vo.DesignExtraDictVO;
 import org.jeecg.modules.gooddesign.service.IDesignExtraDictService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 壮游字典（年份、城市）
@@ -61,6 +65,27 @@ public class DesignEditController extends JeecgController<DesignExtraDict, IDesi
     }
 
 
+    @ApiOperation(value = "编辑壮游-字典展示", notes = "编辑壮游-字典展示")
+    @GetMapping(value = "/listTree")
+    public Result<List<DesignExtraDictVO>> listTree() {
+        List<DesignExtraDict> list = designExtraDictService.list(1);
+        List<DesignExtraDictVO> result = new ArrayList<>();
+        if (!list.isEmpty()) {
+            result = list.stream().map(dict -> {
+                DesignExtraDictVO designExtraDictVO = new DesignExtraDictVO();
+                BeanUtils.copyProperties(dict, designExtraDictVO);
+                List<DesignExtraDictVO> childs = designExtraDictService.listByParentId(dict.getId()).stream().map(child -> {
+                    DesignExtraDictVO vo = new DesignExtraDictVO();
+                    BeanUtils.copyProperties(child, vo);
+                    return vo;
+                }).collect(Collectors.toList());
+                designExtraDictVO.setChild(childs);
+                return designExtraDictVO;
+            }).collect(Collectors.toList());
+        }
+        result.sort(Comparator.comparing(DesignExtraDictVO::getValue).reversed());
+        return Result.OK(result);
+    }
 
 
 }

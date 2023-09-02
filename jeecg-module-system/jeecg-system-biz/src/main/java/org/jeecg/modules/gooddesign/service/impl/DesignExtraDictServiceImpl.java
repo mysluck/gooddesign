@@ -39,4 +39,14 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
         List<DesignExtraDict> list = this.list(queryWrapper);
         return list;
     }
+
+    @Override
+    public List<DesignExtraDict> listByParentId(int parentId) {
+        QueryWrapper<DesignExtraDict> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("parent_id", parentId);
+        List<DesignExtraDict> list = this.list(queryWrapper);
+        return list;
+    }
+
+
 }
