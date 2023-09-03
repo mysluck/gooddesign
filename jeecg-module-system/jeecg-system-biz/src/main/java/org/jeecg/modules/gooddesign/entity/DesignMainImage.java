@@ -35,7 +35,7 @@ public class DesignMainImage implements Serializable {
 	/**主键*/
 	@TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "主键")
-    private java.lang.String id;
+    private java.lang.Integer id;
 	/**创建人*/
     @ApiModelProperty(value = "创建人")
     private java.lang.String createBy;

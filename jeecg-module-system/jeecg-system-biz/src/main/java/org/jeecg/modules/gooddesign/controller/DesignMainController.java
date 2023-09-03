@@ -16,6 +16,7 @@ import org.jeecg.modules.gooddesign.entity.DesignMain;
 import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
 import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainBasicVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignMainDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainMovieVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainAddVO;
 import org.jeecg.modules.gooddesign.service.IDesignMainMovieService;
@@ -86,6 +87,7 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     @DeleteMapping(value = "/delete")
     public Result<String> delete(@RequestParam(name = "id", required = true) Integer id) {
         designMainService.removeById(id);
+
         return Result.OK("删除成功!");
     }
 
@@ -115,6 +117,16 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     @GetMapping(value = "/queryById")
     public Result<DesignMain> queryById(@RequestParam(name = "id", required = true) String id) {
         DesignMain designMain = designMainService.getById(id);
+        if (designMain == null) {
+            return Result.error("未找到对应数据");
+        }
+        return Result.OK(designMain);
+    }
+
+    @ApiOperation(value = "设计壮游-通过id查询相信信息", notes = "设计壮游-通过id查询相信信息（照片、视频）")
+    @GetMapping(value = "/queryDetailById")
+    public Result<DesignMainDetailVO> queryDetailById(@RequestParam(name = "id", required = true) String id) {
+        DesignMainDetailVO designMain = designMainService.queryDetailById(id);
         if (designMain == null) {
             return Result.error("未找到对应数据");
         }

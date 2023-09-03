@@ -15,10 +15,13 @@ import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
+import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +49,8 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     private IDesignTopJudgesService designTopJudgesService;
     @Autowired
     IDesignActivityService designActivityService;
+    @Autowired
+    IDesignTopProductService designTopProductService;
 
     /**
      * 分页列表查询
@@ -105,6 +110,15 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         bean.setCreateTime(new Date());
         bean.setDesignNo(getDesignNo());
         designTopJudgesService.save(bean);
+        return Result.OK("添加成功！");
+    }
+
+    @AutoLog(value = "好设计-发现100-设计师信息-完整添加设计师基本信息和项目信息")
+    @ApiOperation(value = "好设计-发现100-设计师信息-完整添加设计师基本信息和项目信息", notes = "好设计-发现100-设计师信息-完整添加设计师基本信息和项目信息")
+    //@RequiresPermissions("gooddesign:design_top_judges:add")
+    @PostMapping(value = "/addDetail")
+    public Result<String> addDetail(@RequestBody DesignTopJudgesAllVO designTopJudgesAllVO) {
+        designTopJudgesService.addDetail(designTopJudgesAllVO);
         return Result.OK("添加成功！");
     }
 
@@ -185,11 +199,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
 
     @ApiOperation(value = "好设计-发现100-top100得分数据", notes = "好设计-发现100-top100得分数据")
     @GetMapping(value = "/queryTop100")
-    public Result<List<DesignTopProductVO>> queryTop100() {
-//        List<DesignTopProductVO> designTopProducts = designTopProductService.queryByTopJudgesId(id);
-//        if (designTopProducts == null) {
-//            return Result.error("未找到对应数据");
-//        }
+    public Result<List<DesignTopJudgesScoreVO>> queryTop100() {
+        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = designTopJudgesService.queryByTopJudgesId();
+
         return Result.OK();
     }
 

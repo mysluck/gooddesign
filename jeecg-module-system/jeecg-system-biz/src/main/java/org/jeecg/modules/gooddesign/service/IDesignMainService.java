@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service;
 
 import org.jeecg.modules.gooddesign.entity.DesignMain;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.gooddesign.entity.vo.DesignMainDetailVO;
 
 /**
  * @Description: 设计壮游
@@ -11,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IDesignMainService extends IService<DesignMain> {
 
+    DesignMainDetailVO queryDetailById(String id);
 }
