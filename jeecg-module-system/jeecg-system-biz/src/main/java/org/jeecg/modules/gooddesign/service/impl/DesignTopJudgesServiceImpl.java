@@ -1,13 +1,16 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.mapper.DesignTopJudgesMapper;
+import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
 import org.springframework.beans.BeanUtils;
@@ -16,8 +19,8 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 好设计-发现100-设计师信息
@@ -29,11 +32,36 @@ import java.util.List;
 public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMapper, DesignTopJudges> implements IDesignTopJudgesService {
     @Autowired
     IDesignTopProductService designTopProductService;
+    @Autowired
+    IDesignTopJudgesParticipantsService designTopJudgesParticipantsService;
 
     @Override
     public List<DesignTopJudgesScoreVO> queryByTopJudgesId() {
+        List<DesignTopJudgesScoreVO> result = new ArrayList<>();
+        List<DesignTopParticipantsScoreVO> totalScore = designTopJudgesParticipantsService.getTotalScore();
+        if (!totalScore.isEmpty()) {
+            List<Integer> judgesIds = new ArrayList<>();
+            Map<Integer, Double> scoreMap = new HashMap<>(totalScore.size());
+            for (int i = 0; i < totalScore.size(); i++) {
+                DesignTopParticipantsScoreVO designTopParticipantsScoreVO = totalScore.get(i);
+                judgesIds.add(designTopParticipantsScoreVO.getJudgesId());
+                scoreMap.put(designTopParticipantsScoreVO.getJudgesId(), designTopParticipantsScoreVO.getTotalScore());
+            }
 
-        return null;
+            if (judgesIds.size() > 100) {
+                judgesIds.subList(0, 100);
+            }
+            QueryWrapper<DesignTopJudges> queryWrapper = new QueryWrapper();
+            queryWrapper.in("id", judgesIds);
+            List<DesignTopJudges> list = this.list(queryWrapper);
+            result = list.stream().map(designTopJudge -> {
+                DesignTopJudgesScoreVO scoreVO = new DesignTopJudgesScoreVO();
+                BeanUtils.copyProperties(designTopJudge, scoreVO);
+                scoreVO.setScore(scoreMap.get(designTopJudge.getId()));
+                return scoreVO;
+            }).collect(Collectors.toList());
+        }
+        return result;
     }
 
     @Override

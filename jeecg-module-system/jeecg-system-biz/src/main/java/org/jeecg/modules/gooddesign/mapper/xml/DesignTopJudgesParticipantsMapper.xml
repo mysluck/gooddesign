@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.gooddesign.mapper.DesignTopJudgesParticipantsMapper">
+    <select id="getScore" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO">
+        select p.participant_id as judges_id, sum(u.weight) as total_score
+        from design_top_judges_participants p
+                 left join sys_user u on p.judge_id = u.id
+        where p.score_status = 1
+        GROUP BY p.participant_id
+        ORDER BY total_score desc;
+    </select>
+</mapper>

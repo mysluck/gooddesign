@@ -9,9 +9,9 @@ import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.modules.gooddesign.entity.DesignJudgesParticipants;
+import org.jeecg.modules.gooddesign.entity.DesignTopJudgesParticipants;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
-import org.jeecg.modules.gooddesign.service.IDesignJudgesParticipantsService;
+import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,7 +24,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -35,13 +34,13 @@ import org.jeecg.common.aspect.annotation.AutoLog;
  * @Date: 2023-08-17
  * @Version: V1.0
  */
-@Api(tags = "好设计-评委打分")
+@Api(tags = "好设计-top100-评委打分")
 @RestController
 @RequestMapping("/designJudgesParticipants")
 @Slf4j
-public class DesignJudgesParticipantsController extends JeecgController<DesignJudgesParticipants, IDesignJudgesParticipantsService> {
+public class DesignTopJudgesParticipantsController extends JeecgController<DesignTopJudgesParticipants, IDesignTopJudgesParticipantsService> {
     @Autowired
-    private IDesignJudgesParticipantsService designJudgesParticipantsService;
+    private IDesignTopJudgesParticipantsService designJudgesParticipantsService;
 
     /**
      * 分页列表查询
@@ -55,13 +54,13 @@ public class DesignJudgesParticipantsController extends JeecgController<DesignJu
     //@AutoLog(value = "评委通过表，保存评委评分数据-分页列表查询")
     @ApiOperation(value = "评委打分-分页列表查询", notes = "评委打分-分页列表查询")
     @GetMapping(value = "/list")
-    public Result<IPage<DesignJudgesParticipants>> queryPageList(DesignJudgesParticipants designJudgesParticipants,
-                                                                 @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                                 @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                                 HttpServletRequest req) {
-        QueryWrapper<DesignJudgesParticipants> queryWrapper = QueryGenerator.initQueryWrapper(designJudgesParticipants, req.getParameterMap());
-        Page<DesignJudgesParticipants> page = new Page<DesignJudgesParticipants>(pageNo, pageSize);
-        IPage<DesignJudgesParticipants> pageList = designJudgesParticipantsService.page(page, queryWrapper);
+    public Result<IPage<DesignTopJudgesParticipants>> queryPageList(DesignTopJudgesParticipants designJudgesParticipants,
+                                                                    @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                                    HttpServletRequest req) {
+        QueryWrapper<DesignTopJudgesParticipants> queryWrapper = QueryGenerator.initQueryWrapper(designJudgesParticipants, req.getParameterMap());
+        Page<DesignTopJudgesParticipants> page = new Page<DesignTopJudgesParticipants>(pageNo, pageSize);
+        IPage<DesignTopJudgesParticipants> pageList = designJudgesParticipantsService.page(page, queryWrapper);
         return Result.OK(pageList);
     }
 
@@ -76,7 +75,7 @@ public class DesignJudgesParticipantsController extends JeecgController<DesignJu
     //@RequiresPermissions("gooddesign:design_judges_participants:add")
     @PostMapping(value = "/add")
     public Result<String> add(@RequestBody DesignJudgesParticipantsVO designJudgesParticipantsVO) {
-        DesignJudgesParticipants designJudgesParticipants = new DesignJudgesParticipants();
+        DesignTopJudgesParticipants designJudgesParticipants = new DesignTopJudgesParticipants();
         BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         designJudgesParticipants.setCreateBy(sysUser.getUsername());
@@ -98,7 +97,7 @@ public class DesignJudgesParticipantsController extends JeecgController<DesignJu
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignJudgesParticipantsVO designJudgesParticipantsVO) {
 
-        DesignJudgesParticipants designJudgesParticipants = new DesignJudgesParticipants();
+        DesignTopJudgesParticipants designJudgesParticipants = new DesignTopJudgesParticipants();
         BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         designJudgesParticipants.setUpdateBy(sysUser.getUsername());
@@ -148,7 +147,7 @@ public class DesignJudgesParticipantsController extends JeecgController<DesignJu
     @ApiOperation(value = "评委通过表，保存评委评分数据-通过id查询", notes = "评委通过表，保存评委评分数据-通过id查询")
     @GetMapping(value = "/queryById")
     public Result<DesignJudgesParticipantsVO> queryById(@RequestParam(name = "id", required = true) String id) {
-        DesignJudgesParticipants designJudgesParticipants = designJudgesParticipantsService.getById(id);
+        DesignTopJudgesParticipants designJudgesParticipants = designJudgesParticipantsService.getById(id);
         if (designJudgesParticipants == null) {
             return Result.error("未找到对应数据");
         }
@@ -165,8 +164,8 @@ public class DesignJudgesParticipantsController extends JeecgController<DesignJu
      */
     //@RequiresPermissions("gooddesign:design_judges_participants:exportXls")
     @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, DesignJudgesParticipants designJudgesParticipants) {
-        return super.exportXls(request, designJudgesParticipants, DesignJudgesParticipants.class, "评委通过表，保存评委评分数据");
+    public ModelAndView exportXls(HttpServletRequest request, DesignTopJudgesParticipants designJudgesParticipants) {
+        return super.exportXls(request, designJudgesParticipants, DesignTopJudgesParticipants.class, "评委通过表，保存评委评分数据");
     }
 
     /**
@@ -179,7 +178,7 @@ public class DesignJudgesParticipantsController extends JeecgController<DesignJu
     //@RequiresPermissions("gooddesign:design_judges_participants:importExcel")
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
-        return super.importExcel(request, response, DesignJudgesParticipants.class);
+        return super.importExcel(request, response, DesignTopJudgesParticipants.class);
     }
 
 }

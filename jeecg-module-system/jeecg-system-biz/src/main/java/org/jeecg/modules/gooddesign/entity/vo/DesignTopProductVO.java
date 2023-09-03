@@ -37,6 +37,9 @@ public class DesignTopProductVO implements Serializable {
     @ApiModelProperty(value = "项目名称")
     @NotNull
     private String productName;
+
+    @ApiModelProperty(value = "设计说明")
+    private String productDesc;
     /**
      * 发现100设计师id
      */

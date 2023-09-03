@@ -28,8 +28,8 @@ import lombok.experimental.Accessors;
 @TableName("design_judges_participants")
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="design_judges_participants对象", description="评委通过表，保存评委评分数据")
-public class DesignJudgesParticipants implements Serializable {
+@ApiModel(value="design_top_judges_participants对象", description="评委通过表，保存评委评分数据")
+public class DesignTopJudgesParticipants implements Serializable {
     private static final long serialVersionUID = 1L;
 
 	/**主键*/

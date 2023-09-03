@@ -18,7 +18,6 @@ import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +93,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     /**
      * 添加
      *
-     * @param designTopJudges
+     * @param
      * @return
      */
     @AutoLog(value = "好设计-发现100-设计师信息-添加")
@@ -196,15 +194,12 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     }
 
 
-
     @ApiOperation(value = "好设计-发现100-top100得分数据", notes = "好设计-发现100-top100得分数据")
     @GetMapping(value = "/queryTop100")
     public Result<List<DesignTopJudgesScoreVO>> queryTop100() {
         List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = designTopJudgesService.queryByTopJudgesId();
-
-        return Result.OK();
+        return Result.OK(designTopJudgesScoreVOS);
     }
-
 
 
 }
