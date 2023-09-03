@@ -5,10 +5,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
+import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.mapper.DesignTopJudgesMapper;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
@@ -66,19 +63,22 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
 
     @Override
     public void addDetail(DesignTopJudgesAllVO designTopJudgesAllVO) {
+        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
         DesignTopJudges bean = new DesignTopJudges();
-        BeanUtils.copyProperties(designTopJudgesAllVO, bean);
+        BeanUtils.copyProperties(designTopJudges, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         bean.setCreateBy(sysUser.getUsername());
         bean.setCreateTime(new Date());
         bean.setDesignNo(getDesignNo());
         this.save(bean);
 
-        DesignTopProductVO designTopProductVO = new DesignTopProductVO();
-        designTopProductVO.setProductName(designTopJudgesAllVO.getProductName());
-        designTopProductVO.setTopJudgesId(bean.getId());
-        designTopProductVO.setProductImgUrls(designTopJudgesAllVO.getProductImgUrls());
-        designTopProductService.saveProduct(designTopProductVO);
+        //设计师ID
+        Integer judgesId = bean.getId();
+        List<DesignTopProductVO> products = designTopJudgesAllVO.getProducts();
+        products.forEach(productvo -> {
+            productvo.setTopJudgesId(judgesId);
+            designTopProductService.saveProduct(productvo);
+        });
     }
 
 
