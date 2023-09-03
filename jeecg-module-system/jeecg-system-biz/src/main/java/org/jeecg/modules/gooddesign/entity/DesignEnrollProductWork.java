@@ -21,10 +21,10 @@ import java.io.Serializable;
  * @Version: V1.0
  */
 @Data
-@TableName("design_top_product_work")
+@TableName("design_enroll_product_work")
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="design_top_product_work对象", description="好设计-发现100-项目作品")
+@ApiModel(value="design_enroll_product_work对象", description="好设计-发现100-项目作品")
 public class DesignEnrollProductWork implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/designEnroll")
 @Slf4j
-public class DesignEnrollController extends JeecgController<DesignTopJudges, IDesignTopJudgesService> {
+public class DesignEnrollController extends JeecgController<DesignEnrollProduct, IDesignEnrollProductService> {
     @Autowired
     IDesignActivityService designActivityService;
     @Autowired
