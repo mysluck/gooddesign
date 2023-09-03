@@ -18,6 +18,7 @@ import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainMovieVO;
 import org.jeecg.modules.gooddesign.service.IDesignMainMovieService;
 import org.jeecg.modules.gooddesign.service.IDesignMainMovieService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -78,10 +79,7 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
 
 
         DesignMainMovie designMainMovie = new DesignMainMovie();
-        designMainMovie.setMainId(designMainMovieVO.getId());
-        designMainMovie.setMovieUrl(designMainMovieVO.getMovieUrl());
-        designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
-        designMainMovie.setRecommendedStatus(designMainMovieVO.getRecommendedStatus());
+        BeanUtils.copyProperties(designMainMovieVO,designMainMovie);
         designMainMovie.setCreateBy(sysUser.getUsername());
         designMainMovie.setCreateTime(new Date());
         designMainMovieService.save(designMainMovie);
@@ -96,10 +94,8 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
 
         List<DesignMainMovie> result = designMainMovieVOs.stream().map(designMainMovieVO -> {
             DesignMainMovie designMainMovie = new DesignMainMovie();
+            BeanUtils.copyProperties(designMainMovieVO,designMainMovie);
             designMainMovie.setMainId(designMainMovieVO.getMainId());
-            designMainMovie.setMovieUrl(designMainMovieVO.getMovieUrl());
-            designMainMovie.setImgUrl(designMainMovieVO.getImgCoverUrl());
-            designMainMovie.setRecommendedStatus(designMainMovieVO.getRecommendedStatus());
             designMainMovie.setCreateBy(sysUser.getUsername());
             designMainMovie.setCreateTime(new Date());
             return designMainMovie;
