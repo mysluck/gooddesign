@@ -16,6 +16,7 @@ import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
@@ -111,14 +112,15 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         return Result.OK("添加成功！");
     }
 
-    @AutoLog(value = "好设计-发现100-设计师信息-完整添加设计师基本信息和项目信息")
-    @ApiOperation(value = "好设计-发现100-设计师信息-完整添加设计师基本信息和项目信息", notes = "好设计-发现100-设计师信息-完整添加设计师基本信息和项目信息")
-    //@RequiresPermissions("gooddesign:design_top_judges:add")
+
+    @AutoLog(value = "好设计-发现100-完整添加")
+    @ApiOperation(value = "好设计-发现100-完整添加", notes = "好设计-发现100-设计师信息-完整添加设计师基本信息和项目信息")
     @PostMapping(value = "/addDetail")
-    public Result<String> addDetail(@RequestBody DesignTopJudgesAllVO designTopJudgesAllVO) {
+    public Result<String> addDetail(@RequestBody DesignTopJudgesDetailVO designTopJudgesAllVO) {
         designTopJudgesService.addDetail(designTopJudgesAllVO);
         return Result.OK("添加成功！");
     }
+
 
 
     private String getDesignNo() {

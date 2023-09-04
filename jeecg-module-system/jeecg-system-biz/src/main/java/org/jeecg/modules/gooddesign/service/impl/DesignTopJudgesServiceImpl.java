@@ -62,7 +62,7 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     }
 
     @Override
-    public void addDetail(DesignTopJudgesAllVO designTopJudgesAllVO) {
+    public void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {
         DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudges, bean);

@@ -3,6 +3,7 @@ package org.jeecg.modules.gooddesign.service;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
     List<DesignTopJudgesScoreVO> queryByTopJudgesId();
 
 
-    void addDetail(DesignTopJudgesAllVO designTopJudgesAllVO);
+    void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);
 }
