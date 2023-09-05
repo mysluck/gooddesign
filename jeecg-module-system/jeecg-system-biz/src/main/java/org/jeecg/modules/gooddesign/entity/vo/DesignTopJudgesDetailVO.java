@@ -19,9 +19,9 @@ import java.util.List;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "设计师完整对象", description = "设计师完整对象")
-public class DesignTopJudgesDetailVO implements Serializable {
-    @ApiModelProperty(value = "设计师信息")
-    private DesignTopJudgesVO designTopJudges;
+public class DesignTopJudgesDetailVO extends DesignTopJudgesVO implements Serializable {
+//    @ApiModelProperty(value = "设计师信息")
+//    private DesignTopJudgesVO designTopJudges;
 
     @ApiModelProperty(value = "作品集合")
     private List<DesignTopProductVO> products;

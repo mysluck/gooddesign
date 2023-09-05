@@ -63,9 +63,9 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
 
     @Override
     public void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {
-        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
+//        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
         DesignTopJudges bean = new DesignTopJudges();
-        BeanUtils.copyProperties(designTopJudges, bean);
+        BeanUtils.copyProperties(designTopJudgesAllVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         bean.setCreateBy(sysUser.getUsername());
         bean.setCreateTime(new Date());
