@@ -11,9 +11,7 @@ import org.jeecg.modules.gooddesign.entity.vo.DesignExtraDictVO;
 import org.jeecg.modules.gooddesign.service.IDesignExtraDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -87,5 +85,22 @@ public class DesignEditController extends JeecgController<DesignExtraDict, IDesi
         return Result.OK(result);
     }
 
+	@ApiOperation(value="壮游字典（年份、城市）-编辑", notes="壮游字典（年份、城市）-编辑")
+	//@RequiresPermissions("gooddesign:design_extra_dict:edit")
+	@RequestMapping(value = "/edit", method = {RequestMethod.POST})
+	public Result<String> edit(@RequestBody DesignExtraDict designExtraDict) {
+		designExtraDictService.updateById(designExtraDict);
+		return Result.OK("编辑成功!");
+	}
 
+    //	//@AutoLog(value = "壮游字典（年份、城市）-通过id查询")
+	@ApiOperation(value="壮游字典（年份、城市）-通过id查询", notes="壮游字典（年份、城市）-通过id查询")
+	@GetMapping(value = "/queryById")
+	public Result<DesignExtraDict> queryById(@RequestParam(name="id",required=true) String id) {
+		DesignExtraDict designExtraDict = designExtraDictService.getById(id);
+		if(designExtraDict==null) {
+			return Result.error("未找到对应数据");
+		}
+		return Result.OK(designExtraDict);
+	}
 }
