@@ -2,8 +2,6 @@ package org.jeecg.modules.gooddesign.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
-import org.jeecg.modules.gooddesign.entity.DesignTopProduct;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 
 import java.util.List;

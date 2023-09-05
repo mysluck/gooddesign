@@ -76,20 +76,18 @@ public class DesignTopProductController extends JeecgController<DesignTopProduct
         return Result.OK("添加成功！");
     }
 
-    @AutoLog(value = "好设计-发现100-项目信息-添加")
-    @ApiOperation(value = "好设计-发现100-项目信息-添加", notes = "好设计-发现100-项目信息-添加")
+
+
+
+    @AutoLog(value = "好设计-发现100-项目信息-批量添加")
+    @ApiOperation(value = "好设计-发现100-项目信息-批量添加", notes = "好设计-发现100-项目信息-批量添加")
     //@RequiresPermissions("gooddesign:design_top_product:add")
     @PostMapping(value = "/batchAdd")
     public Result<String> batchAdd(@RequestBody @Valid List<DesignTopProductVO> designTopProductVOs) {
-        designTopProductVOs.forEach(vo->{
-            designTopProductService.saveProduct(vo);
-        });
+        designTopProductVOs.forEach(vo-> designTopProductService.saveProduct(vo));
+
         return Result.OK("添加成功！");
     }
-
-
-
-
 
     /**
      * 编辑

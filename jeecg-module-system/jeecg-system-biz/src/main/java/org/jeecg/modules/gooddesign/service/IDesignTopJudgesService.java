@@ -1,5 +1,6 @@
 package org.jeecg.modules.gooddesign.service;
 
+import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
@@ -25,4 +26,6 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
 
 
     void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);
+
+    List<DesignActivity> queryActivityList();
 }

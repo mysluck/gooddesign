@@ -123,6 +123,8 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
 
 
 
+
+
     private String getDesignNo() {
         return "FX" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss");
     }
@@ -202,6 +204,16 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = designTopJudgesService.queryByTopJudgesId();
         return Result.OK(designTopJudgesScoreVOS);
     }
+
+
+    @ApiOperation(value = "好设计-发现100-活动展示", notes = "好设计-发现100-活动展示")
+    @GetMapping(value = "/queryActivityList")
+    public Result<List<DesignActivity>> queryActivityList() {
+      List<DesignActivity> activities=designTopJudgesService.queryActivityList();
+        return Result.OK(activities);
+    }
+
+
 
 
 }

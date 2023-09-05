@@ -96,8 +96,17 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     //@RequiresPermissions("gooddesign:design_activity:edit")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignActivityVO designActivityVO) {
+
+
         DesignActivity bean = new DesignActivity();
         BeanUtils.copyProperties(designActivityVO, bean);
+
+        if ( 1 == designActivityVO.getActivityStatus()){
+            if (designActivityService.checkActivityStatus()) {
+                return Result.OK("存在正在进行中的活动，请处理！");
+            }
+            bean.setPublishTime(new Date());
+        }
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         bean.setUpdateBy(sysUser.getUsername());
         bean.setUpdateTime(new Date());
@@ -156,12 +165,12 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     @ApiOperation(value = "合作伙伴-序号检查", notes = "合作伙伴-序号检查，判断编码是否存在，存在，返回true")
     @PostMapping(value = "/checkActivityStatus")
     public Result checkActivityStatus() {
-
         if (designActivityService.checkActivityStatus()) {
             return Result.OK("存在正在进行中的活动，请确认！", true);
         }
         return Result.OK("当前无进行中活动，可以修改！", false);
     }
+
 
 
 }

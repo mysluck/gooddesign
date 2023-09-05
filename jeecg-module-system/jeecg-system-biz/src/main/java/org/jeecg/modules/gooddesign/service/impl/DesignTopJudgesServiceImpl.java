@@ -1,12 +1,16 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.*;
+import org.jeecg.modules.gooddesign.mapper.DesignActivityMapper;
 import org.jeecg.modules.gooddesign.mapper.DesignTopJudgesMapper;
+import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
@@ -29,6 +33,10 @@ import java.util.stream.Collectors;
 public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMapper, DesignTopJudges> implements IDesignTopJudgesService {
     @Autowired
     IDesignTopProductService designTopProductService;
+    @Autowired
+    IDesignActivityService designActivityService;
+    @Autowired
+    DesignActivityMapper designActivityMapper;
     @Autowired
     IDesignTopJudgesParticipantsService designTopJudgesParticipantsService;
 
@@ -63,6 +71,11 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
 
     @Override
     public void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {
+
+        DesignActivity activity = designActivityService.getActivity();
+        if (activity == null)
+            throw new BusinessException("当前不存在开启活动，请开起活动！");
+
 //        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesAllVO, bean);
@@ -70,6 +83,8 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
         bean.setCreateBy(sysUser.getUsername());
         bean.setCreateTime(new Date());
         bean.setDesignNo(getDesignNo());
+        bean.setActivityId(activity.getId());
+        bean.setActivityName(activity.getActivityName());
         this.save(bean);
 
         //设计师ID
@@ -81,9 +96,16 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
         });
     }
 
+    @Override
+    public List<DesignActivity> queryActivityList() {
+        return designActivityMapper.queryActivityList();
+    }
+
 
     private String getDesignNo() {
         return "FX" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss");
     }
+
+
 
 }

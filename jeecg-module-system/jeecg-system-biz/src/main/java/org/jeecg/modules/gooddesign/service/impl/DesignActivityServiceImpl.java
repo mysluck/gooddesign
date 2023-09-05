@@ -28,4 +28,15 @@ public class DesignActivityServiceImpl extends ServiceImpl<DesignActivityMapper,
         return true;
     }
 
+    @Override
+    public DesignActivity getActivity() {
+        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("activity_status", 1);
+        List<DesignActivity> list = this.list(queryWrapper);
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
 }

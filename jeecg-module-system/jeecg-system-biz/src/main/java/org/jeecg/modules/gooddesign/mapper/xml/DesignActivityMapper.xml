@@ -2,4 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.gooddesign.mapper.DesignActivityMapper">
 
+
+<!--    <select id="queryActivityList" resultType="org.jeecg.modules.gooddesign.entity.DesignActivity">-->
+
+<!--        select a.id, a.activity_name, LEFT (a.publish_time, 4) as publish_time, a.activity_status-->
+<!--        from design_activity a-->
+<!--        where id in (-->
+<!--            SELECT distinct (activity_id) from design_top_judges )-->
+<!--        order by publish_time desc-->
+<!--    </select>-->
+
 </mapper>

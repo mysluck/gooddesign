@@ -12,8 +12,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IDesignActivityService extends IService<DesignActivity> {
 
     /**
-     *
      * @return 进行中 返回true
      */
     boolean checkActivityStatus();
+
+    DesignActivity getActivity();
+
 }

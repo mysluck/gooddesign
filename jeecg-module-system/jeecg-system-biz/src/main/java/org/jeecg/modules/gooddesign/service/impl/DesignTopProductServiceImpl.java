@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jeecg.weibo.exception.BusinessException;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopProductWork;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.mapper.DesignTopProductMapper;
 import org.jeecg.modules.gooddesign.mapper.DesignTopProductWorkMapper;
+import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductWorkService;
 import org.springframework.beans.BeanUtils;
@@ -32,10 +34,13 @@ import java.util.stream.Collectors;
 public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMapper, DesignTopProduct> implements IDesignTopProductService {
 
     @Autowired
+    IDesignActivityService designActivityService;
+    @Autowired
     IDesignTopProductWorkService designTopProductWorkService;
 
     @Override
     public void saveProduct(DesignTopProductVO designTopProductVO) {
+
         DesignTopProduct bean = new DesignTopProduct();
         BeanUtils.copyProperties(designTopProductVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
