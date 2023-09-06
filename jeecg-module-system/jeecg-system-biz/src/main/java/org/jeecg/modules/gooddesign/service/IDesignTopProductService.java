@@ -13,7 +13,7 @@ import java.util.List;
  * @Version: V1.0
  */
 public interface IDesignTopProductService extends IService<DesignTopProduct> {
-    void saveProduct( DesignTopProductVO designTopProductVO);
+    void saveProduct(DesignTopProductVO designTopProductVO);
 
     void editProduct(DesignTopProductVO designTopProductVO);
 

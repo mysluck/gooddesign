@@ -27,5 +27,9 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
 
     void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);
 
+    void editDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);
+
     List<DesignActivity> queryActivityList();
+
+    DesignTopJudgesDetailVO queryDetailById(Integer id);
 }

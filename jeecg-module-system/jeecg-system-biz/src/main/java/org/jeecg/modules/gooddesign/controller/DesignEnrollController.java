@@ -8,6 +8,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollProductService;
@@ -41,5 +42,14 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         return Result.OK("添加成功！");
     }
 
+
+
+    @AutoLog(value = "好设计-报名-添加设计师信息和作品信息")
+    @ApiOperation(value = "好设计-报名-添加设计师信息和作品信息", notes = "好设计-报名-添加设计师信息和作品信息")
+    @PostMapping(value = "/addDetail")
+    public Result<String> addDetail(@RequestBody DesignTopJudgesDetailVO designTopJudgesAllVO) {
+        designEnrollProductService.addDetail(designTopJudgesAllVO);
+        return Result.OK("添加成功！");
+    }
 
 }

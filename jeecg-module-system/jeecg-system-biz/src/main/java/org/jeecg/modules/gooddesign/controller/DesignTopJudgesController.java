@@ -122,7 +122,13 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     }
 
 
-
+    @AutoLog(value = "好设计-发现100-完整编辑")
+    @ApiOperation(value = "好设计-发现100-完整编辑", notes = "好设计-发现100-完整编辑")
+    @PostMapping(value = "/editDetail")
+    public Result<String> editDetail(@RequestBody DesignTopJudgesDetailVO designTopJudgesAllVO) {
+        designTopJudgesService.editDetail(designTopJudgesAllVO);
+        return Result.OK("添加成功！");
+    }
 
 
     private String getDesignNo() {
@@ -197,6 +203,18 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         return Result.OK(designTopJudges);
     }
 
+    @ApiOperation(value = "好设计-发现100-设计师信息-通过id查询详细信息", notes = "好设计-发现100-设计师信息-通过id查询详细信息")
+    @GetMapping(value = "/queryDetailById")
+    public Result<DesignTopJudgesDetailVO> queryDetailById(@RequestParam(name = "id", required = true) Integer id) {
+        DesignTopJudgesDetailVO designTopJudges = designTopJudgesService.queryDetailById(id);
+//        DesignTopJudges designTopJudges = designTopJudgesService.getById(id);
+
+        if (designTopJudges == null) {
+            return Result.error("未找到对应数据");
+        }
+        return Result.OK(designTopJudges);
+    }
+
 
     @ApiOperation(value = "好设计-发现100-top100得分数据", notes = "好设计-发现100-top100得分数据")
     @GetMapping(value = "/queryTop100")
@@ -209,11 +227,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @ApiOperation(value = "好设计-发现100-活动展示", notes = "好设计-发现100-活动展示")
     @GetMapping(value = "/queryActivityList")
     public Result<List<DesignActivity>> queryActivityList() {
-      List<DesignActivity> activities=designTopJudgesService.queryActivityList();
+        List<DesignActivity> activities = designTopJudgesService.queryActivityList();
         return Result.OK(activities);
     }
-
-
 
 
 }

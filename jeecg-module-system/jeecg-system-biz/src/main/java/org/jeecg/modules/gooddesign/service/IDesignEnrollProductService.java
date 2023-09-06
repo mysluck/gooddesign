@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public interface IDesignEnrollProductService extends IService<DesignEnrollProduc
 
     List<DesignTopProductVO> queryByTopJudgesId(Integer id);
 
+    void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);
 }

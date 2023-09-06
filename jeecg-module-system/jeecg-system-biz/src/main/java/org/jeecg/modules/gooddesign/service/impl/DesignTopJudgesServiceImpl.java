@@ -16,6 +16,7 @@ import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -97,15 +98,54 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     }
 
     @Override
+    public void editDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {
+
+        DesignActivity activity = designActivityService.getActivity();
+        if (activity == null)
+            throw new BusinessException("当前不存在开启活动，请开起活动！");
+
+//        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
+        DesignTopJudges bean = new DesignTopJudges();
+        BeanUtils.copyProperties(designTopJudgesAllVO, bean);
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        bean.setUpdateBy(sysUser.getUsername());
+        bean.setUpdateTime(new Date());
+        this.updateById(bean);
+
+        //设计师ID
+        Integer judgesId = bean.getId();
+        List<DesignTopProductVO> products = designTopJudgesAllVO.getProducts();
+        products.forEach(productvo -> {
+            productvo.setTopJudgesId(judgesId);
+            designTopProductService.editProduct(productvo);
+        });
+    }
+
+    @Override
     public List<DesignActivity> queryActivityList() {
         return designActivityMapper.queryActivityList();
+    }
+
+    @Override
+    public DesignTopJudgesDetailVO queryDetailById(Integer id) {
+        DesignTopJudgesDetailVO result = new DesignTopJudgesDetailVO();
+
+        DesignTopJudges designTopJudges = this.getById(id);
+        if (designTopJudges == null || designTopJudges.getId() == null) {
+            return result;
+        }
+        BeanUtils.copyProperties(designTopJudges, result);
+
+        List<DesignTopProductVO> designTopProductVOS = designTopProductService.queryByTopJudgesId(id);
+        result.setProducts(designTopProductVOS);
+
+        return result;
     }
 
 
     private String getDesignNo() {
         return "FX" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss");
     }
-
 
 
 }
