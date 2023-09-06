@@ -16,6 +16,8 @@ import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * @Description: 好设计-报名
@@ -43,7 +45,6 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     }
 
 
-
     @AutoLog(value = "好设计-报名-添加设计师信息和作品信息")
     @ApiOperation(value = "好设计-报名-添加设计师信息和作品信息", notes = "好设计-报名-添加设计师信息和作品信息")
     @PostMapping(value = "/addDetail")
@@ -51,5 +52,18 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         designEnrollProductService.addDetail(designTopJudgesAllVO);
         return Result.OK("添加成功！");
     }
+
+
+    @ApiOperation(value = "好设计-报名-根据设计师ID查询", notes = "好设计-报名-根据设计师ID查询")
+    @GetMapping(value = "/queryDetailByJudgesId")
+    public Result<List<DesignTopProductVO>> queryDetailByJudgesId(@RequestParam(name = "id", required = true) Integer id) {
+
+        List<DesignTopProductVO> designTopProduct = designEnrollProductService.queryDetailByJudgesId(id);
+        if (designTopProduct == null || designTopProduct.isEmpty()) {
+            return Result.error("未找到对应数据");
+        }
+        return Result.OK(designTopProduct);
+    }
+
 
 }

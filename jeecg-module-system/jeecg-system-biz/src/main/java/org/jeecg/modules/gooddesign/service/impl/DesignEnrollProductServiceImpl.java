@@ -118,6 +118,36 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
         return resultVO;
     }
 
+
+    @Override
+    public List<DesignTopProductVO> queryDetailByJudgesId(Integer id) {
+        List<DesignTopProductVO> result = new ArrayList<>();
+        DesignEnrollProduct product = this.getById(id);
+        DesignTopProductVO resultVO = new DesignTopProductVO();
+        BeanUtils.copyProperties(product, resultVO);
+
+        QueryWrapper<DesignEnrollProduct> productQueryWrapper = new QueryWrapper();
+        productQueryWrapper.eq("top_judges_id", id);
+
+        List<DesignEnrollProduct> products = this.list(productQueryWrapper);
+        if (products == null || products.isEmpty()) {
+            return result;
+        }
+        result = products.stream().map(pro -> {
+            DesignTopProductVO designTopProductVO = new DesignTopProductVO();
+            BeanUtils.copyProperties(pro, designTopProductVO);
+
+            QueryWrapper<DesignEnrollProductWork> queryWrapper = new QueryWrapper();
+            queryWrapper.eq("top_judges_id", id);
+            List<DesignEnrollProductWork> list = designEnrollProductWorkService.list(queryWrapper);
+            designTopProductVO.setProductImgUrls(list.stream().map(DesignEnrollProductWork::getWorkUrl).collect(Collectors.toList()));
+
+            return designTopProductVO;
+        }).collect(Collectors.toList());
+
+        return result;
+    }
+
     @Override
     public List<DesignTopProductVO> queryByTopJudgesId(Integer topJudgesId) {
         QueryWrapper<DesignEnrollProduct> queryWrapper = new QueryWrapper<>();
