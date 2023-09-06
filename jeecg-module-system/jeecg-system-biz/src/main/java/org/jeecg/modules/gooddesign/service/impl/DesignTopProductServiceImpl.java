@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jeecg.weibo.exception.BusinessException;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopProductWork;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.mapper.DesignTopProductMapper;
-import org.jeecg.modules.gooddesign.mapper.DesignTopProductWorkMapper;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductWorkService;
@@ -44,7 +42,9 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
         DesignTopProduct bean = new DesignTopProduct();
         BeanUtils.copyProperties(designTopProductVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setCreateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            bean.setCreateBy(sysUser.getUsername());
+        }
         bean.setCreateTime(new Date());
         this.save(bean);
 
@@ -75,7 +75,9 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
         DesignTopProduct bean = new DesignTopProduct();
         BeanUtils.copyProperties(designTopProductVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setUpdateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            bean.setUpdateBy(sysUser.getUsername());
+        }
         bean.setUpdateTime(new Date());
         this.updateById(bean);
 

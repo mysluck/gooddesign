@@ -75,7 +75,9 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
         DesignNews designNews = new DesignNews();
         BeanUtils.copyProperties(designNewsVO, designNews);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designNews.setCreateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designNews.setCreateBy(sysUser.getUsername());
+        }
         designNews.setCreateTime(new Date());
         designNewsService.save(designNews);
         return Result.OK("添加成功！");
@@ -94,7 +96,9 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
         DesignNews designNews = new DesignNews();
         BeanUtils.copyProperties(designNewsVO, designNews);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designNews.setUpdateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designNews.setUpdateBy(sysUser.getUsername());
+        }
         designNews.setUpdateTime(new Date());
         designNewsService.updateById(designNews);
         return Result.OK("编辑成功!");

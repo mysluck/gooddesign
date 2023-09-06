@@ -141,7 +141,9 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
         DesignMain designContent = new DesignMain();
         BeanUtils.copyProperties(designMainBasicVO, designContent);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designContent.setCreateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designContent.setCreateBy(sysUser.getUsername());
+        }
         designContent.setCreateTime(new Date());
         designMainService.save(designContent);
         return Result.OK(designContent);

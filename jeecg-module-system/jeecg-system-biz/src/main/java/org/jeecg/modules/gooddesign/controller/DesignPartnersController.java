@@ -75,7 +75,10 @@ public class DesignPartnersController extends JeecgController<DesignPartners, ID
         DesignPartners bean = new DesignPartners();
         BeanUtils.copyProperties(designPartnersVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setCreateBy(sysUser.getUsername());
+        if (sysUser != null) {
+
+            bean.setCreateBy(sysUser.getUsername());
+        }
         bean.setCreateTime(new Date());
 
         designPartnersService.save(bean);

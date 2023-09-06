@@ -105,7 +105,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setCreateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            bean.setCreateBy(sysUser.getUsername());
+        }
         bean.setCreateTime(new Date());
         bean.setDesignNo(getDesignNo());
         designTopJudgesService.save(bean);
@@ -149,7 +151,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setUpdateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            bean.setUpdateBy(sysUser.getUsername());
+        }
         bean.setUpdateTime(new Date());
 
         designTopJudgesService.updateById(bean);

@@ -82,8 +82,10 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
         DesignJudges userDesigner = new DesignJudges();
         BeanUtils.copyProperties(userDesignerDTO, userDesigner);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        userDesigner.setCreateBy(sysUser.getUsername());
-        userDesigner.setCreateTime(new Date());
+        if (sysUser != null) {
+            userDesigner.setCreateBy(sysUser.getUsername());
+            userDesigner.setCreateTime(new Date());
+        }
         userDesignerService.save(userDesigner);
         return Result.OK("添加成功！");
     }
@@ -110,8 +112,11 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
         if (null == userDesigner.getId()) {
             return Result.error(500, "请传入ID!");
         }
-        userDesigner.setUpdateBy(sysUser.getUsername());
-        userDesigner.setUpdateTime(new Date());
+        if (sysUser != null) {
+            userDesigner.setUpdateBy(sysUser.getUsername());
+            userDesigner.setUpdateTime(new Date());
+        }
+
         userDesignerService.updateById(userDesigner);
         return Result.OK("编辑成功!");
     }

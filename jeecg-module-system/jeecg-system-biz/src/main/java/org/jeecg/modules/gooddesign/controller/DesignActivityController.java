@@ -71,7 +71,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     @PostMapping(value = "/add")
     public Result<String> add(@RequestBody DesignActivityVO designActivityVO) {
         DesignActivity bean = new DesignActivity();
-        if ( 1 == designActivityVO.getActivityStatus()){
+        if (1 == designActivityVO.getActivityStatus()) {
             if (designActivityService.checkActivityStatus()) {
                 return Result.OK("存在正在进行中的活动，请处理！");
             }
@@ -79,7 +79,9 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
         }
         BeanUtils.copyProperties(designActivityVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setCreateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            bean.setCreateBy(sysUser.getUsername());
+        }
         bean.setCreateTime(new Date());
         designActivityService.save(bean);
         return Result.OK("添加成功！");
@@ -101,7 +103,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
         DesignActivity bean = new DesignActivity();
         BeanUtils.copyProperties(designActivityVO, bean);
 
-        if ( 1 == designActivityVO.getActivityStatus()){
+        if (1 == designActivityVO.getActivityStatus()) {
             if (designActivityService.checkActivityStatus()) {
                 return Result.OK("存在正在进行中的活动，请处理！");
             }
@@ -170,7 +172,6 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
         }
         return Result.OK("当前无进行中活动，可以修改！", false);
     }
-
 
 
 }

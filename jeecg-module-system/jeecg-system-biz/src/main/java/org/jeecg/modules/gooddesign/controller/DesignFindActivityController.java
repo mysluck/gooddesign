@@ -94,7 +94,9 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
         DesignFindActivity designFindActivity = new DesignFindActivity();
         BeanUtils.copyProperties(designFindActivityVO, designFindActivity);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designFindActivity.setCreateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designFindActivity.setCreateBy(sysUser.getUsername());
+        }
         designFindActivity.setCreateTime(new Date());
         designFindActivityService.updateById(designFindActivity);
         return Result.OK("添加成功！");
@@ -114,7 +116,9 @@ public class DesignFindActivityController extends JeecgController<DesignFindActi
         DesignFindActivity designFindActivity = new DesignFindActivity();
         BeanUtils.copyProperties(designFindActivityVO, designFindActivity);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designFindActivity.setUpdateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designFindActivity.setUpdateBy(sysUser.getUsername());
+        }
         designFindActivity.setUpdateTime(new Date());
         designFindActivityService.updateById(designFindActivity);
         return Result.OK("编辑成功!");

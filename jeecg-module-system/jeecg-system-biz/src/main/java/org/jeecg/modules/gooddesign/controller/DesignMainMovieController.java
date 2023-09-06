@@ -79,8 +79,10 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
 
 
         DesignMainMovie designMainMovie = new DesignMainMovie();
-        BeanUtils.copyProperties(designMainMovieVO,designMainMovie);
-        designMainMovie.setCreateBy(sysUser.getUsername());
+        BeanUtils.copyProperties(designMainMovieVO, designMainMovie);
+        if (sysUser != null) {
+            designMainMovie.setCreateBy(sysUser.getUsername());
+        }
         designMainMovie.setCreateTime(new Date());
         designMainMovieService.save(designMainMovie);
         return Result.OK("添加成功！");
@@ -94,9 +96,11 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
 
         List<DesignMainMovie> result = designMainMovieVOs.stream().map(designMainMovieVO -> {
             DesignMainMovie designMainMovie = new DesignMainMovie();
-            BeanUtils.copyProperties(designMainMovieVO,designMainMovie);
+            BeanUtils.copyProperties(designMainMovieVO, designMainMovie);
             designMainMovie.setMainId(designMainMovieVO.getMainId());
-            designMainMovie.setCreateBy(sysUser.getUsername());
+            if (sysUser != null) {
+                designMainMovie.setCreateBy(sysUser.getUsername());
+            }
             designMainMovie.setCreateTime(new Date());
             return designMainMovie;
         }).collect(Collectors.toList());
@@ -117,7 +121,9 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignMainMovie designMainMovie) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designMainMovie.setUpdateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designMainMovie.setUpdateBy(sysUser.getUsername());
+        }
         designMainMovie.setUpdateTime(new Date());
         designMainMovieService.updateById(designMainMovie);
         return Result.OK("编辑成功!");

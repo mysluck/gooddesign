@@ -77,7 +77,9 @@ public class DesignContentController extends JeecgController<DesignContent, IDes
         DesignContent designContent = new DesignContent();
         BeanUtils.copyProperties(designContentVO, designContent);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designContent.setCreateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            designContent.setCreateBy(sysUser.getUsername());
+        }
         designContent.setCreateTime(new Date());
         designContent.setId(null);
         designContentService.save(designContent);
@@ -98,7 +100,9 @@ public class DesignContentController extends JeecgController<DesignContent, IDes
         DesignContent designContent = new DesignContent();
         BeanUtils.copyProperties(designContentVO, designContent);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designContent.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            designContent.setUpdateBy(sysUser.getUsername());
+        }
         designContent.setUpdateTime(new Date());
         designContentService.updateById(designContent);
         return Result.OK("编辑成功!");

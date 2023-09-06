@@ -78,7 +78,9 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         DesignTopJudgesParticipants designJudgesParticipants = new DesignTopJudgesParticipants();
         BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designJudgesParticipants.setCreateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designJudgesParticipants.setCreateBy(sysUser.getUsername());
+        }
         designJudgesParticipants.setCreateTime(new Date());
 
         designJudgesParticipantsService.save(designJudgesParticipants);
@@ -100,7 +102,9 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         DesignTopJudgesParticipants designJudgesParticipants = new DesignTopJudgesParticipants();
         BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designJudgesParticipants.setUpdateBy(sysUser.getUsername());
+        if(sysUser!=null) {
+            designJudgesParticipants.setUpdateBy(sysUser.getUsername());
+        }
         designJudgesParticipants.setUpdateTime(new Date());
 
         designJudgesParticipantsService.updateById(designJudgesParticipants);
