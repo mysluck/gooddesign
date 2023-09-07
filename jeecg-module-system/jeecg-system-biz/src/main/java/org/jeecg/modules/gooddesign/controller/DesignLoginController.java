@@ -22,6 +22,8 @@ import org.jeecg.common.util.*;
 import org.jeecg.common.util.encryption.EncryptedString;
 import org.jeecg.config.JeecgBaseConfig;
 import org.jeecg.modules.base.service.BaseCommonService;
+import org.jeecg.modules.gooddesign.entity.vo.WxAccessTokenVO;
+import org.jeecg.modules.gooddesign.service.WeChatAuthService;
 import org.jeecg.modules.system.entity.SysDepart;
 import org.jeecg.modules.system.entity.SysRoleIndex;
 import org.jeecg.modules.system.entity.SysUser;
@@ -66,6 +68,8 @@ public class DesignLoginController {
     @Resource
     private BaseCommonService baseCommonService;
 
+    @Autowired
+    WeChatAuthService weChatAuthService;
     @Autowired
     private JeecgBaseConfig jeecgBaseConfig;
 
@@ -144,6 +148,7 @@ public class DesignLoginController {
         //update-end--Author:wangshuai  Date:20200714  for：登录日志没有记录人员
         return result;
     }
+
     /**
      * 用户信息
      *
@@ -165,7 +170,7 @@ public class DesignLoginController {
         obj.put("token", token);
 
         //2.设置登录租户
-        Result<JSONObject> loginTenantError = sysUserService.setLoginTenant(sysUser, obj, username,result);
+        Result<JSONObject> loginTenantError = sysUserService.setLoginTenant(sysUser, obj, username, result);
         if (loginTenantError != null) {
             return loginTenantError;
         }
@@ -179,14 +184,14 @@ public class DesignLoginController {
         if (departs == null || departs.size() == 0) {
             obj.put("multi_depart", 0);
         } else if (departs.size() == 1) {
-            sysUserService.updateUserDepart(username, departs.get(0).getOrgCode(),null);
+            sysUserService.updateUserDepart(username, departs.get(0).getOrgCode(), null);
             obj.put("multi_depart", 1);
         } else {
             //查询当前是否有登录部门
             // update-begin--Author:wangshuai Date:20200805 for：如果用戶为选择部门，数据库为存在上一次登录部门，则取一条存进去
             SysUser sysUserById = sysUserService.getById(sysUser.getId());
-            if(oConvertUtils.isEmpty(sysUserById.getOrgCode())){
-                sysUserService.updateUserDepart(username, departs.get(0).getOrgCode(),null);
+            if (oConvertUtils.isEmpty(sysUserById.getOrgCode())) {
+                sysUserService.updateUserDepart(username, departs.get(0).getOrgCode(), null);
             }
             // update-end--Author:wangshuai Date:20200805 for：如果用戶为选择部门，数据库为存在上一次登录部门，则取一条存进去
             obj.put("multi_depart", 2);
@@ -196,7 +201,6 @@ public class DesignLoginController {
         result.success("登录成功");
         return result;
     }
-
 
 
     /**
@@ -234,7 +238,6 @@ public class DesignLoginController {
             return Result.error("Token无效!");
         }
     }
-
 
 
     @ApiOperation("获取验证码")
@@ -315,40 +318,72 @@ public class DesignLoginController {
             //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
             addLoginFailOvertimes(phone);
             //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
-            return Result.error(0,"手机验证码错误");
+            return Result.error(0, "手机验证码错误");
         }
 
         //添加日志
         baseCommonService.addLog("用户名: " + phone + ",手机号登录成功！", CommonConstant.LOG_TYPE_1, null);
 
-        return Result.OK();
+        return Result.OK(phone);
     }
+
+    @ApiOperation(value = "微信登录接口", notes = "返回openID（用户唯一标志）")
+    @GetMapping("/wechatLogin")
+    public Result<JSONObject> wechatLogin(@RequestParam @ApiParam("微信跳转后code码") String code) {
+        Result<JSONObject> result = new Result<JSONObject>();
+        //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+
+        //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+        WxAccessTokenVO wxAccessTokenVO = weChatAuthService.assess_token(code);
+        String openid = wxAccessTokenVO.getOpenid();
+
+//        //update-begin-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
+//        String redisKey = CommonConstant.PHONE_REDIS_KEY_PRE + phone;
+//        Object code = redisUtil.get(redisKey);
+//        //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
+//
+//        if (!captcha.equals(code)) {
+//            //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+//            addLoginFailOvertimes(phone);
+//            //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+//            return Result.error(0, "手机验证码错误");
+//        }
+
+        //添加日志
+        baseCommonService.addLog("微信用户: " + openid + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
+
+        return Result.OK(openid);
+    }
+
 
     /**
      * 登录失败超出次数5 返回true
+     *
      * @param username
      * @return
      */
-    private boolean isLoginFailOvertimes(String username){
+    private boolean isLoginFailOvertimes(String username) {
         String key = CommonConstant.LOGIN_FAIL + username;
         Object failTime = redisUtil.get(key);
-        if(failTime!=null){
+        if (failTime != null) {
             Integer val = Integer.parseInt(failTime.toString());
-            if(val>5){
+            if (val > 5) {
                 return true;
             }
         }
         return false;
     }
+
     /**
      * 记录登录失败次数
+     *
      * @param username
      */
-    private void addLoginFailOvertimes(String username){
+    private void addLoginFailOvertimes(String username) {
         String key = CommonConstant.LOGIN_FAIL + username;
         Object failTime = redisUtil.get(key);
         Integer val = 0;
-        if(failTime!=null){
+        if (failTime != null) {
             val = Integer.parseInt(failTime.toString());
         }
         // 1小时

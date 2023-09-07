@@ -142,4 +142,8 @@ public class DesignTopJudges implements Serializable {
     private String designNo;
 
 
+    @ApiModelProperty(value = "loginId")
+    private String loginId;
+
+
 }

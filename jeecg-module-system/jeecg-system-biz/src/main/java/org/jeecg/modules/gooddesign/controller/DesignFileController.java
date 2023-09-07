@@ -4,10 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.common.api.vo.Result;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -42,7 +39,7 @@ public class DesignFileController {
      */
     @PostMapping(value = "/checkImageScale")
     @ApiOperation("好设计-文件处理-图片校验16：9")
-        public Result<?> checkImageScale(HttpServletRequest request, HttpServletResponse response, @RequestParam("file")MultipartFile file) throws Exception {
+    public Result<?> checkImageScale(HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) throws Exception {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         // 获取上传文件对象
         File fileTemp = MultipartFile2File(file);
@@ -113,5 +110,12 @@ public class DesignFileController {
             System.out.println("删除失败");
         }
     }
+
+    @GetMapping("getToken")
+    public Result getToken(@RequestParam("code") String code) {
+
+        return null;
+    }
+
 
 }

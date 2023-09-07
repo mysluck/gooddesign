@@ -19,11 +19,11 @@ public enum DySmsEnum {
 	/**我的计划通知*/
 	PLAN_NOTICE_TEMPLATE_CODE("SMS_201470515","JEECG","username,title,time"),
     //测试
-	DESIGN_DEMO("SMS_462720345","好设计","code"),
+//	DESIGN_DEMO("SMS_462720345","好设计","code"),
     //登录
-    DESIGN_LOGIN("SMS_462680393","好设计","code"),
+    DESIGN_LOGIN("SMS_463135807","发现中国好设计","code"),
     //注册
-    DESIGN_REGISTER("SMS_462720345","好设计","code"),
+//    DESIGN_REGISTER("SMS_462720345","好设计","code"),
 
     ;
 
