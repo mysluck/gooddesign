@@ -328,10 +328,11 @@ public class DesignLoginController {
         if (byLoginId != null) {
             loginVO.setEnroll(true);
             loginVO.setId(byLoginId.getId());
-        }else {
+        } else {
             loginVO.setEnroll(false);
         }
-
+        String token = "1111111";
+        loginVO.setToken(token);
         return Result.OK(loginVO);
     }
 

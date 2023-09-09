@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jeecg.weibo.exception.BusinessException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignTopProduct;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
  * @Version: V1.0
  */
 @Service
+@Slf4j
 public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMapper, DesignTopProduct> implements IDesignTopProductService {
 
     @Autowired
@@ -36,6 +39,7 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
     @Autowired
     IDesignTopProductWorkService designTopProductWorkService;
 
+    @Transactional
     @Override
     public void saveProduct(DesignTopProductVO designTopProductVO) {
 
@@ -50,7 +54,14 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
 
         Integer productId = bean.getId();
 
+        if (designTopProductVO == null) {
+            log.info("当前数据存在问题：{}", designTopProductVO);
+            return;
+        }
         List<String> productImgUrls = designTopProductVO.getProductImgUrls();
+        if (productImgUrls == null) {
+            return;
+        }
         List<DesignTopProductWork> designTopProductWorkList = new ArrayList<>();
         for (int i = 0; i < productImgUrls.size(); i++) {
             DesignTopProductWork designTopProductWork = new DesignTopProductWork();

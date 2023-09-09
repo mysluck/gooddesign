@@ -20,5 +20,8 @@ public class LoginVO {
     @ApiModelProperty("报名ID")
     private Integer id;
 
+    @ApiModelProperty("token")
+    private String token;
+
 
 }
