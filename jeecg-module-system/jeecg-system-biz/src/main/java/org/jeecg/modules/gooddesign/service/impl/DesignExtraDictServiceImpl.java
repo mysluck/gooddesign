@@ -33,6 +33,18 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
     }
 
     @Override
+    public boolean saveExt(int type, String value, int parentId) {
+        DesignExtraDict designExtraDict = new DesignExtraDict();
+        designExtraDict.setType(type);
+        designExtraDict.setValue(value);
+        designExtraDict.setParentId(parentId);
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        designExtraDict.setUpdateBy(sysUser.getUsername());
+        designExtraDict.setUpdateTime(new Date());
+        return this.save(designExtraDict);
+    }
+
+    @Override
     public List<DesignExtraDict> list(int type) {
         QueryWrapper<DesignExtraDict> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("type", type);

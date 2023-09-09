@@ -1,5 +1,6 @@
 package org.jeecg.modules.gooddesign.controller;
 
+import com.qiniu.util.StringMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,14 @@ public class QiNiuAuthController {
     @GetMapping("/getToken")
     public Result getToken() {
         Auth auth = Auth.create(qiNiuConfiguration.getAccessKeyId(), qiNiuConfiguration.getAccessKeySecret());
-        String design = auth.uploadToken("discovery-of-good-design");
-        return Result.OK(design);
+        StringMap putPolicy = new StringMap();
+        putPolicy.put("fileType", 1);
+//        String design = auth.uploadToken("discovery-of-good-design",null,putPolicy);
+        String token = auth.uploadToken("discovery-of-good-design", null, 3600L, putPolicy);
+        return Result.OK(token);
     }
+
+    //StringMap putPolicy = new StringMap();
+    //putPolicy.put("fileType", 1);
+    //String token = auth.uploadToken(bucket, key, 3600L, putPolicy);
 }

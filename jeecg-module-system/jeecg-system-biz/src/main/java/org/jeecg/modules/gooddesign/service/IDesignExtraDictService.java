@@ -14,6 +14,8 @@ import java.util.List;
 public interface IDesignExtraDictService extends IService<DesignExtraDict> {
     boolean saveExt(int type, String value);
 
+    boolean saveExt(int type, String value,int parentId);
+
     List<DesignExtraDict> list(int type);
 
     List<DesignExtraDict> listByParentId(int parentId);

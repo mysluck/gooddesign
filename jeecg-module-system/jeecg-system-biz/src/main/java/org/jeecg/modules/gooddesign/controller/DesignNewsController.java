@@ -56,6 +56,7 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                    HttpServletRequest req) {
         QueryWrapper<DesignNews> queryWrapper = QueryGenerator.initQueryWrapper(designNews, req.getParameterMap());
+        queryWrapper.orderByDesc("publish_time");
         Page<DesignNews> page = new Page<DesignNews>(pageNo, pageSize);
         IPage<DesignNews> pageList = designNewsService.page(page, queryWrapper);
         return Result.OK(pageList);
