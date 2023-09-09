@@ -22,7 +22,10 @@ import org.jeecg.common.util.*;
 import org.jeecg.common.util.encryption.EncryptedString;
 import org.jeecg.config.JeecgBaseConfig;
 import org.jeecg.modules.base.service.BaseCommonService;
+import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
+import org.jeecg.modules.gooddesign.entity.vo.LoginVO;
 import org.jeecg.modules.gooddesign.entity.vo.WxAccessTokenVO;
+import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.WeChatAuthService;
 import org.jeecg.modules.system.entity.SysDepart;
 import org.jeecg.modules.system.entity.SysRoleIndex;
@@ -70,6 +73,9 @@ public class DesignLoginController {
 
     @Autowired
     WeChatAuthService weChatAuthService;
+    @Autowired
+    IDesignTopJudgesService designTopJudgesService;
+
     @Autowired
     private JeecgBaseConfig jeecgBaseConfig;
 
@@ -247,9 +253,7 @@ public class DesignLoginController {
         //手机号模式 登录模式: "2"  注册模式: "1"
         log.info(mobile);
         if (oConvertUtils.isEmpty(mobile)) {
-            result.setMessage("手机号不允许为空！");
-            result.setSuccess(false);
-            return result;
+            return Result.error("手机号不允许为空!");
         }
 
         //update-begin-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
@@ -258,9 +262,7 @@ public class DesignLoginController {
         //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
 
         if (object != null) {
-            result.setMessage("验证码10分钟内，仍然有效！");
-            result.setSuccess(false);
-            return result;
+            return Result.error("验证码10分钟内，仍然有效!");
         }
 
         //随机数
@@ -271,9 +273,7 @@ public class DesignLoginController {
             boolean b = DySmsHelper.sendSms(mobile, obj, DySmsEnum.DESIGN_LOGIN);
 //            boolean b = DySmsHelper.sendSms(mobile, obj, DySmsEnum.DESIGN_LOGIN);
             if (b == false) {
-                result.setMessage("短信验证码发送失败,请稍后重试");
-                result.setSuccess(false);
-                return result;
+                return Result.error("短信验证码发送失败,请稍后重试");
             }
             //update-begin-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
             //验证码10分钟内有效
@@ -283,13 +283,12 @@ public class DesignLoginController {
             //update-begin--Author:scott  Date:20190812 for：issues#391
             //result.setResult(captcha);
             //update-end--Author:scott  Date:20190812 for：issues#391
-            result.setSuccess(true);
         } catch (ClientException e) {
             e.printStackTrace();
             result.error500(" 短信接口未配置，请联系管理员！");
             return result;
         }
-        return result;
+        return Result.ok();
     }
 
 
@@ -300,8 +299,9 @@ public class DesignLoginController {
      */
     @ApiOperation("手机号登录接口")
     @GetMapping("/phoneLogin")
-    public Result<JSONObject> phoneLogin(@RequestParam @ApiParam("手机号") String phone, @RequestParam @ApiParam("验证码") String captcha) {
-        Result<JSONObject> result = new Result<JSONObject>();
+    public Result<LoginVO> phoneLogin(@RequestParam @ApiParam("手机号") String phone, @RequestParam @ApiParam("验证码") String captcha) {
+        Result<LoginVO> result = new Result<LoginVO>();
+        LoginVO loginVO = new LoginVO();
         //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
         if (isLoginFailOvertimes(phone)) {
             return result.error500("该用户登录失败次数过多，请于10分钟后再次登录！");
@@ -323,8 +323,16 @@ public class DesignLoginController {
 
         //添加日志
         baseCommonService.addLog("用户名: " + phone + ",手机号登录成功！", CommonConstant.LOG_TYPE_1, null);
+        loginVO.setLoginId(phone);
+        DesignTopJudges byLoginId = designTopJudgesService.getByLoginId(phone);
+        if (byLoginId != null) {
+            loginVO.setEnroll(true);
+            loginVO.setId(byLoginId.getId());
+        }else {
+            loginVO.setEnroll(false);
+        }
 
-        return Result.OK(phone);
+        return Result.OK(loginVO);
     }
 
     @ApiOperation(value = "微信登录接口", notes = "返回openID（用户唯一标志）")
@@ -389,5 +397,6 @@ public class DesignLoginController {
         // 1小时
         redisUtil.set(key, ++val, 3600);
     }
+
 
 }

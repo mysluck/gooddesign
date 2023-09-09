@@ -35,6 +35,7 @@ public class DesignTopJudges implements Serializable {
      */
     @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "主键")
+    @Excel(name = "ID", width = 15)
     private Integer id;
     /**
      * 创建人
@@ -69,7 +70,7 @@ public class DesignTopJudges implements Serializable {
     /**
      * 姓名
      */
-    @Excel(name = "姓名", width = 15)
+    @Excel(name = "设计师序号", width = 15)
     @ApiModelProperty(value = "姓名")
     private String realName;
     /**
@@ -93,6 +94,7 @@ public class DesignTopJudges implements Serializable {
     private String post;
 
 
+    @Excel(name = "省", width = 15)
     @ApiModelProperty(value = "省")
     private String provinces;
     @ApiModelProperty(value = "市")
@@ -118,14 +120,17 @@ public class DesignTopJudges implements Serializable {
     private String email;
 
     @ApiModelProperty(value = "个人描述")
+    @Excel(name = "个人描述", width = 15)
     private String userDesc;
 
 
     @ApiModelProperty(value = "活动ID")
+    @Excel(name = "活动ID", width = 15)
     private Integer activityId;
 
     @TableField(exist = false)
     @ApiModelProperty(value = "活动名称")
+    @Excel(name = "活动名称", width = 15)
     private String activityName;
 
     @TableField(exist = false)
@@ -133,9 +138,11 @@ public class DesignTopJudges implements Serializable {
     private Date publishTime;
 
     @ApiModelProperty(value = "筛选状态 通过1 不通过0")
+    @Excel(name = "筛选状态", width = 15)
     private Integer screenStatus;
 
     @ApiModelProperty(value = "肖像")
+    @Excel(name = "肖像", width = 15)
     private String userImgUrl;
 
     @ApiModelProperty(value = "设计报奖编号")
@@ -144,6 +151,14 @@ public class DesignTopJudges implements Serializable {
 
     @ApiModelProperty(value = "loginId")
     private String loginId;
+
+
+    @ApiModelProperty(value = "意愿参与壮观点演讲 1同意 0不同意")
+    private Integer willStatus;
+
+    @ApiModelProperty(value = "知识产权无争议 1是 0否")
+    private Integer  disputeStatus;
+
 
 
 }

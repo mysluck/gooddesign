@@ -42,7 +42,7 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
         DesignTopProduct bean = new DesignTopProduct();
         BeanUtils.copyProperties(designTopProductVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             bean.setCreateBy(sysUser.getUsername());
         }
         bean.setCreateTime(new Date());
@@ -57,7 +57,9 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
             designTopProductWork.setProductId(productId);
             designTopProductWork.setWorkUrl(productImgUrls.get(i));
             designTopProductWork.setSort(i + 1);
-            designTopProductWork.setCreateBy(sysUser.getUsername());
+            if (sysUser != null) {
+                designTopProductWork.setCreateBy(sysUser.getUsername());
+            }
             designTopProductWork.setCreateTime(new Date());
             designTopProductWorkList.add(designTopProductWork);
         }
@@ -75,7 +77,7 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
         DesignTopProduct bean = new DesignTopProduct();
         BeanUtils.copyProperties(designTopProductVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             bean.setUpdateBy(sysUser.getUsername());
         }
         bean.setUpdateTime(new Date());
@@ -93,7 +95,9 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
             designTopProductWork.setProductId(designTopProductVO.getId());
             designTopProductWork.setWorkUrl(productImgUrls.get(i));
             designTopProductWork.setSort(i + 1);
-            designTopProductWork.setCreateBy(sysUser.getUsername());
+            if (sysUser != null) {
+                designTopProductWork.setCreateBy(sysUser.getUsername());
+            }
             designTopProductWork.setCreateTime(new Date());
             designTopProductWorkList.add(designTopProductWork);
         }

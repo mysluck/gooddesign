@@ -64,7 +64,9 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
             designTopProductWork.setProductId(productId);
             designTopProductWork.setWorkUrl(productImgUrls.get(i));
             designTopProductWork.setSort(i + 1);
-            designTopProductWork.setCreateBy(sysUser.getUsername());
+            if (sysUser != null) {
+                designTopProductWork.setCreateBy(sysUser.getUsername());
+            }
             designTopProductWork.setCreateTime(new Date());
             designTopProductWorkList.add(designTopProductWork);
         }
@@ -80,7 +82,9 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
         DesignEnrollProduct bean = new DesignEnrollProduct();
         BeanUtils.copyProperties(designTopProductVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            bean.setUpdateBy(sysUser.getUsername());
+        }
         bean.setUpdateTime(new Date());
         this.updateById(bean);
 
@@ -96,7 +100,9 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
             designEnrollProductWork.setProductId(designTopProductVO.getId());
             designEnrollProductWork.setWorkUrl(productImgUrls.get(i));
             designEnrollProductWork.setSort(i + 1);
-            designEnrollProductWork.setCreateBy(sysUser.getUsername());
+            if (sysUser != null) {
+                designEnrollProductWork.setCreateBy(sysUser.getUsername());
+            }
             designEnrollProductWork.setCreateTime(new Date());
             designEnrollProductWorkList.add(designEnrollProductWork);
         }
@@ -182,7 +188,9 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesAllVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setCreateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            bean.setCreateBy(sysUser.getUsername());
+        }
         bean.setCreateTime(new Date());
         bean.setDesignNo(getDesignNo());
         bean.setActivityId(activity.getId());

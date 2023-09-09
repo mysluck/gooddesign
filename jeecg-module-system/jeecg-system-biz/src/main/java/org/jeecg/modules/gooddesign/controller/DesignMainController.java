@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Date;
@@ -48,8 +49,7 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     IDesignMainStakeholderService designMainStakeholderService;
     @Autowired
     private IDesignMainService designMainService;
-    @Autowired
-    private IDesignMainMovieService designMainMovieService;
+
 
     /**
      * 分页列表查询
@@ -123,7 +123,7 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
         return Result.OK(designMain);
     }
 
-    @ApiOperation(value = "设计壮游-通过id查询相信信息", notes = "设计壮游-通过id查询相信信息（照片、视频）")
+    @ApiOperation(value = "设计壮游-通过id查询详细信息", notes = "设计壮游-通过id查询详细信息（照片、视频）")
     @GetMapping(value = "/queryDetailById")
     public Result<DesignMainDetailVO> queryDetailById(@RequestParam(name = "id", required = true) String id) {
         DesignMainDetailVO designMain = designMainService.queryDetailById(id);
@@ -134,18 +134,22 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     }
 
 
-    @AutoLog(value = "设计壮游-编辑壮游-基础信息-添加")
-    @ApiOperation(value = "设计壮游-编辑壮游-基础信息-添加", notes = "编辑壮游-基础信息-添加")
+    @AutoLog(value = "设计壮游-编辑壮游-基础信息-添加/修改")
+    @ApiOperation(value = "设计壮游-编辑壮游-基础信息-添加/修改", notes = "编辑壮游-基础信息-添加/修改，如果存在ID，则修改，id为0或空，则添加")
     @PostMapping(value = "/addBasic")
     public Result<DesignMain> addBasic(@RequestBody @Valid DesignMainBasicVO designMainBasicVO) {
         DesignMain designContent = new DesignMain();
         BeanUtils.copyProperties(designMainBasicVO, designContent);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             designContent.setCreateBy(sysUser.getUsername());
         }
         designContent.setCreateTime(new Date());
-        designMainService.save(designContent);
+        if (designMainBasicVO.getId() != null && designMainBasicVO.getId() != 0) {
+            designMainService.updateById(designContent);
+        } else {
+            designMainService.save(designContent);
+        }
         return Result.OK(designContent);
     }
 
@@ -177,5 +181,8 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
         return Result.OK("删除成功！");
     }
 
-
+    @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
+        return super.importExcel(request, response, DesignMain.class);
+    }
 }

@@ -81,7 +81,9 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesAllVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setCreateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            bean.setCreateBy(sysUser.getUsername());
+        }
         bean.setCreateTime(new Date());
         bean.setDesignNo(getDesignNo());
         bean.setActivityId(activity.getId());
@@ -108,7 +110,9 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesAllVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            bean.setUpdateBy(sysUser.getUsername());
+        }
         bean.setUpdateTime(new Date());
         this.updateById(bean);
 
@@ -140,6 +144,21 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
         result.setProducts(designTopProductVOS);
 
         return result;
+    }
+
+    @Override
+    public DesignTopJudges getByLoginId(String loginId) {
+        QueryWrapper<DesignTopJudges> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("login_id", loginId);
+        DesignActivity activity = designActivityService.getActivity();
+        if (activity != null) {
+            queryWrapper.eq("activity_id", activity.getId());
+            List<DesignTopJudges> list = this.list(queryWrapper);
+            if (!list.isEmpty()) {
+                return list.get(0);
+            }
+        }
+        return null;
     }
 
 

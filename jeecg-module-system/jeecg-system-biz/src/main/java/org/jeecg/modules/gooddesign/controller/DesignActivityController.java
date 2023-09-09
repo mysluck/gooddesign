@@ -110,7 +110,9 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
             bean.setPublishTime(new Date());
         }
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            bean.setUpdateBy(sysUser.getUsername());
+        }
         bean.setUpdateTime(new Date());
         designActivityService.updateById(bean);
         return Result.OK("编辑成功!");

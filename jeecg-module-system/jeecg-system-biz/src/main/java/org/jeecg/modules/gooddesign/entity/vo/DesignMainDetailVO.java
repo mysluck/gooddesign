@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "设计壮游-基础信息对象", description = "设计壮游-基础信息对象")
+@ApiModel(value = "设计壮游-详细对象", description = "设计壮游-详细对象")
 public class DesignMainDetailVO implements Serializable {
     private static final long serialVersionUID = 1L;
 

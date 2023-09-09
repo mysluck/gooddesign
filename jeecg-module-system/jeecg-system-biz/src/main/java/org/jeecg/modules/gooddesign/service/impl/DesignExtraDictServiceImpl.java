@@ -27,7 +27,9 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
         designExtraDict.setType(type);
         designExtraDict.setValue(value);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designExtraDict.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            designExtraDict.setUpdateBy(sysUser.getUsername());
+        }
         designExtraDict.setUpdateTime(new Date());
         return this.save(designExtraDict);
     }
@@ -39,7 +41,9 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
         designExtraDict.setValue(value);
         designExtraDict.setParentId(parentId);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designExtraDict.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            designExtraDict.setUpdateBy(sysUser.getUsername());
+        }
         designExtraDict.setUpdateTime(new Date());
         return this.save(designExtraDict);
     }

@@ -295,6 +295,7 @@ public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant
         SysUser user = userService.getById(userId);
         //变更拥有者
         SysTenant tenant = new SysTenant();
+
         tenant.setCreateBy(user.getUsername());
         tenant.setId(tenantId);
         tenantMapper.updateById(tenant);

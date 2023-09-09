@@ -15,7 +15,6 @@ import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
@@ -27,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -71,23 +71,25 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         Page<DesignTopJudges> page = new Page<DesignTopJudges>(pageNo, pageSize);
         IPage<DesignTopJudges> pageList = designTopJudgesService.page(page, queryWrapper);
         List<DesignTopJudges> records = pageList.getRecords();
-        List<Integer> activityIds = records.stream().map(DesignTopJudges::getActivityId).collect(Collectors.toList());
-        QueryWrapper<DesignActivity> designActivityWrapper = new QueryWrapper();
-        designActivityWrapper.in("id", activityIds);
-        List<DesignActivity> list = designActivityService.list(designActivityWrapper);
+        if (!records.isEmpty()) {
+            List<Integer> activityIds = records.stream().map(DesignTopJudges::getActivityId).collect(Collectors.toList());
+            QueryWrapper<DesignActivity> designActivityWrapper = new QueryWrapper();
+            designActivityWrapper.in("id", activityIds);
+            List<DesignActivity> list = designActivityService.list(designActivityWrapper);
 
-        Map<Integer, DesignActivity> designActivityMap = list.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
+            Map<Integer, DesignActivity> designActivityMap = list.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
 
-        records.stream().forEach(designTopJudge -> {
-            Integer activityId = designTopJudge.getActivityId();
-            if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {
-                DesignActivity designActivity = designActivityMap.get(activityId);
-                designTopJudge.setActivityName(designActivity.getActivityName());
-                designTopJudge.setPublishTime(designActivity.getPublishTime());
-            }
-        });
+            records.stream().forEach(designTopJudge -> {
+                Integer activityId = designTopJudge.getActivityId();
+                if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {
+                    DesignActivity designActivity = designActivityMap.get(activityId);
+                    designTopJudge.setActivityName(designActivity.getActivityName());
+                    designTopJudge.setPublishTime(designActivity.getPublishTime());
+                }
+            });
+            pageList.setRecords(records);
+        }
 
-        pageList.setRecords(records);
         return Result.OK(pageList);
     }
 
@@ -105,7 +107,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             bean.setCreateBy(sysUser.getUsername());
         }
         bean.setCreateTime(new Date());
@@ -151,7 +153,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         DesignTopJudges bean = new DesignTopJudges();
         BeanUtils.copyProperties(designTopJudgesVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             bean.setUpdateBy(sysUser.getUsername());
         }
         bean.setUpdateTime(new Date());
@@ -235,5 +237,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         return Result.OK(activities);
     }
 
+    @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
+    public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
+        return super.importExcel(request, response, DesignTopJudges.class);
+    }
 
 }

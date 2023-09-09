@@ -82,7 +82,9 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
         DesignStakeholder designStakeholder = new DesignStakeholder();
         BeanUtils.copyProperties(designStakeholderVO, designStakeholder);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        designStakeholder.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            designStakeholder.setUpdateBy(sysUser.getUsername());
+        }
         designStakeholder.setUpdateTime(new Date());
         designStakeholderService.save(designStakeholder);
         return Result.OK("添加成功！");

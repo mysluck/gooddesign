@@ -101,8 +101,15 @@ public class DesignTopJudgesVO extends DesignTopJudges implements Serializable {
     @ApiModelProperty(value = "肖像")
     private String userImgUrl;
 
+
     @ApiModelProperty(value = "用户扫码登录、手机号登录唯一ID")
     private String loginId;
+
+    @ApiModelProperty(value = "意愿参与壮观点演讲 1同意 0不同意")
+    private Integer willStatus;
+
+    @ApiModelProperty(value = "知识产权无争议 1是 0否")
+    private Integer  disputeStatus;
 
 
 }

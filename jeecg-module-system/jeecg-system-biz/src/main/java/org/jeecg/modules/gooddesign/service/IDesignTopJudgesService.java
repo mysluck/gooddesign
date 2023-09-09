@@ -32,4 +32,6 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
     List<DesignActivity> queryActivityList();
 
     DesignTopJudgesDetailVO queryDetailById(Integer id);
+
+    DesignTopJudges getByLoginId(String loginId);
 }

@@ -49,6 +49,9 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @ApiOperation(value = "好设计-报名-添加设计师信息和作品信息", notes = "好设计-报名-添加设计师信息和作品信息")
     @PostMapping(value = "/addDetail")
     public Result<String> addDetail(@RequestBody DesignTopJudgesDetailVO designTopJudgesAllVO) {
+        if (designTopJudgesAllVO.getLoginId() == null) {
+            return Result.OK("请输入报名唯一信息！");
+        }
         designEnrollProductService.addDetail(designTopJudgesAllVO);
         return Result.OK("添加成功！");
     }
