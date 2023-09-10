@@ -3,9 +3,12 @@ package org.jeecg.modules.gooddesign.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
+import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.system.base.controller.JeecgController;
+import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
@@ -16,6 +19,8 @@ import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -39,7 +44,16 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @AutoLog(value = "好设计-报名-添加作品信息")
     @ApiOperation(value = "好设计-报名-添加作品信息", notes = "好设计-报名-添加作品信息")
     @PostMapping(value = "/addProduct")
-    public Result<String> addProduct(@RequestBody DesignTopProductVO designTopProductVO) {
+    public Result<String> addProduct(HttpServletRequest request, HttpServletResponse response, @RequestBody DesignTopProductVO designTopProductVO) {
+        String token = request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        if (StringUtils.isEmpty(token)) {
+            return Result.error("请先登录！");
+        }
+        String username = JwtUtil.getUsername(token);
+        if (StringUtils.isEmpty(username)) {
+            return Result.error("请先登录！");
+        }
+
         designEnrollProductService.saveProduct(designTopProductVO);
         return Result.OK("添加成功！");
     }
@@ -48,8 +62,15 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @AutoLog(value = "好设计-报名-添加设计师信息和作品信息")
     @ApiOperation(value = "好设计-报名-添加设计师信息和作品信息", notes = "好设计-报名-添加设计师信息和作品信息")
     @PostMapping(value = "/addDetail")
-    public Result<String> addDetail(@RequestBody DesignTopJudgesDetailVO designTopJudgesAllVO) {
-        if (designTopJudgesAllVO.getLoginId() == null) {
+    public Result<String> addDetail(HttpServletRequest request, HttpServletResponse response,@RequestBody DesignTopJudgesDetailVO designTopJudgesAllVO) {
+        String token = request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        if (StringUtils.isEmpty(token)) {
+            return Result.error("请先登录！");
+        }
+        String username = JwtUtil.getUsername(token);
+        if (StringUtils.isEmpty(username)) {
+            return Result.error("请先登录！");
+        }   if (designTopJudgesAllVO.getLoginId() == null) {
             return Result.OK("请输入报名唯一信息！");
         }
         designEnrollProductService.addDetail(designTopJudgesAllVO);
