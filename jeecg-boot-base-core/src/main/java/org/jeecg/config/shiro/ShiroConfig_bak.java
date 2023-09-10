@@ -87,8 +87,10 @@ public class ShiroConfig_bak {
         filterChainDefinitionMap.put("/sys/getEncryptedString", "anon"); //获取加密串
         filterChainDefinitionMap.put("/sys/sms", "anon");//短信验证码
         filterChainDefinitionMap.put("/design/sys/**", "anon");//短信验证码
+        filterChainDefinitionMap.put("/designEdit/**", "anon");//发现设计
         filterChainDefinitionMap.put("/designerJudges/**", "anon");//发现设计
         filterChainDefinitionMap.put("/designTopJudges/**", "anon");//添加设计师-发现100
+        filterChainDefinitionMap.put("/list", "anon");//壮游查询
         filterChainDefinitionMap.put("/designNews/**", "anon");//咨询中心
         filterChainDefinitionMap.put("/designPartners/**", "anon");//合作伙伴
         filterChainDefinitionMap.put("/designContent/**", "anon");//首页内容
