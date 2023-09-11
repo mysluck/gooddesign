@@ -22,7 +22,5 @@ public interface IDesignEnrollProductService extends IService<DesignEnrollProduc
 
     List<DesignTopProductVO> queryByTopJudgesId(Integer id);
 
-    void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);
-
     List<DesignTopProductVO> queryDetailByJudgesId(Integer id);
 }
