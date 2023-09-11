@@ -190,13 +190,17 @@ public class ExcelController {
                     });
                 } else if (j == 15) {
                     Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
-                        designTopJudges.setUserImgUrl(data.toString());
+                        designTopJudges.setScreenStatus(Integer.valueOf(data.toString()));
                     });
                 } else if (j == 16) {
                     Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
-                        designTopProductVO.setProductName(data.toString());
+                        designTopJudges.setUserImgUrl(data.toString());
                     });
                 } else if (j == 17) {
+                    Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
+                        designTopProductVO.setProductName(data.toString());
+                    });
+                } else if (j == 18) {
                     Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
                         designTopProductVO.setProductDesc(data.toString());
                     });
