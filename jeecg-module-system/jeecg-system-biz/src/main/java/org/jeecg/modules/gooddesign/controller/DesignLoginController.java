@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
@@ -239,6 +240,35 @@ public class DesignLoginController {
             redisUtil.del(String.format("%s::%s", CacheConstant.SYS_USERS_CACHE, sysUser.getUsername()));
             //调用shiro的logout
             SecurityUtils.getSubject().logout();
+            return Result.ok("退出登录成功！");
+        } else {
+            return Result.error("Token无效!");
+        }
+    }
+
+    @ApiOperation("手机号、微信登出接口")
+    @RequestMapping(value = "/enrollLogout")
+    public Result<Object> enrollLogout(HttpServletRequest request, HttpServletResponse response) {
+        //用户退出逻辑
+        String token = request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        if (oConvertUtils.isEmpty(token)) {
+            return Result.error("退出登录失败！");
+        }
+        String username = JwtUtil.getUsername(token);
+        if (StringUtils.isNotEmpty(username)) {
+            //update-begin--Author:wangshuai  Date:20200714  for：登出日志没有记录人员
+            //update-end--Author:wangshuai  Date:20200714  for：登出日志没有记录人员
+            log.info(" 用户名:  " + username + ",退出成功！ ");
+            //清空用户登录Token缓存
+            redisUtil.del(CommonConstant.PREFIX_USER_TOKEN + token);
+
+
+            String redisKey = CommonConstant.PHONE_REDIS_KEY_PRE + username;
+            //登出之后 删除手机验证码key
+            redisUtil.del(redisKey);
+
+            //调用shiro的logout
+//            SecurityUtils.getSubject().logout();
             return Result.ok("退出登录成功！");
         } else {
             return Result.error("Token无效!");
