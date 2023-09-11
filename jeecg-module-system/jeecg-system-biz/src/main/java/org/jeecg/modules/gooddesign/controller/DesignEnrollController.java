@@ -124,7 +124,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         if (designTopJudgesAllVO.getLoginId() == null) {
             return Result.OK("请输入报名唯一信息！");
         }
-        designEnrollProductService.addDetail(designTopJudgesAllVO);
+        designEnrollJudgesService.addDetail(designTopJudgesAllVO);
         return Result.OK("添加成功！");
     }
 

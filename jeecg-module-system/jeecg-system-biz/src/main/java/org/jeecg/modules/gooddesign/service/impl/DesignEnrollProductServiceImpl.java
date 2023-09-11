@@ -7,7 +7,6 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.*;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.mapper.DesignEnrollProductMapper;
 import org.jeecg.modules.gooddesign.service.*;
@@ -29,8 +28,6 @@ import java.util.stream.Collectors;
 @Service
 public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProductMapper, DesignEnrollProduct> implements IDesignEnrollProductService {
 
-    @Autowired
-    IDesignEnrollJudgesService designTopJudgesService;
     @Autowired
     IDesignActivityService designActivityService;
     @Autowired
@@ -168,36 +165,6 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
             return resultVO;
         }).collect(Collectors.toList());
         return result;
-    }
-
-
-    @Override
-    public void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {
-
-        DesignActivity activity = designActivityService.getActivity();
-        if (activity == null)
-            throw new BusinessException("当前不存在开启活动，请开起活动！");
-
-//        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
-        DesignEnrollJudges bean = new DesignEnrollJudges();
-        BeanUtils.copyProperties(designTopJudgesAllVO, bean);
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysUser != null) {
-            bean.setCreateBy(sysUser.getUsername());
-        }
-        bean.setCreateTime(new Date());
-        bean.setDesignNo(getDesignNo());
-        bean.setActivityId(activity.getId());
-        bean.setActivityName(activity.getActivityName());
-        designTopJudgesService.save(bean);
-
-        //设计师ID
-        Integer judgesId = bean.getId();
-        List<DesignTopProductVO> products = designTopJudgesAllVO.getProducts();
-        products.forEach(productvo -> {
-            productvo.setTopJudgesId(judgesId);
-            this.saveProduct(productvo);
-        });
     }
 
 
