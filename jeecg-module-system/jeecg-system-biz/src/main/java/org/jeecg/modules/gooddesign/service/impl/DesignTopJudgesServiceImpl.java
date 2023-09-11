@@ -41,34 +41,6 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     @Autowired
     IDesignTopJudgesParticipantsService designTopJudgesParticipantsService;
 
-    @Override
-    public List<DesignTopJudgesScoreVO> queryByTopJudgesId() {
-        List<DesignTopJudgesScoreVO> result = new ArrayList<>();
-        List<DesignTopParticipantsScoreVO> totalScore = designTopJudgesParticipantsService.getTotalScore();
-        if (!totalScore.isEmpty()) {
-            List<Integer> judgesIds = new ArrayList<>();
-            Map<Integer, Double> scoreMap = new HashMap<>(totalScore.size());
-            for (int i = 0; i < totalScore.size(); i++) {
-                DesignTopParticipantsScoreVO designTopParticipantsScoreVO = totalScore.get(i);
-                judgesIds.add(designTopParticipantsScoreVO.getJudgesId());
-                scoreMap.put(designTopParticipantsScoreVO.getJudgesId(), designTopParticipantsScoreVO.getTotalScore());
-            }
-
-            if (judgesIds.size() > 100) {
-                judgesIds.subList(0, 100);
-            }
-            QueryWrapper<DesignTopJudges> queryWrapper = new QueryWrapper();
-            queryWrapper.in("id", judgesIds);
-            List<DesignTopJudges> list = this.list(queryWrapper);
-            result = list.stream().map(designTopJudge -> {
-                DesignTopJudgesScoreVO scoreVO = new DesignTopJudgesScoreVO();
-                BeanUtils.copyProperties(designTopJudge, scoreVO);
-                scoreVO.setScore(scoreMap.get(designTopJudge.getId()));
-                return scoreVO;
-            }).collect(Collectors.toList());
-        }
-        return result;
-    }
 
     @Override
     public void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {

@@ -17,12 +17,7 @@ import java.util.List;
  */
 public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
 
-    /**
-     * 查询top100
-     *
-     * @return
-     */
-    List<DesignTopJudgesScoreVO> queryByTopJudgesId();
+
 
 
     void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);

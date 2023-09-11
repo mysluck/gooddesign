@@ -90,6 +90,7 @@ public class ShiroConfig_bak {
         filterChainDefinitionMap.put("/designEdit/**", "anon");//发现设计
         filterChainDefinitionMap.put("/designEnroll/**", "anon");//报名
         filterChainDefinitionMap.put("/designerJudges/**", "anon");//发现设计
+        filterChainDefinitionMap.put("/excel/**", "anon");//发现设计
         filterChainDefinitionMap.put("/designTopJudges/**", "anon");//添加设计师-发现100
 //        filterChainDefinitionMap.put("/designMain/list", "anon");//壮游查询
         filterChainDefinitionMap.put("/**/list", "anon");//壮游查询

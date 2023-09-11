@@ -222,13 +222,6 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     }
 
 
-    @ApiOperation(value = "好设计-发现100-top1AntPathMatcher00得分数据", notes = "好设计-发现100-top100得分数据")
-    @GetMapping(value = "/queryTop100")
-    public Result<List<DesignTopJudgesScoreVO>> queryTop100() {
-        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = designTopJudgesService.queryByTopJudgesId();
-        return Result.OK(designTopJudgesScoreVOS);
-    }
-
 
     @ApiOperation(value = "好设计-发现100-活动展示", notes = "好设计-发现100-活动展示")
     @GetMapping(value = "/queryActivityList")

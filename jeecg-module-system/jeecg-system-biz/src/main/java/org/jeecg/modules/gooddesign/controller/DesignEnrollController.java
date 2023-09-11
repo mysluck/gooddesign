@@ -20,6 +20,7 @@ import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
@@ -217,7 +218,12 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     }
 
 
-
+    @ApiOperation(value = "好设计-报名-根据评委打分数据获取前100名", notes = "好设计-报名-根据评委打分数据获取前100名")
+    @GetMapping(value = "/queryTop100")
+    public Result<List<DesignTopJudgesScoreVO>> queryTop100() {
+        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = designEnrollJudgesService.queryByTopJudgesId();
+        return Result.OK(designTopJudgesScoreVOS);
+    }
 
 
 }

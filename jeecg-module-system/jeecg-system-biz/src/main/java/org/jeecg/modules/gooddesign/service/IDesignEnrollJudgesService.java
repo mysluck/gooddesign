@@ -17,6 +17,9 @@ import java.util.List;
  */
 public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges> {
 
+
+
+
     /**
      * 查询top100
      *
