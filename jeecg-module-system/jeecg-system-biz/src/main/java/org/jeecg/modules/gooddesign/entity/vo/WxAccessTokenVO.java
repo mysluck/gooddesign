@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class WxAccessTokenVO {
+public class WxAccessTokenVO extends WxAccessErrorVO {
 //    {"access_token":"72_ka_gOEmIJRMGEas1JxVd5FZ1Kf66h5tdfQdMEaGy3NEnaUpRKSFIm0quFpPCFJwlISB0dsYXayH_lKokCuoKsL2ML2_Pk6IBb1luMcHg6Lw","expires_in":7200,"refresh_token":"72_PypxmGideN5pl0XfvrjLrLaJIiIobDZN4-7uyEiTBf1eS8qt1EjW6wgoViPEfBx5JoL4k13wajVtRYa508letubYy4QuebQiejEHMlsxKHo","openid":"oQ63N6cU-IqBkadQFsIgoHav3HzY","scope":"snsapi_login","unionid":"ok5Tc6X7uQyUs_GbgiCB37Av4x04"}
 
     @ApiModelProperty("token")

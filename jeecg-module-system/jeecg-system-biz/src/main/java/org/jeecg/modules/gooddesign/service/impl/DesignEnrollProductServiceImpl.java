@@ -6,17 +6,11 @@ import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.modules.gooddesign.entity.DesignActivity;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollProductWork;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
+import org.jeecg.modules.gooddesign.entity.*;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.mapper.DesignEnrollProductMapper;
-import org.jeecg.modules.gooddesign.service.IDesignActivityService;
-import org.jeecg.modules.gooddesign.service.IDesignEnrollProductService;
-import org.jeecg.modules.gooddesign.service.IDesignEnrollProductWorkService;
-import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
+import org.jeecg.modules.gooddesign.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +30,7 @@ import java.util.stream.Collectors;
 public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProductMapper, DesignEnrollProduct> implements IDesignEnrollProductService {
 
     @Autowired
-    IDesignTopJudgesService designTopJudgesService;
+    IDesignEnrollJudgesService designTopJudgesService;
     @Autowired
     IDesignActivityService designActivityService;
     @Autowired
@@ -185,7 +179,7 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
             throw new BusinessException("当前不存在开启活动，请开起活动！");
 
 //        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
-        DesignTopJudges bean = new DesignTopJudges();
+        DesignEnrollJudges bean = new DesignEnrollJudges();
         BeanUtils.copyProperties(designTopJudgesAllVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if (sysUser != null) {

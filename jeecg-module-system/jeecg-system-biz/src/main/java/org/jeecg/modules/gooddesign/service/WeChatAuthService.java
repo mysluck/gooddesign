@@ -1,5 +1,6 @@
 package org.jeecg.modules.gooddesign.service;
 
+import org.jeecg.modules.gooddesign.entity.vo.WeChatUserInfo;
 import org.jeecg.modules.gooddesign.entity.vo.WxAccessTokenVO;
 
 /**
@@ -18,7 +19,7 @@ public interface WeChatAuthService {
      */
     WxAccessTokenVO assess_token(String code);
 
-    String refresh_token(String refresh_token);
+    WxAccessTokenVO refresh_token(String refresh_token);
 
     /**
      * {
@@ -40,7 +41,7 @@ public interface WeChatAuthService {
      * @param refresh_token
      * @return
      */
-    String userinfo(String refresh_token);
+    WeChatUserInfo userinfo(String access_token, String openId);
 
 
 }

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
@@ -245,6 +246,35 @@ public class DesignLoginController {
         }
     }
 
+    @ApiOperation("手机号、微信登出接口")
+    @RequestMapping(value = "/enrollLogout")
+    public Result<Object> enrollLogout(HttpServletRequest request, HttpServletResponse response) {
+        //用户退出逻辑
+        String token = request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        if (oConvertUtils.isEmpty(token)) {
+            return Result.error("退出登录失败！");
+        }
+        String username = JwtUtil.getUsername(token);
+        if (StringUtils.isNotEmpty(username)) {
+            //update-begin--Author:wangshuai  Date:20200714  for：登出日志没有记录人员
+            //update-end--Author:wangshuai  Date:20200714  for：登出日志没有记录人员
+            log.info(" 用户名:  " + username + ",退出成功！ ");
+            //清空用户登录Token缓存
+            redisUtil.del(CommonConstant.PREFIX_USER_TOKEN + token);
+
+
+            String redisKey = CommonConstant.PHONE_REDIS_KEY_PRE + username;
+            //登出之后 删除手机验证码key
+            redisUtil.del(redisKey);
+
+            //调用shiro的logout
+//            SecurityUtils.getSubject().logout();
+            return Result.ok("退出登录成功！");
+        } else {
+            return Result.error("Token无效!");
+        }
+    }
+
 
     @ApiOperation("获取验证码")
     @GetMapping(value = "/sms")
@@ -262,7 +292,7 @@ public class DesignLoginController {
         //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
 
         if (object != null) {
-            return Result.error("验证码10分钟内，仍然有效!");
+            return Result.error("验证码5分钟内，仍然有效!");
         }
 
         //随机数
@@ -277,7 +307,7 @@ public class DesignLoginController {
             }
             //update-begin-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
             //验证码10分钟内有效
-            redisUtil.set(redisKey, captcha, 600);
+            redisUtil.set(redisKey, captcha, 300);
             //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
 
             //update-begin--Author:scott  Date:20190812 for：issues#391
@@ -304,7 +334,7 @@ public class DesignLoginController {
         LoginVO loginVO = new LoginVO();
         //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
         if (isLoginFailOvertimes(phone)) {
-            return result.error500("该用户登录失败次数过多，请于10分钟后再次登录！");
+            return result.error500("该用户登录失败次数过多，请于5分钟后再次登录！");
         }
         //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
 
@@ -331,21 +361,41 @@ public class DesignLoginController {
         } else {
             loginVO.setEnroll(false);
         }
-        String token = "1111111";
+
+
+        //1.生成token
+        String token = JwtUtil.sign(phone, "third");
+        // 设置token缓存有效时间
+        redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
+        redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME * 2 / 1000);
         loginVO.setToken(token);
         return Result.OK(loginVO);
     }
 
+
     @ApiOperation(value = "微信登录接口", notes = "返回openID（用户唯一标志）")
     @GetMapping("/wechatLogin")
-    public Result<JSONObject> wechatLogin(@RequestParam @ApiParam("微信跳转后code码") String code) {
-        Result<JSONObject> result = new Result<JSONObject>();
+    public Result<LoginVO> wechatLogin(@RequestParam @ApiParam("微信跳转后code码") String code) {
         //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
-
+        LoginVO loginVO = new LoginVO();
         //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
         WxAccessTokenVO wxAccessTokenVO = weChatAuthService.assess_token(code);
-        String openid = wxAccessTokenVO.getOpenid();
+        if (wxAccessTokenVO == null || wxAccessTokenVO.getOpenid() == null) {
 
+        }
+
+        String openid = wxAccessTokenVO.getOpenid();
+        redisUtil.set(CommonConstant.PREFIX_USER_TOKEN_WECHAT + openid, wxAccessTokenVO);
+
+
+        loginVO.setLoginId(wxAccessTokenVO.getOpenid());
+        DesignTopJudges byLoginId = designTopJudgesService.getByLoginId(openid);
+        if (byLoginId != null) {
+            loginVO.setEnroll(true);
+            loginVO.setId(byLoginId.getId());
+        } else {
+            loginVO.setEnroll(false);
+        }
 //        //update-begin-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
 //        String redisKey = CommonConstant.PHONE_REDIS_KEY_PRE + phone;
 //        Object code = redisUtil.get(redisKey);
@@ -357,11 +407,16 @@ public class DesignLoginController {
 //            //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
 //            return Result.error(0, "手机验证码错误");
 //        }
-
+        //1.生成token
+        String token = JwtUtil.sign(openid, "third");
+        // 设置token缓存有效时间
+        redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, token);
+        redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME * 2 / 1000);
         //添加日志
         baseCommonService.addLog("微信用户: " + openid + ",登录成功！", CommonConstant.LOG_TYPE_1, null);
+        loginVO.setToken(token);
 
-        return Result.OK(openid);
+        return Result.OK(loginVO);
     }
 
 
