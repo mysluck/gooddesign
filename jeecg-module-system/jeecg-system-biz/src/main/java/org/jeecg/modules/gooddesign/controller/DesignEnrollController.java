@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,10 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -125,6 +123,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         if (designTopJudgesAllVO.getLoginId() == null) {
             return Result.OK("请输入报名唯一信息！");
         }
+        designTopJudgesAllVO.setLoginId(username);
         designEnrollJudgesService.addDetail(designTopJudgesAllVO);
         return Result.OK("添加成功！");
     }
@@ -152,6 +151,13 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
             return Result.error("未找到对应数据");
         }
         return Result.OK(designTopJudges);
+    }
+
+    @ApiOperation(value = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)", notes = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)")
+    @GetMapping(value = "/queryDetailByLoginId")
+    public Result<List<DesignTopJudgesDetailVO>> queryDetailByLoginId(@RequestParam(name = "loginId", required = true) String loginId) {
+        List<DesignTopJudgesDetailVO> designTopJudgesDetailVOS = designEnrollJudgesService.queryDetailByLoginId(loginId);
+        return Result.OK(designTopJudgesDetailVOS);
     }
 
     @AutoLog(value = "好设计-报名-修改报名信息")

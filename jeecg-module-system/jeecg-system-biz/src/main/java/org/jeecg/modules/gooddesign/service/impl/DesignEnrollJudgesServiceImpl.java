@@ -3,6 +3,7 @@ package org.jeecg.modules.gooddesign.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jeecg.weibo.exception.BusinessException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
@@ -143,6 +144,24 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
         result.setProducts(designTopProductVOS);
 
         return result;
+    }
+
+
+    @Override
+    public List<DesignTopJudgesDetailVO> queryDetailByLoginId(String loginId) {
+        QueryWrapper<DesignEnrollJudges> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("login_id", loginId);
+        List<DesignEnrollJudges> enrollJudges = this.list(queryWrapper);
+        if (CollectionUtils.isEmpty(enrollJudges)) {
+            return new ArrayList<>();
+        }
+        return enrollJudges.stream().map(enrollJudge -> {
+            DesignTopJudgesDetailVO result = new DesignTopJudgesDetailVO();
+            BeanUtils.copyProperties(enrollJudge, result);
+            List<DesignTopProductVO> designTopProductVOS = designEnrollProductService.queryByTopJudgesId(result.getId());
+            result.setProducts(designTopProductVOS);
+            return result;
+        }).collect(Collectors.toList());
     }
 
     @Override

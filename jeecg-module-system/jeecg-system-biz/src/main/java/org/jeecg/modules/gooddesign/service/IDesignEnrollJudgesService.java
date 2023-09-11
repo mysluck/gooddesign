@@ -18,8 +18,6 @@ import java.util.List;
 public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges> {
 
 
-
-
     /**
      * 查询top100
      *
@@ -35,6 +33,13 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
     List<DesignActivity> queryActivityList();
 
     DesignTopJudgesDetailVO queryDetailById(Integer id);
+
+    /**
+     * 根据登陆ID获取所有报名信息
+     * @param id
+     * @return
+     */
+    List<DesignTopJudgesDetailVO> queryDetailByLoginId(String loginid);
 
     DesignEnrollJudges getByLoginId(String loginId);
 }
