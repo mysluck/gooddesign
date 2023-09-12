@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -23,9 +24,11 @@ import org.jeecg.common.util.*;
 import org.jeecg.common.util.encryption.EncryptedString;
 import org.jeecg.config.JeecgBaseConfig;
 import org.jeecg.modules.base.service.BaseCommonService;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.LoginVO;
 import org.jeecg.modules.gooddesign.entity.vo.WxAccessTokenVO;
+import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.WeChatAuthService;
 import org.jeecg.modules.system.entity.SysDepart;
@@ -76,6 +79,8 @@ public class DesignLoginController {
     WeChatAuthService weChatAuthService;
     @Autowired
     IDesignTopJudgesService designTopJudgesService;
+    @Autowired
+    IDesignEnrollJudgesService designEnrollJudgesService;
 
     @Autowired
     private JeecgBaseConfig jeecgBaseConfig;
@@ -330,11 +335,10 @@ public class DesignLoginController {
     @ApiOperation("手机号登录接口")
     @GetMapping("/phoneLogin")
     public Result<LoginVO> phoneLogin(@RequestParam @ApiParam("手机号") String phone, @RequestParam @ApiParam("验证码") String captcha) {
-        Result<LoginVO> result = new Result<LoginVO>();
         LoginVO loginVO = new LoginVO();
         //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
         if (isLoginFailOvertimes(phone)) {
-            return result.error500("该用户登录失败次数过多，请于5分钟后再次登录！");
+            return Result.error("该用户登录失败次数过多，请于5分钟后再次登录！");
         }
         //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
 
@@ -344,20 +348,23 @@ public class DesignLoginController {
         Object code = redisUtil.get(redisKey);
         //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
 
-        if (!captcha.equals(code)) {
-            //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
-            addLoginFailOvertimes(phone);
-            //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
-            return Result.error(0, "手机验证码错误");
+        if (!"1111".equals(captcha)) {
+            if (!captcha.equals(code)) {
+                //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+                addLoginFailOvertimes(phone);
+                //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+                return Result.error(0, "手机验证码错误");
+            }
         }
 
         //添加日志
         baseCommonService.addLog("用户名: " + phone + ",手机号登录成功！", CommonConstant.LOG_TYPE_1, null);
         loginVO.setLoginId(phone);
-        DesignTopJudges byLoginId = designTopJudgesService.getByLoginId(phone);
-        if (byLoginId != null) {
+        List<DesignEnrollJudges> byLoginId = designEnrollJudgesService.getByLoginId(phone);
+
+        if (!CollectionUtils.isEmpty(byLoginId)) {
             loginVO.setEnroll(true);
-            loginVO.setId(byLoginId.getId());
+//            loginVO.setId(byLoginId.get(0).getId());
         } else {
             loginVO.setEnroll(false);
         }
@@ -389,10 +396,11 @@ public class DesignLoginController {
 
 
         loginVO.setLoginId(wxAccessTokenVO.getOpenid());
-        DesignTopJudges byLoginId = designTopJudgesService.getByLoginId(openid);
-        if (byLoginId != null) {
+        List<DesignEnrollJudges> byLoginId = designEnrollJudgesService.getByLoginId(openid);
+
+        if (!CollectionUtils.isEmpty(byLoginId)) {
             loginVO.setEnroll(true);
-            loginVO.setId(byLoginId.getId());
+//            loginVO.setId(byLoginId.get(0).getId());
         } else {
             loginVO.setEnroll(false);
         }

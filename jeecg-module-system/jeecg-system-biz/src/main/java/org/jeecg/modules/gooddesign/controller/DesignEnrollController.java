@@ -2,11 +2,11 @@ package org.jeecg.modules.gooddesign.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
@@ -20,10 +20,7 @@ import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
+import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollProductService;
@@ -129,7 +126,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     }
 
 
-    @ApiOperation(value = "好设计-报名-根据设计师ID查询(项目信息)", notes = "好设计-报名-根据设计师ID查询(项目信息)")
+    @ApiOperation(value = "好设计-报名-根据设计师ID查询项目信息", notes = "好设计-报名-根据设计师ID查询项目信息")
     @GetMapping(value = "/queryDetailByJudgesId")
     public Result<List<DesignTopProductVO>> queryDetailByJudgesId(@RequestParam(name = "id", required = true) Integer id) {
 
@@ -141,19 +138,17 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     }
 
 
-    @ApiOperation(value = "好设计-报名-通过id查询详细信息(个人信息+项目信息)", notes = "好设计-报名-通过id查询详细信息(个人信息+项目信息)")
+    @ApiOperation(value = "好设计-报名-通过id查询个人信息+项目信息", notes = "好设计-报名-通过id查询个人信息+项目信息")
     @GetMapping(value = "/queryDetailById")
     public Result<DesignTopJudgesDetailVO> queryDetailById(@RequestParam(name = "id", required = true) Integer id) {
         DesignTopJudgesDetailVO designTopJudges = designEnrollJudgesService.queryDetailById(id);
-//        DesignTopJudges designTopJudges = designTopJudgesService.getById(id);
-
         if (designTopJudges == null) {
             return Result.error("未找到对应数据");
         }
         return Result.OK(designTopJudges);
     }
 
-    @ApiOperation(value = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)", notes = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)")
+    @ApiOperation(value = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)", notes = "好设计-报名-通过报名ID(微信二维码openId或手机号)查询当前用户所有报名详细信息(个人信息+项目信息)")
     @GetMapping(value = "/queryDetailByLoginId")
     public Result<List<DesignTopJudgesDetailVO>> queryDetailByLoginId(@RequestParam(name = "loginId", required = true) String loginId) {
         List<DesignTopJudgesDetailVO> designTopJudgesDetailVOS = designEnrollJudgesService.queryDetailByLoginId(loginId);
@@ -231,5 +226,20 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         return Result.OK(designTopJudgesScoreVOS);
     }
 
+    @ApiOperation(value = "好设计-报名-判断是否报名", notes = "好设计-报名-判断是否报名")
+    @GetMapping(value = "/queryEnrollData")
+    public Result<LoginVO> queryEnroll(HttpServletRequest request, HttpServletResponse response, @RequestParam String loginId) {
+        List<DesignEnrollJudges> byLoginId = designEnrollJudgesService.getByLoginId(loginId);
+        String token = request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        LoginVO loginVO = new LoginVO();
+        loginVO.setLoginId(loginId);
+        loginVO.setToken(token);
+        if (!CollectionUtils.isEmpty(byLoginId)) {
+            loginVO.setEnroll(true);
+        } else {
+            loginVO.setEnroll(false);
+        }
+        return Result.OK(loginVO);
+    }
 
 }

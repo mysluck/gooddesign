@@ -9,7 +9,6 @@ import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
@@ -165,18 +164,16 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     }
 
     @Override
-    public DesignEnrollJudges getByLoginId(String loginId) {
+    public List<DesignEnrollJudges> getByLoginId(String loginId) {
+        List<DesignEnrollJudges> list = new ArrayList<>();
         QueryWrapper<DesignEnrollJudges> queryWrapper = new QueryWrapper();
         queryWrapper.eq("login_id", loginId);
         DesignActivity activity = designActivityService.getActivity();
         if (activity != null) {
             queryWrapper.eq("activity_id", activity.getId());
-            List<DesignEnrollJudges> list = this.list(queryWrapper);
-            if (!list.isEmpty()) {
-                return list.get(0);
-            }
+            list = this.list(queryWrapper);
         }
-        return null;
+        return list;
     }
 
 

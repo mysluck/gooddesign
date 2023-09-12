@@ -17,8 +17,8 @@ public class LoginVO {
     @ApiModelProperty("是否报名 true 是 false 否")
     private boolean enroll;
 
-    @ApiModelProperty("报名ID")
-    private Integer id;
+//    @ApiModelProperty("设计师信息表唯一ID")
+//    private Integer id;
 
     @ApiModelProperty("token")
     private String token;
