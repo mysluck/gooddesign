@@ -76,7 +76,6 @@ public class DesignPartnersController extends JeecgController<DesignPartners, ID
         BeanUtils.copyProperties(designPartnersVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if (sysUser != null) {
-
             bean.setCreateBy(sysUser.getUsername());
         }
         bean.setCreateTime(new Date());
@@ -99,7 +98,9 @@ public class DesignPartnersController extends JeecgController<DesignPartners, ID
         DesignPartners bean = new DesignPartners();
         BeanUtils.copyProperties(designPartnersVO, bean);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        bean.setUpdateBy(sysUser.getUsername());
+        if (sysUser != null) {
+            bean.setUpdateBy(sysUser.getUsername());
+        }
         bean.setUpdateTime(new Date());
         designPartnersService.updateById(bean);
         return Result.OK("编辑成功!");

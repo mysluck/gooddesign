@@ -3,7 +3,6 @@ package org.jeecg.modules.gooddesign.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 
@@ -41,5 +40,5 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
      */
     List<DesignTopJudgesDetailVO> queryDetailByLoginId(String loginid);
 
-    DesignEnrollJudges getByLoginId(String loginId);
+    List<DesignEnrollJudges> getByLoginId(String loginId);
 }

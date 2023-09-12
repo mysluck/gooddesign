@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -359,10 +360,11 @@ public class DesignLoginController {
         //添加日志
         baseCommonService.addLog("用户名: " + phone + ",手机号登录成功！", CommonConstant.LOG_TYPE_1, null);
         loginVO.setLoginId(phone);
-        DesignEnrollJudges byLoginId = designEnrollJudgesService.getByLoginId(phone);
-        if (byLoginId != null) {
+        List<DesignEnrollJudges> byLoginId = designEnrollJudgesService.getByLoginId(phone);
+
+        if (!CollectionUtils.isEmpty(byLoginId)) {
             loginVO.setEnroll(true);
-            loginVO.setId(byLoginId.getId());
+//            loginVO.setId(byLoginId.get(0).getId());
         } else {
             loginVO.setEnroll(false);
         }
@@ -394,11 +396,11 @@ public class DesignLoginController {
 
 
         loginVO.setLoginId(wxAccessTokenVO.getOpenid());
-        DesignEnrollJudges byLoginId = designEnrollJudgesService.getByLoginId(openid);
+        List<DesignEnrollJudges> byLoginId = designEnrollJudgesService.getByLoginId(openid);
 
-        if (byLoginId != null) {
+        if (!CollectionUtils.isEmpty(byLoginId)) {
             loginVO.setEnroll(true);
-            loginVO.setId(byLoginId.getId());
+//            loginVO.setId(byLoginId.get(0).getId());
         } else {
             loginVO.setEnroll(false);
         }

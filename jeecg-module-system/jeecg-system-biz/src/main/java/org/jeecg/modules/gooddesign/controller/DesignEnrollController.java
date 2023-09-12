@@ -2,11 +2,11 @@ package org.jeecg.modules.gooddesign.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
@@ -20,10 +20,7 @@ import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
+import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollProductService;
@@ -229,5 +226,20 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         return Result.OK(designTopJudgesScoreVOS);
     }
 
+    @ApiOperation(value = "好设计-报名-判断是否报名", notes = "好设计-报名-判断是否报名")
+    @GetMapping(value = "/queryEnrollData")
+    public Result<LoginVO> queryEnroll(HttpServletRequest request, HttpServletResponse response, @RequestParam String loginId) {
+        List<DesignEnrollJudges> byLoginId = designEnrollJudgesService.getByLoginId(loginId);
+        String token = request.getHeader(CommonConstant.X_ACCESS_TOKEN);
+        LoginVO loginVO = new LoginVO();
+        loginVO.setLoginId(loginId);
+        loginVO.setToken(token);
+        if (!CollectionUtils.isEmpty(byLoginId)) {
+            loginVO.setEnroll(true);
+        } else {
+            loginVO.setEnroll(false);
+        }
+        return Result.OK(loginVO);
+    }
 
 }
