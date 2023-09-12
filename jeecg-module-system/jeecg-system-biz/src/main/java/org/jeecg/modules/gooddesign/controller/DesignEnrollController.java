@@ -129,7 +129,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     }
 
 
-    @ApiOperation(value = "好设计-报名-根据设计师ID查询(项目信息)", notes = "好设计-报名-根据设计师ID查询(项目信息)")
+    @ApiOperation(value = "好设计-报名-根据设计师ID查询项目信息", notes = "好设计-报名-根据设计师ID查询项目信息")
     @GetMapping(value = "/queryDetailByJudgesId")
     public Result<List<DesignTopProductVO>> queryDetailByJudgesId(@RequestParam(name = "id", required = true) Integer id) {
 
@@ -141,19 +141,17 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     }
 
 
-    @ApiOperation(value = "好设计-报名-通过id查询详细信息(个人信息+项目信息)", notes = "好设计-报名-通过id查询详细信息(个人信息+项目信息)")
+    @ApiOperation(value = "好设计-报名-通过id查询个人信息+项目信息", notes = "好设计-报名-通过id查询个人信息+项目信息")
     @GetMapping(value = "/queryDetailById")
     public Result<DesignTopJudgesDetailVO> queryDetailById(@RequestParam(name = "id", required = true) Integer id) {
         DesignTopJudgesDetailVO designTopJudges = designEnrollJudgesService.queryDetailById(id);
-//        DesignTopJudges designTopJudges = designTopJudgesService.getById(id);
-
         if (designTopJudges == null) {
             return Result.error("未找到对应数据");
         }
         return Result.OK(designTopJudges);
     }
 
-    @ApiOperation(value = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)", notes = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)")
+    @ApiOperation(value = "好设计-报名-通过报名ID查询所有报名详细信息(个人信息+项目信息)", notes = "好设计-报名-通过报名ID(微信二维码openId或手机号)查询当前用户所有报名详细信息(个人信息+项目信息)")
     @GetMapping(value = "/queryDetailByLoginId")
     public Result<List<DesignTopJudgesDetailVO>> queryDetailByLoginId(@RequestParam(name = "loginId", required = true) String loginId) {
         List<DesignTopJudgesDetailVO> designTopJudgesDetailVOS = designEnrollJudgesService.queryDetailByLoginId(loginId);
