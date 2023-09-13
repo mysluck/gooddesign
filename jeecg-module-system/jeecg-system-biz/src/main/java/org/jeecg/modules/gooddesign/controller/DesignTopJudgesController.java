@@ -222,12 +222,6 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     }
 
 
-    @ApiOperation(value = "好设计-发现100-活动展示", notes = "好设计-发现100-活动展示")
-    @GetMapping(value = "/queryActivityList")
-    public Result<List<DesignActivity>> queryActivityList() {
-        List<DesignActivity> activities = designTopJudgesService.queryActivityList();
-        return Result.OK(activities);
-    }
 
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {

@@ -124,10 +124,6 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
         });
     }
 
-    @Override
-    public List<DesignActivity> queryActivityList() {
-        return designActivityMapper.queryActivityList();
-    }
 
     @Override
     public DesignTopJudgesDetailVO queryDetailById(Integer id) {

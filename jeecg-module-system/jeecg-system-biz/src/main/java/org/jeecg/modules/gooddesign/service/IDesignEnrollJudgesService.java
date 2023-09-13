@@ -29,7 +29,6 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
 
     void editDetail(DesignTopJudgesDetailVO designTopJudgesAllVO);
 
-    List<DesignActivity> queryActivityList();
 
     DesignTopJudgesDetailVO queryDetailById(Integer id);
 
