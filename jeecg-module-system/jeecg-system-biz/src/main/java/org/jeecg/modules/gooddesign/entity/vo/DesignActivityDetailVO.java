@@ -18,25 +18,14 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "design_activity对象", description = "好设计-跨年启停")
-public class DesignActivityVO implements Serializable {
+@ApiModel(value = "跨年启停活动信息", description = "好设计-跨年启停活动信息")
+public class DesignActivityDetailVO extends DesignActivityVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
-    @ApiModelProperty(value = "主键")
-    private Integer id;
-
-    /**
-     * 名称
-     */
-    @ApiModelProperty(value = "名称")
-    private String activityName;
 
     /**
      * 状态（1 启动 0未启动 2结束）
      */
-    @ApiModelProperty(value = "状态（1 启动 0未启动 2结束）")
-    private int activityStatus;
+    @ApiModelProperty(value = "活动发布年份")
+    private String publishYear;
 }
