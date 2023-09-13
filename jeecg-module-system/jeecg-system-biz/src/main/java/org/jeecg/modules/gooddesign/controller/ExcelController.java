@@ -105,9 +105,12 @@ public class ExcelController {
         // 遍历读取的行数据
         for (int i = 1; i < rows.size(); i++) {
             List<Object> rowList = rows.get(i);
-            Optional.ofNullable(rowList.get(15)).ifPresent(data -> {
-                userImgs.add(data.toString());
-            });
+            if (rowList.size() > 16) {
+                Optional.ofNullable(rowList.get(16)).ifPresent(data -> {
+                    userImgs.add(data.toString());
+                });
+            }
+
         }
         return userImgs;
     }
@@ -127,7 +130,7 @@ public class ExcelController {
             DesignTopProductVO designTopProductVO = new DesignTopProductVO();
             for (int j = 0; j < rowList.size(); j++) {
                 if (j == 0) {
-                    Optional.ofNullable(rowList.get(0)).ifPresent(data -> {
+                    Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
                         designTopJudges.setActivityId(Integer.valueOf(data.toString()));
                     });
                 } else if (j == 1) {
@@ -135,11 +138,11 @@ public class ExcelController {
 //                        designTopJudges.setActivityId(Integer.valueOf(data.toString()));
 //                    });
                 } else if (j == 2) {
-                    Optional.ofNullable(rowList.get(3)).ifPresent(data -> {
+                    Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
                         designTopJudges.setCity(data.toString());
                     });
                 } else if (j == 3) {
-                    Optional.ofNullable(rowList.get(3)).ifPresent(data -> {
+                    Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
                         designTopJudges.setActivityName(data.toString());
                     });
                 } else if (j == 4) {
@@ -186,7 +189,7 @@ public class ExcelController {
                     });
                 } else if (j == 14) {
                     Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
-                        designTopJudges.setScreenStatus(Integer.valueOf(data.toString()));
+                        designTopJudges.setUserDesc(data.toString());
                     });
                 } else if (j == 15) {
                     Optional.ofNullable(rowList.get(j)).ifPresent(data -> {
@@ -225,7 +228,7 @@ public class ExcelController {
 
             if (designTopJudges.getActivityId() == null) {
                 //todo 添加注意修改对应活动
-                designTopJudges.setActivityId(1);
+                designTopJudges.setActivityId(2);
             }
 
             designTopJudgesList.add(designTopJudges);
@@ -236,8 +239,6 @@ public class ExcelController {
 
     Map<Integer, List<String>> doDesignTopImages(List<List<Object>> rows, List<String> userImgs) {
         Map<Integer, List<String>> resultMap = new HashMap<>();
-        List<DesignTopJudgesDetailVO> designTopJudgesList = new ArrayList<>();
-
         if (CollectionUtils.isEmpty(rows)) {
             log.info("读取sheet1失败!");
             return null;
