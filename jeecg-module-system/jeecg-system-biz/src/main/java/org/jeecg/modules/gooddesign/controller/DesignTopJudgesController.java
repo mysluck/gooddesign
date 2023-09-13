@@ -1,5 +1,6 @@
 package org.jeecg.modules.gooddesign.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +16,7 @@ import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
+import org.jeecg.modules.gooddesign.entity.vo.DesignActivityDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
@@ -27,10 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -222,7 +221,6 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     }
 
 
-
     @ApiOperation(value = "好设计-发现100-活动展示", notes = "好设计-发现100-活动展示")
     @GetMapping(value = "/queryActivityList")
     public Result<List<DesignActivity>> queryActivityList() {
@@ -233,6 +231,28 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, DesignTopJudges.class);
+    }
+
+
+    @ApiOperation(value = "好设计-发现100-获取所有活动信息", notes = "好设计-发现100-获取所有活动信息")
+    @RequestMapping(value = "/getAdctivity", method = RequestMethod.POST)
+    public Result<List<DesignActivityDetailVO>> getAdctivity() {
+        List<DesignActivity> list = designActivityService.list();
+
+        List<DesignActivityDetailVO> result = list.stream().map(activity -> {
+            DesignActivityDetailVO designActivityDetailVO = new DesignActivityDetailVO();
+            BeanUtils.copyProperties(activity, designActivityDetailVO);
+            Date publishTime = activity.getPublishTime();
+            try {
+                String year = DateUtil.format(publishTime, "yyyy");
+                designActivityDetailVO.setPublishYear(year);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+            return designActivityDetailVO;
+        }).collect(Collectors.toList());
+        result.sort(Comparator.comparing(DesignActivityDetailVO::getPublishYear));
+        return Result.OK(result);
     }
 
 }

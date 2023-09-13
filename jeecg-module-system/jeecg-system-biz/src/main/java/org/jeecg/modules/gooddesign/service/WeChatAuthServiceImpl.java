@@ -1,10 +1,15 @@
 package org.jeecg.modules.gooddesign.service;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
+import org.jeecg.common.util.RedisUtil;
 import org.jeecg.modules.gooddesign.entity.vo.WeChatUserInfo;
 import org.jeecg.modules.gooddesign.entity.vo.WxAccessTokenVO;
+import org.jeecg.modules.monitor.service.RedisService;
+import org.jeecg.modules.monitor.service.impl.RedisServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Service
 public class WeChatAuthServiceImpl implements WeChatAuthService {
+    @Autowired
+    RedisUtil redisUtil;
     @Autowired
     RestTemplate restTemplate;
 
@@ -31,16 +38,22 @@ public class WeChatAuthServiceImpl implements WeChatAuthService {
      */
     @Override
     public WxAccessTokenVO assess_token(String code) {
+        if (redisUtil.hasKey(code)) {
+            return (WxAccessTokenVO) redisUtil.get(code);
+        }
         return assess_token(code, appid, secret);
     }
 
     public WxAccessTokenVO assess_token(String code, String appId, String secret) {
-        WxAccessTokenVO wxAccessTokenVO = new WxAccessTokenVO();
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + secret + "&code=" + code + "&grant_type=authorization_code";
-        wxAccessTokenVO = restTemplate.getForObject(url, WxAccessTokenVO.class);
+        String forObject = restTemplate.getForObject(url, String.class);
+        log.info("微信登录返回内容为：{}", forObject);
+        WxAccessTokenVO wxAccessTokenVO = JSONObject.parseObject(forObject, WxAccessTokenVO.class);
+//        wxAccessTokenVO = restTemplate.getForObject(url, WxAccessTokenVO.class);
         if (wxAccessTokenVO == null) {
             return null;
         }
+        redisUtil.set("code", wxAccessTokenVO, 600);
         return wxAccessTokenVO;
     }
 
