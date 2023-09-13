@@ -67,6 +67,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
         QueryWrapper<DesignTopJudges> queryWrapper = QueryGenerator.initQueryWrapper(designTopJudges, req.getParameterMap());
+        queryWrapper.orderByAsc("sort");
         Page<DesignTopJudges> page = new Page<DesignTopJudges>(pageNo, pageSize);
         IPage<DesignTopJudges> pageList = designTopJudgesService.page(page, queryWrapper);
         List<DesignTopJudges> records = pageList.getRecords();
