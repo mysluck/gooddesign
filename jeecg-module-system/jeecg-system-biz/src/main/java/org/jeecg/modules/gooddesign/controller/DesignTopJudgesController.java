@@ -131,7 +131,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @PostMapping(value = "/editDetail")
     public Result<String> editDetail(@RequestBody DesignTopJudgesDetailVO designTopJudgesAllVO) {
         designTopJudgesService.editDetail(designTopJudgesAllVO);
-        return Result.OK("添加成功！");
+        return Result.OK("编辑成功！");
     }
 
 

@@ -56,7 +56,7 @@ public class DesignTopJudgesParticipants implements Serializable {
     /**评委ID*/
 	@Excel(name = "评委ID", width = 15)
     @ApiModelProperty(value = "评委ID")
-    private java.lang.Integer judgeId;
+    private java.lang.String judgeId;
 	/**参赛者ID*/
 	@Excel(name = "参赛者ID", width = 15)
     @ApiModelProperty(value = "参赛者ID")

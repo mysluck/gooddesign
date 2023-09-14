@@ -34,7 +34,7 @@ import org.jeecg.common.aspect.annotation.AutoLog;
  * @Date: 2023-08-17
  * @Version: V1.0
  */
-@Api(tags = "好设计-top100-评委打分")
+@Api(tags = "好设计-报名-评委打分")
 @RestController
 @RequestMapping("/designJudgesParticipants")
 @Slf4j
