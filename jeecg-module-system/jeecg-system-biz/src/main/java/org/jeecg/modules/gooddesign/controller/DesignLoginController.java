@@ -311,7 +311,8 @@ public class DesignLoginController {
                 return Result.error("短信验证码发送失败,请稍后重试");
             }
             //update-begin-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
-            //验证码10分钟内有效
+            //验证码5分钟内有效
+            log.info("redis key:{}，验证码：{}", redisKey, captcha);
             redisUtil.set(redisKey, captcha, 300);
             //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
 
@@ -347,16 +348,13 @@ public class DesignLoginController {
         String redisKey = CommonConstant.PHONE_REDIS_KEY_PRE + phone;
         Object code = redisUtil.get(redisKey);
         //update-end-author:taoyan date:2022-9-13 for: VUEN-2245 【漏洞】发现新漏洞待处理20220906
-
-        if (!"1111".equals(captcha)) {
-            if (!captcha.equals(code)) {
-                //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
-                addLoginFailOvertimes(phone);
-                //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
-                return Result.error(0, "手机验证码错误");
-            }
+        log.info("redis验证码为：{}，前端入参为：{}", code, captcha);
+        if (!("1111".equals(captcha) || captcha.equals(code))) {
+            //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+            addLoginFailOvertimes(phone);
+            //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
+            return Result.error(0, "手机验证码错误");
         }
-
         //添加日志
         baseCommonService.addLog("用户名: " + phone + ",手机号登录成功！", CommonConstant.LOG_TYPE_1, null);
         loginVO.setLoginId(phone);

@@ -102,9 +102,9 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
 
         DesignActivity bean = new DesignActivity();
         BeanUtils.copyProperties(designActivityVO, bean);
-
         if (1 == designActivityVO.getActivityStatus()) {
-            if (designActivityService.checkActivityStatus()) {
+            DesignActivity activity = designActivityService.getActivity();
+            if (activity != null && activity.getId() != null && !designActivityVO.getId().equals(activity.getId())) {
                 return Result.OK("存在正在进行中的活动，请处理！");
             }
             bean.setPublishTime(new Date());
