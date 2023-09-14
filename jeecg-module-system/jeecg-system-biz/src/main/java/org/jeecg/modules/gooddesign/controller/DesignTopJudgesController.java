@@ -222,7 +222,6 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     }
 
 
-
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, DesignTopJudges.class);
@@ -232,7 +231,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @ApiOperation(value = "好设计-发现100-获取所有活动信息", notes = "好设计-发现100-获取所有活动信息")
     @RequestMapping(value = "/getAdctivity", method = RequestMethod.POST)
     public Result<List<DesignActivityDetailVO>> getAdctivity() {
-        List<DesignActivity> list = designActivityService.list();
+        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("activity_status", 2);
+        List<DesignActivity> list = designActivityService.list(queryWrapper);
 
         List<DesignActivityDetailVO> result = list.stream().map(activity -> {
             DesignActivityDetailVO designActivityDetailVO = new DesignActivityDetailVO();
