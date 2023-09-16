@@ -2,7 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.gooddesign.mapper.DesignMainStakeholderMapper">
 
-    <select id="getStakeholderIds" parameterType="int" >
-        select * from design_main_stakeholder s where s.main_id =#{mainId} and s.type = #{type}
+    <select id="getStakeholderIds" parameterType="int">
+        select *
+        from design_main_stakeholder s
+        where s.main_id = #{mainId}
+          and s.type = #{type}
     </select>
+
+    <select id="queryMainStakeholder" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO">
+        select m.id, m.main_id, m.stakeholder_id, d.name, d.type, d.user_desc, d.user_img_url
+        from design_main_stakeholder m
+                 left join design_stakeholder d on m.stakeholder_id = d.id
+        where m.main_id = #{mainId}
+    </select>
+
+    <select id="queryMainStakeholderByType" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO">
+        select m.id, m.main_id, m.stakeholder_id, d.name, d.type, d.user_desc, d.user_img_url
+        from design_main_stakeholder m
+                 left join design_stakeholder d on m.stakeholder_id = d.id
+        where m.main_id = #{mainId}
+          and m.type = #{type}
+    </select>
+
 </mapper>

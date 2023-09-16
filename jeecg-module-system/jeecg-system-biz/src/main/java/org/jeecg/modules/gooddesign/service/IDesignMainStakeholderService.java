@@ -1,7 +1,9 @@
 package org.jeecg.modules.gooddesign.service;
 
+import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO;
 
 import java.util.List;
 
@@ -21,5 +23,10 @@ public interface IDesignMainStakeholderService extends IService<DesignMainStakeh
      * @return
      */
     List<Integer> getStakeholderIds(int mainId, int type);
+
+    List<DesignMainStakeholderVO> queryMainStakeholder(int mainId);
+
+    List<DesignMainStakeholderVO> queryMainStakeholderByType(int mainId, int type);
+
 
 }

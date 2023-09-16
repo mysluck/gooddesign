@@ -15,10 +15,7 @@ import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMain;
 import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
 import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
-import org.jeecg.modules.gooddesign.entity.vo.DesignMainBasicVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignMainDetailVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignMainMovieVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainAddVO;
+import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.IDesignMainMovieService;
 import org.jeecg.modules.gooddesign.service.IDesignMainService;
 import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
@@ -123,6 +120,21 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
         return Result.OK(designMain);
     }
 
+
+    @ApiOperation(value = "设计壮游-通过年份ID和城市ID查询详细信息", notes = "设计壮游-通过年份ID和城市ID查询详细信息")
+    @GetMapping(value = "/queryDetailByYearAndCity")
+    public Result<DesignMainDetailVO> queryDetailByYearAndCity(
+            @RequestParam(name = "yearId", required = true) int yearId,
+            @RequestParam(name = "cityId", required = true) int cityId
+    ) {
+        DesignMainDetailVO designMain = designMainService.queryDetailByYearAndCity(yearId, cityId);
+        if (designMain == null) {
+            return Result.error("未找到对应数据");
+        }
+        return Result.OK(designMain);
+    }
+
+
     @ApiOperation(value = "设计壮游-通过id查询详细信息", notes = "设计壮游-通过id查询详细信息（照片、视频）")
     @GetMapping(value = "/queryDetailById")
     public Result<DesignMainDetailVO> queryDetailById(@RequestParam(name = "id", required = true) String id) {
@@ -185,4 +197,14 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
         return super.importExcel(request, response, DesignMain.class);
     }
+
+    @ApiOperation(value = "相关人员-根据活动ID和人员类型查询相关人员", notes = "相关人员-根据活动ID和人员类型查询相关人员")
+    @GetMapping(value = "/queryStakeholder")
+    public Result<List<DesignMainStakeholderVO>> queryPageList(@RequestParam(name = "mainID") Integer mainID,
+                                                               @RequestParam(name = "type") Integer type) {
+
+        List<DesignMainStakeholderVO> designMainStakeholderVOS = designMainStakeholderService.queryMainStakeholderByType(mainID, type);
+        return Result.OK(designMainStakeholderVOS);
+    }
+
 }

@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.jeecg.modules.gooddesign.entity.DesignMainImage;
-import org.jeecgframework.poi.excel.annotation.Excel;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,6 +32,15 @@ public class DesignMainDetailVO implements Serializable {
     @ApiModelProperty("现场照片")
     List<DesignMainImageVO> images;
 
+    //        @ApiModelProperty(value = "相关人员类型（1推荐委员 2发现大使 3观点讲者）")
+    @ApiModelProperty("推荐委员")
+    List<DesignMainStakeholderVO> user1List;
+
+    @ApiModelProperty("2发现大使")
+    List<DesignMainStakeholderVO> user2List;
+
+    @ApiModelProperty("3观点讲者")
+    List<DesignMainStakeholderVO> user3List;
 
 
 }

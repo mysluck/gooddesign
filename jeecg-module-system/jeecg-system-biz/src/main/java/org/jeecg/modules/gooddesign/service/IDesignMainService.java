@@ -13,4 +13,6 @@ import org.jeecg.modules.gooddesign.entity.vo.DesignMainDetailVO;
 public interface IDesignMainService extends IService<DesignMain> {
 
     DesignMainDetailVO queryDetailById(String id);
+
+    DesignMainDetailVO queryDetailByYearAndCity(int yearId,int cityId);
 }
