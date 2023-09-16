@@ -41,4 +41,10 @@ public class DesignJudgesParticipantsVO implements Serializable {
 
     @ApiModelProperty(value = "打分状态 0待定  1推荐 2不推荐")
     private Integer scoreStatus;
+
+    @ApiModelProperty(value = "活动ID")
+    private Integer activityId;
+
+
+
 }

@@ -26,8 +26,9 @@ spring:
       max-request-size: 10MB
   mail:
     host: smtp.163.com
-    username: jeecgos@163.com
-    password: ??
+    username: 16619947603@163.com
+    password: YNKZUEVCUFOAMQBD
+    #    password: Zzy897570
     properties:
       mail:
         smtp:
@@ -40,7 +41,7 @@ spring:
     job-store-type: jdbc
     initialize-schema: embedded
     #定时任务启动开关，true-开  false-关
-    auto-startup: true
+    auto-startup: false
     #延迟1秒启动定时任务
     startup-delay: 1s
     #启动时更新己存在的Job
@@ -145,8 +146,8 @@ spring:
   redis:
     database: 0
     host: 127.0.0.1
-    port: 6379
-    password: ''
+    port: 6380
+    password: 'designFx'
 #mybatis plus 设置
 mybatis-plus:
   mapper-locations: classpath*:org/jeecg/modules/**/xml/*Mapper.xml
@@ -188,8 +189,9 @@ jeecg:
     excludeUrls: /test/jeecgDemo/demo3,/test/jeecgDemo/redisDemo/**,/category/**,/visual/**,/map/**,/jmreport/bigscreen2/**
   #阿里云oss存储和大鱼短信秘钥配置
   oss:
-    accessKey: ??
-    secretKey: ??
+    accessKey: TFRBSTV0SkNnd0tXZTZaaHN4bUhxS2Z2
+    secretKey: WHdsOE9YVHNwbzRCUWFGY0dxdkVUNjljWG1iNG1v
+    #    secretKey: wiEe83GEbdX1RKZwiXTWBXQIEVe6WB
     endpoint: oss-cn-beijing.aliyuncs.com
     bucketName: jeecgdev
   # ElasticSearch 6设置
@@ -205,22 +207,26 @@ jeecg:
     minio_name: ??
     minio_pass: ??
     bucketName: otatest
+  qiniu:
+    accessKey: ZO5zgV4ch3XayYZc4sBBkDr_eT8xY0wA1vHj7C_9
+    secretKey: 2aHB_p8bBH1NtPmFf0wWb-g-BHgEr0It2-lSvbIZ
+    bucketName: design
   #大屏报表参数设置
   jmreport:
     mode: dev
     #数据字典是否进行saas数据隔离，自己看自己的字典
     saas: false
   #xxl-job配置
-#  xxljob:
-#    enabled: false
-#    adminAddresses: http://127.0.0.1:9080/xxl-job-admin
-#    appname: ${spring.application.name}
-#    accessToken: ''
-#    address: 127.0.0.1:30007
-#    ip: 127.0.0.1
-#    port: 30007
-#    logPath: logs/jeecg/job/jobhandler/
-#    logRetentionDays: 30
+  xxljob:
+    enabled: false
+    adminAddresses: http://127.0.0.1:9080/xxl-job-admin
+    appname: ${spring.application.name}
+    accessToken: ''
+    address: 127.0.0.1:30007
+    ip: 127.0.0.1
+    port: 30007
+    logPath: logs/jeecg/job/jobhandler/
+    logRetentionDays: 30
   #分布式锁配置
   redisson:
     address: 127.0.0.1:6379
@@ -262,9 +268,9 @@ justauth:
       client-secret: ??
       redirect-uri: http://sso.test.com:8080/jeecg-boot/sys/thirdLogin/dingtalk/callback
     WECHAT_OPEN:
-      client-id: ??
-      client-secret: ??
-      redirect-uri: http://sso.test.com:8080/jeecg-boot/sys/thirdLogin/wechat_open/callback
+      client-id: wx46bd06cbf7d37908
+      client-secret: 35ba3dc865d6543ee255cd42ad641f98
+      redirect-uri: zhe
   cache:
     type: default
     prefix: 'demo::'

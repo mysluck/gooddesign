@@ -1,6 +1,6 @@
 package org.jeecg.modules.gooddesign.mapper;
 
-import org.jeecg.modules.gooddesign.entity.DesignTopJudgesParticipants;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @Date: 2023-08-17
  * @Version: V1.0
  */
-public interface DesignTopJudgesParticipantsMapper extends BaseMapper<DesignTopJudgesParticipants> {
+public interface DesignTopJudgesParticipantsMapper extends BaseMapper<DesignEnrollParticipants> {
     List<DesignTopParticipantsScoreVO> getScore();
 
 }

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudgesParticipants;
 import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.*;
 import org.springframework.beans.BeanUtils;
@@ -240,37 +238,6 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
             loginVO.setEnroll(false);
         }
         return Result.OK(loginVO);
-    }
-
-    @ApiOperation(value = "好设计-报名-查询所有初审通过的设计师集合列表", notes = "好设计-报名-查询所有初审通过的设计师集合")
-    @GetMapping(value = "/listScreenEnroll")
-    public Result<IPage<DesignEnrollJudges>> listEnroll(@RequestParam(name = "judgesId") @ApiParam("评委ID") String juedgsId,
-                                                        @RequestParam(name = "activityId") @ApiParam("活动ID") Integer activityId,
-                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                        HttpServletRequest req) {
-
-
-        QueryWrapper<DesignEnrollJudges> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("activity_id", activityId);
-        queryWrapper.eq("screen_status", 1);
-        List<DesignEnrollJudges> records = designEnrollJudgesService.list(queryWrapper);
-
-        QueryWrapper<DesignTopJudgesParticipants> participantsQueryWrapper = new QueryWrapper<>();
-        participantsQueryWrapper.eq("judge_id", juedgsId);
-
-        List<DesignTopJudgesParticipants> designTopJudgesParticipants = designTopJudgesParticipantsService.list(participantsQueryWrapper);
-        Map<Integer, Integer> integerIntegerMap = new HashMap<>();
-        if (!CollectionUtils.isEmpty(designTopJudgesParticipants)) {
-            integerIntegerMap = designTopJudgesParticipants.stream().collect(Collectors.toMap(DesignTopJudgesParticipants::getParticipantId, DesignTopJudgesParticipants::getScoreStatus));
-        }
-        List result = new ArrayList();
-        if (!CollectionUtils.isNotEmpty(records)) {
-
-        }
-
-
-        return Result.OK(null);
     }
 
 

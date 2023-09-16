@@ -1,6 +1,6 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
-import org.jeecg.modules.gooddesign.entity.DesignTopJudgesParticipants;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.mapper.DesignTopJudgesParticipantsMapper;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
@@ -17,7 +17,7 @@ import java.util.List;
  * @Version: V1.0
  */
 @Service
-public class DesignTopJudgesParticipantsServiceImpl extends ServiceImpl<DesignTopJudgesParticipantsMapper, DesignTopJudgesParticipants> implements IDesignTopJudgesParticipantsService {
+public class DesignTopJudgesParticipantsServiceImpl extends ServiceImpl<DesignTopJudgesParticipantsMapper, DesignEnrollParticipants> implements IDesignTopJudgesParticipantsService {
     @Override
     public List<DesignTopParticipantsScoreVO> getTotalScore() {
         return this.baseMapper.getScore();

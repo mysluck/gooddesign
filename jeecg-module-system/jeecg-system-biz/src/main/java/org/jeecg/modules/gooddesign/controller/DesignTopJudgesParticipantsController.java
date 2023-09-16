@@ -1,16 +1,21 @@
 package org.jeecg.modules.gooddesign.controller;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudgesParticipants;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
+import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
+import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -38,7 +43,9 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 @RestController
 @RequestMapping("/designJudgesParticipants")
 @Slf4j
-public class DesignTopJudgesParticipantsController extends JeecgController<DesignTopJudgesParticipants, IDesignTopJudgesParticipantsService> {
+public class DesignTopJudgesParticipantsController extends JeecgController<DesignEnrollParticipants, IDesignTopJudgesParticipantsService> {
+    @Autowired
+    IDesignEnrollJudgesService designEnrollJudgesService;
     @Autowired
     private IDesignTopJudgesParticipantsService designJudgesParticipantsService;
 
@@ -54,20 +61,20 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     //@AutoLog(value = "评委通过表，保存评委评分数据-分页列表查询")
     @ApiOperation(value = "评委打分-分页列表查询", notes = "评委打分-分页列表查询")
     @GetMapping(value = "/list")
-    public Result<IPage<DesignTopJudgesParticipants>> queryPageList(DesignTopJudgesParticipants designJudgesParticipants,
-                                                                    @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                                    HttpServletRequest req) {
-        QueryWrapper<DesignTopJudgesParticipants> queryWrapper = QueryGenerator.initQueryWrapper(designJudgesParticipants, req.getParameterMap());
-        Page<DesignTopJudgesParticipants> page = new Page<DesignTopJudgesParticipants>(pageNo, pageSize);
-        IPage<DesignTopJudgesParticipants> pageList = designJudgesParticipantsService.page(page, queryWrapper);
+    public Result<IPage<DesignEnrollParticipants>> queryPageList(DesignEnrollParticipants designJudgesParticipants,
+                                                                 @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                                 @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                                 HttpServletRequest req) {
+        QueryWrapper<DesignEnrollParticipants> queryWrapper = QueryGenerator.initQueryWrapper(designJudgesParticipants, req.getParameterMap());
+        Page<DesignEnrollParticipants> page = new Page<DesignEnrollParticipants>(pageNo, pageSize);
+        IPage<DesignEnrollParticipants> pageList = designJudgesParticipantsService.page(page, queryWrapper);
         return Result.OK(pageList);
     }
 
     /**
      * 添加
      *
-     * @param designJudgesParticipants
+     * @param
      * @return
      */
     @AutoLog(value = "评委通过表，保存评委评分数据-添加")
@@ -75,10 +82,10 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     //@RequiresPermissions("gooddesign:design_judges_participants:add")
     @PostMapping(value = "/add")
     public Result<String> add(@RequestBody DesignJudgesParticipantsVO designJudgesParticipantsVO) {
-        DesignTopJudgesParticipants designJudgesParticipants = new DesignTopJudgesParticipants();
+        DesignEnrollParticipants designJudgesParticipants = new DesignEnrollParticipants();
         BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             designJudgesParticipants.setCreateBy(sysUser.getUsername());
         }
         designJudgesParticipants.setCreateTime(new Date());
@@ -90,7 +97,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     /**
      * 编辑
      *
-     * @param designJudgesParticipants
+     * @param
      * @return
      */
     @AutoLog(value = "评委通过表，保存评委评分数据-编辑")
@@ -99,10 +106,10 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignJudgesParticipantsVO designJudgesParticipantsVO) {
 
-        DesignTopJudgesParticipants designJudgesParticipants = new DesignTopJudgesParticipants();
+        DesignEnrollParticipants designJudgesParticipants = new DesignEnrollParticipants();
         BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             designJudgesParticipants.setUpdateBy(sysUser.getUsername());
         }
         designJudgesParticipants.setUpdateTime(new Date());
@@ -151,7 +158,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     @ApiOperation(value = "评委通过表，保存评委评分数据-通过id查询", notes = "评委通过表，保存评委评分数据-通过id查询")
     @GetMapping(value = "/queryById")
     public Result<DesignJudgesParticipantsVO> queryById(@RequestParam(name = "id", required = true) String id) {
-        DesignTopJudgesParticipants designJudgesParticipants = designJudgesParticipantsService.getById(id);
+        DesignEnrollParticipants designJudgesParticipants = designJudgesParticipantsService.getById(id);
         if (designJudgesParticipants == null) {
             return Result.error("未找到对应数据");
         }
@@ -168,8 +175,8 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
      */
     //@RequiresPermissions("gooddesign:design_judges_participants:exportXls")
     @RequestMapping(value = "/exportXls")
-    public ModelAndView exportXls(HttpServletRequest request, DesignTopJudgesParticipants designJudgesParticipants) {
-        return super.exportXls(request, designJudgesParticipants, DesignTopJudgesParticipants.class, "评委通过表，保存评委评分数据");
+    public ModelAndView exportXls(HttpServletRequest request, DesignEnrollParticipants designJudgesParticipants) {
+        return super.exportXls(request, designJudgesParticipants, DesignEnrollParticipants.class, "评委通过表，保存评委评分数据");
     }
 
     /**
@@ -182,7 +189,48 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     //@RequiresPermissions("gooddesign:design_judges_participants:importExcel")
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
-        return super.importExcel(request, response, DesignTopJudgesParticipants.class);
+        return super.importExcel(request, response, DesignEnrollParticipants.class);
+    }
+
+    @ApiOperation(value = "好设计-报名-查询所有初审通过的设计师集合列表", notes = "好设计-报名-查询所有初审通过的设计师集合")
+    @GetMapping(value = "/listScreenEnroll")
+    public Result<List<DesignEnrollScoreVO>> listEnroll(@RequestParam(name = "userId") @ApiParam("评委ID") String juedgsId,
+                                                        @RequestParam(name = "activityId") @ApiParam("活动ID") Integer activityId,
+                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                        HttpServletRequest req) {
+
+
+        //初筛通过数据
+        QueryWrapper<DesignEnrollJudges> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("activity_id", activityId);
+        queryWrapper.eq("screen_status", 1);
+        queryWrapper.orderByAsc("id");
+        List<DesignEnrollJudges> records = designEnrollJudgesService.list(queryWrapper);
+
+        //评分数据
+        QueryWrapper<DesignEnrollParticipants> participantsQueryWrapper = new QueryWrapper<>();
+        //评委已评分的数据
+        participantsQueryWrapper.eq("judge_id", juedgsId);
+        participantsQueryWrapper.eq("activity_id", activityId);
+        List<DesignEnrollParticipants> designEnrollParticipants = designJudgesParticipantsService.list(participantsQueryWrapper);
+
+        if (CollectionUtils.isEmpty(designEnrollParticipants)) {
+            designEnrollParticipants = new ArrayList<>();
+        }
+        Map<Integer, Integer> scoreStatusMap = designEnrollParticipants.stream().collect(Collectors.toMap(DesignEnrollParticipants::getParticipantId, DesignEnrollParticipants::getScoreStatus));
+
+        if (CollectionUtils.isEmpty(records)) {
+            return Result.error("未查询到通过初筛的数据！");
+        }
+        List<DesignEnrollScoreVO> result = records.stream().map(data -> {
+            DesignEnrollScoreVO designEnrollScoreVO = new DesignEnrollScoreVO();
+            BeanUtils.copyProperties(data, designEnrollScoreVO);
+            designEnrollScoreVO.setScoreStatus(scoreStatusMap.getOrDefault(data.getId(), 4));
+            return designEnrollScoreVO;
+        }).collect(Collectors.toList());
+
+        return Result.OK(result);
     }
 
 }
