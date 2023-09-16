@@ -86,4 +86,7 @@ public class DesignMainMovie implements Serializable {
 
     @ApiModelProperty(value = "是否推荐 1推荐 0不推荐")
     private int recommendedStatus;
+
+    @ApiModelProperty(value = "标题")
+    private String title;
 }

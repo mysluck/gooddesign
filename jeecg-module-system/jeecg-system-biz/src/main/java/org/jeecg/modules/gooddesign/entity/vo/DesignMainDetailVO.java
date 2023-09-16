@@ -34,4 +34,6 @@ public class DesignMainDetailVO implements Serializable {
     @ApiModelProperty("现场照片")
     List<DesignMainImageVO> images;
 
+
+
 }

@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.entity.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * @Description:
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @Date: 2023/9/3 9:52
  * @Version: V1.0
  */
+@Data
 @ApiModel(value = "设计壮游-基础信息-图片对象", description = "设计壮游-基础信息-图片对象")
 public class DesignMainImageVO {
     @ApiModelProperty(value = "id")
