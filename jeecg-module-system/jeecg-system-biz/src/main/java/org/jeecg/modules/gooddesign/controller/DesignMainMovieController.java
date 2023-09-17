@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -112,7 +113,7 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     /**
      * 编辑
      *
-     * @param DesignMainMovie
+     * @param DesignMainMovies
      * @return
      */
     @AutoLog(value = "设计壮游-编辑")
@@ -121,11 +122,30 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignMainMovie designMainMovie) {
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             designMainMovie.setUpdateBy(sysUser.getUsername());
         }
         designMainMovie.setUpdateTime(new Date());
         designMainMovieService.updateById(designMainMovie);
+        return Result.OK("编辑成功!");
+    }
+
+
+    @AutoLog(value = "设计壮游-批量编辑")
+    @ApiOperation(value = "设计壮游-批量编辑", notes = "设计壮游-批量编辑")
+    //@RequiresPermissions("gooddesign:design_main_image:edit")
+    @RequestMapping(value = "/batchEdit", method = {RequestMethod.POST})
+    public Result<String> batchEdit(@RequestBody List<DesignMainMovie> designMainMovies) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if (CollectionUtils.isNotEmpty(designMainMovies)) {
+            designMainMovies.forEach(designMainMovie -> {
+                if (sysUser != null) {
+                    designMainMovie.setUpdateBy(sysUser.getUsername());
+                }
+                designMainMovie.setUpdateTime(new Date());
+                designMainMovieService.updateById(designMainMovie);
+            });
+        }
         return Result.OK("编辑成功!");
     }
 
