@@ -3,8 +3,10 @@ package org.jeecg.modules.gooddesign.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jeecg.weibo.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollProductWork;
 import org.jeecg.modules.gooddesign.entity.DesignTopProduct;
 import org.jeecg.modules.gooddesign.entity.DesignTopProductWork;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
@@ -115,6 +117,24 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
 
         designTopProductWorkService.saveBatch(designTopProductWorkList);
 
+    }
+
+
+    @Override
+    public void editProducts(List<DesignTopProductVO> designTopProductVOs, int judgesId) {
+        List<DesignTopProductVO> designTopProductVOS = this.queryByTopJudgesId(judgesId);
+        if (CollectionUtils.isNotEmpty(designTopProductVOS)) {
+            //  删除
+            List<Integer> productIds = designTopProductVOS.stream().map(DesignTopProductVO::getId).collect(Collectors.toList());
+            QueryWrapper<DesignTopProductWork> queryWrapper = new QueryWrapper<>();
+            queryWrapper.in("product_id", productIds);
+            designTopProductWorkService.remove(queryWrapper);
+            this.removeByIds(productIds);
+        }
+        designTopProductVOs.forEach(productvo -> {
+            productvo.setTopJudgesId(judgesId);
+            this.saveProduct(productvo);
+        });
     }
 
 

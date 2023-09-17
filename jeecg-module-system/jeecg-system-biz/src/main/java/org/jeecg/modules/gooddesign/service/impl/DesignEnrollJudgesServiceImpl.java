@@ -118,10 +118,11 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
         //设计师ID
         Integer judgesId = bean.getId();
         List<DesignTopProductVO> products = designTopJudgesAllVO.getProducts();
-        products.forEach(productvo -> {
-            productvo.setTopJudgesId(judgesId);
-            designEnrollProductService.editProduct(productvo);
-        });
+//        products.forEach(productvo -> {
+//            productvo.setTopJudgesId(judgesId);
+//            designEnrollProductService.editProduct(productvo);
+//        });
+        designEnrollProductService.editProducsts(products, judgesId);
     }
 
 

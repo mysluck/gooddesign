@@ -17,9 +17,12 @@ public interface IDesignEnrollProductService extends IService<DesignEnrollProduc
 
     void editProduct(DesignTopProductVO designTopProductVO);
 
+    void editProducsts(List<DesignTopProductVO> designTopProductVOs, int judgesId);
+
     DesignTopProductVO queryByProductId(Integer id);
 
     List<DesignTopProductVO> queryByTopJudgesId(Integer id);
 
     List<DesignTopProductVO> queryDetailByJudgesId(Integer id);
+
 }

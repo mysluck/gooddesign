@@ -3,6 +3,7 @@ package org.jeecg.modules.gooddesign.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jeecg.weibo.exception.BusinessException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
@@ -102,6 +103,34 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
 
     }
 
+    /**
+     * 批量编辑项目信息 删除在添加
+     *
+     * @param designTopProductVOs
+     * @param judgesId
+     */
+    @Override
+    public void editProducsts(List<DesignTopProductVO> designTopProductVOs, int judgesId) {
+
+        QueryWrapper<DesignEnrollProduct> productQueryWrapper = new QueryWrapper();
+        productQueryWrapper.eq("top_judges_id", judgesId);
+
+        List<DesignEnrollProduct> designTopProductVOS = this.list(productQueryWrapper);
+
+        if (CollectionUtils.isNotEmpty(designTopProductVOS)) {
+            //  删除
+            List<Integer> productIds = designTopProductVOS.stream().map(DesignEnrollProduct::getId).collect(Collectors.toList());
+            QueryWrapper<DesignEnrollProductWork> queryWrapper = new QueryWrapper<>();
+            queryWrapper.in("product_id", productIds);
+            designEnrollProductWorkService.remove(queryWrapper);
+            this.removeByIds(productIds);
+        }
+        designTopProductVOs.forEach(productvo -> {
+            productvo.setTopJudgesId(judgesId);
+            this.saveProduct(productvo);
+        });
+    }
+
 
     @Override
     public DesignTopProductVO queryByProductId(Integer id) {
@@ -138,7 +167,7 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
             BeanUtils.copyProperties(pro, designTopProductVO);
 
             QueryWrapper<DesignEnrollProductWork> queryWrapper = new QueryWrapper();
-            queryWrapper.eq("top_judges_id", id);
+            queryWrapper.eq("product_id", id);
             List<DesignEnrollProductWork> list = designEnrollProductWorkService.list(queryWrapper);
             designTopProductVO.setProductImgUrls(list.stream().map(DesignEnrollProductWork::getWorkUrl).collect(Collectors.toList()));
 

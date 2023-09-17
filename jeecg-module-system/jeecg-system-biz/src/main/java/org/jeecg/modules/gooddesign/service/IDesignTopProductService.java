@@ -17,6 +17,8 @@ public interface IDesignTopProductService extends IService<DesignTopProduct> {
 
     void editProduct(DesignTopProductVO designTopProductVO);
 
+    void editProducts(List<DesignTopProductVO> designTopProductVOs, int judgesId);
+
     DesignTopProductVO queryByProductId(Integer id);
 
     List<DesignTopProductVO> queryByTopJudgesId(Integer id);
