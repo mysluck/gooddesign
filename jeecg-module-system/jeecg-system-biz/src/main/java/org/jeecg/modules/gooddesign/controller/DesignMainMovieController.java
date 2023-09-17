@@ -93,19 +93,7 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     @ApiOperation(value = "设计壮游-编辑壮游-现场视频-批量添加", notes = "设计壮游-编辑壮游-现场视频-批量添加")
     @PostMapping(value = "/batchAdd")
     public Result<String> addMovie(@RequestBody List<DesignMainMovieVO> designMainMovieVOs) {
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-
-        List<DesignMainMovie> result = designMainMovieVOs.stream().map(designMainMovieVO -> {
-            DesignMainMovie designMainMovie = new DesignMainMovie();
-            BeanUtils.copyProperties(designMainMovieVO, designMainMovie);
-            designMainMovie.setMainId(designMainMovieVO.getMainId());
-            if (sysUser != null) {
-                designMainMovie.setCreateBy(sysUser.getUsername());
-            }
-            designMainMovie.setCreateTime(new Date());
-            return designMainMovie;
-        }).collect(Collectors.toList());
-        designMainMovieService.saveBatch(result);
+        designMainMovieService.batchAdd(designMainMovieVOs);
         return Result.OK("添加成功！");
     }
 
@@ -135,17 +123,8 @@ public class DesignMainMovieController extends JeecgController<DesignMainMovie, 
     @ApiOperation(value = "设计壮游-批量编辑", notes = "设计壮游-批量编辑")
     //@RequiresPermissions("gooddesign:design_main_image:edit")
     @RequestMapping(value = "/batchEdit", method = {RequestMethod.POST})
-    public Result<String> batchEdit(@RequestBody List<DesignMainMovie> designMainMovies) {
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if (CollectionUtils.isNotEmpty(designMainMovies)) {
-            designMainMovies.forEach(designMainMovie -> {
-                if (sysUser != null) {
-                    designMainMovie.setUpdateBy(sysUser.getUsername());
-                }
-                designMainMovie.setUpdateTime(new Date());
-                designMainMovieService.updateById(designMainMovie);
-            });
-        }
+    public Result<String> batchEdit(@RequestBody List<DesignMainMovieVO> designMainMovies) {
+        designMainMovieService.batchEdit(designMainMovies);
         return Result.OK("编辑成功!");
     }
 

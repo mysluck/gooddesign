@@ -2,6 +2,10 @@ package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
+import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainMovieVO;
 import org.jeecg.modules.gooddesign.mapper.DesignMainMovieMapper;
@@ -9,6 +13,7 @@ import org.jeecg.modules.gooddesign.service.IDesignMainMovieService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,5 +50,33 @@ public class DesignMainMovieServiceImpl extends ServiceImpl<DesignMainMovieMappe
             return designMainMovieVO;
         }).collect(Collectors.toList());
         return result;
+    }
+
+    @Override
+    public void batchAdd(List<DesignMainMovieVO> designMainMovieVOS) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+
+        List<DesignMainMovie> result = designMainMovieVOS.stream().map(designMainMovieVO -> {
+            DesignMainMovie designMainMovie = new DesignMainMovie();
+            BeanUtils.copyProperties(designMainMovieVO, designMainMovie);
+            designMainMovie.setMainId(designMainMovieVO.getMainId());
+            if (sysUser != null) {
+                designMainMovie.setCreateBy(sysUser.getUsername());
+            }
+            designMainMovie.setCreateTime(new Date());
+            return designMainMovie;
+        }).collect(Collectors.toList());
+        this.saveBatch(result);
+    }
+
+    @Override
+    public void batchEdit(List<DesignMainMovieVO> designMainMovieVOS) {
+        if (CollectionUtils.isNotEmpty(designMainMovieVOS)) {
+            Integer mainId = designMainMovieVOS.get(0).getMainId();
+            QueryWrapper<DesignMainMovie> queryWrapper = new QueryWrapper();
+            queryWrapper.eq("main_id", mainId);
+            this.remove(queryWrapper);
+        }
+        batchAdd(designMainMovieVOS);
     }
 }

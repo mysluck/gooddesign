@@ -14,6 +14,7 @@ import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMainImage;
+import org.jeecg.modules.gooddesign.entity.vo.DesignMainImageVO;
 import org.jeecg.modules.gooddesign.service.IDesignMainImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -80,8 +81,8 @@ public class DesignMainImageController extends JeecgController<DesignMainImage, 
     @ApiOperation(value = "现场照片-批量添加", notes = "现场照片-批量添加")
     //@RequiresPermissions("gooddesign:design_main_image:add")
     @PostMapping(value = "/batchAdd")
-    public Result<String> batchAdd(@RequestBody List<DesignMainImage> designMainImages) {
-        designMainImageService.saveBatch(designMainImages);
+    public Result<String> batchAdd(@RequestBody List<DesignMainImageVO> designMainImages) {
+        designMainImageService.batchAdd(designMainImages);
         return Result.OK("添加成功！");
     }
 
@@ -105,17 +106,8 @@ public class DesignMainImageController extends JeecgController<DesignMainImage, 
     @ApiOperation(value = "现场照片-批量编辑", notes = "现场照片-批量编辑")
     //@RequiresPermissions("gooddesign:design_main_image:edit")
     @RequestMapping(value = "/batchEdit", method = {RequestMethod.POST})
-    public Result<String> batchEdit(@RequestBody List<DesignMainImage> designMainImages) {
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if (CollectionUtils.isNotEmpty(designMainImages)) {
-            designMainImages.forEach(designMainImage -> {
-                if (sysUser != null) {
-                    designMainImage.setUpdateBy(sysUser.getUsername());
-                }
-                designMainImage.setUpdateTime(new Date());
-                designMainImageService.updateById(designMainImage);
-            });
-        }
+    public Result<String> batchEdit(@RequestBody List<DesignMainImageVO> designMainImages) {
+        designMainImageService.batchEdit(designMainImages);
         return Result.OK("编辑成功!");
     }
 

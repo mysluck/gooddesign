@@ -1,6 +1,10 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
+import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMainImage;
 import org.jeecg.modules.gooddesign.entity.DesignMainMovie;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainImageVO;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,5 +55,33 @@ public class DesignMainImageServiceImpl extends ServiceImpl<DesignMainImageMappe
             return vo;
         }).collect(Collectors.toList());
         return result;
+    }
+
+    @Override
+    public void batchEdit(List<DesignMainImageVO> designMainImageVOS) {
+        if (CollectionUtils.isNotEmpty(designMainImageVOS)) {
+            Integer mainId = designMainImageVOS.get(0).getMainId();
+            QueryWrapper<DesignMainImage> queryWrapper = new QueryWrapper();
+            queryWrapper.eq("main_id", mainId);
+            this.remove(queryWrapper);
+        }
+        batchAdd(designMainImageVOS);
+    }
+
+    @Override
+    public void batchAdd(List<DesignMainImageVO> designMainImageVOS) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if (CollectionUtils.isNotEmpty(designMainImageVOS)) {
+            List<DesignMainImage> result = designMainImageVOS.stream().map(designMainImageVO -> {
+                DesignMainImage designMainImage = new DesignMainImage();
+                BeanUtils.copyProperties(designMainImageVO, designMainImage);
+                if (sysUser != null) {
+                    designMainImage.setCreateBy(sysUser.getUsername());
+                }
+                designMainImage.setCreateTime(new Date());
+                return designMainImage;
+            }).collect(Collectors.toList());
+            this.saveBatch(result);
+        }
     }
 }

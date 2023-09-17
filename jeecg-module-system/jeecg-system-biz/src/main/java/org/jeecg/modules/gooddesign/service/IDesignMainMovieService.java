@@ -17,4 +17,7 @@ public interface IDesignMainMovieService extends IService<DesignMainMovie> {
 
     List<DesignMainMovieVO> queryByMainIds(List<Integer> mainIds);
 
+    void batchAdd(List<DesignMainMovieVO> designMainMovieVOS);
+
+    void batchEdit(List<DesignMainMovieVO> designMainMovieVOS);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @Description: 现场照片
  * @Author: jeecg-boot
- * @Date:   2023-08-18
+ * @Date: 2023-08-18
  * @Version: V1.0
  */
 public interface IDesignMainImageService extends IService<DesignMainImage> {
@@ -18,4 +18,7 @@ public interface IDesignMainImageService extends IService<DesignMainImage> {
 
     List<DesignMainImageVO> queryByMainIds(List<Integer> mainIds);
 
+    void batchEdit(List<DesignMainImageVO> designMainImageVOS);
+
+    void batchAdd(List<DesignMainImageVO> designMainImageVOS);
 }
