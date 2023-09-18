@@ -12,9 +12,7 @@
 //import org.jeecg.common.system.vo.LoginUser;
 //import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
 //import org.jeecg.modules.gooddesign.entity.DesignStakeholder;
-//import org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO;
-//import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainVO;
-//import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderVO;
+//import org.jeecg.modules.gooddesign.entity.vo.*;
 //import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
 //import org.jeecg.modules.gooddesign.service.IDesignStakeholderService;
 //import org.springframework.beans.BeanUtils;
@@ -53,5 +51,14 @@
 //        List<DesignMainStakeholderVO> designMainStakeholderVOS = designMainStakeholderService.queryMainStakeholder(mainID);
 //        return Result.OK(designMainStakeholderVOS);
 //    }
+//
+//    @AutoLog(value = "相关人员-批量编辑")
+//    @ApiOperation(value = "相关人员-批量编辑", notes = "相关人员-批量编辑")
+//    @PostMapping(value = "/batchEdit")
+//    public Result<String> batchEdit(@RequestBody DesignStakeholderMainAddVO designMainStakeholderAddParams) {
+//        designMainStakeholderService.batchEdit(designMainStakeholderAddParams);
+//        return Result.OK("编辑成功！");
+//    }
+//
 //
 //}

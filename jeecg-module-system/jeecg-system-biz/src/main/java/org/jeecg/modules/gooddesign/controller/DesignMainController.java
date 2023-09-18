@@ -168,19 +168,18 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     @ApiOperation(value = "设计壮游-编辑壮游-相关人员映射表-添加", notes = "编辑壮游-相关人员映射表-添加")
     @PostMapping(value = "/addRecommended")
     public Result<String> addRecommended(@RequestBody @Valid DesignStakeholderMainAddVO designStakeholderMainAddVO) {
-        List<Integer> stakeholderIds = designStakeholderMainAddVO.getStakeholderIds();
-        int mainId = designStakeholderMainAddVO.getMainId();
-        int type = designStakeholderMainAddVO.getType();
-        List<DesignMainStakeholder> result = stakeholderIds.stream().map(stakeholderId -> {
-            DesignMainStakeholder designMainStakeholder = new DesignMainStakeholder();
-            designMainStakeholder.setMainId(mainId);
-            designMainStakeholder.setType(type);
-            designMainStakeholder.setStakeholderId(stakeholderId);
-            return designMainStakeholder;
-        }).collect(Collectors.toList());
-        designMainStakeholderService.saveBatch(result);
+        designMainStakeholderService.batchAdd(designStakeholderMainAddVO);
         return Result.OK("添加成功！");
     }
+
+    @AutoLog(value = "设计壮游-编辑壮游-相关人员映射表-添加")
+    @ApiOperation(value = "设计壮游-编辑壮游-相关人员映射表-添加", notes = "编辑壮游-相关人员映射表-添加")
+    @PostMapping(value = "/editRecommended")
+    public Result<String> editRecommended(@RequestBody @Valid DesignStakeholderMainAddVO designStakeholderMainAddVO) {
+        designMainStakeholderService.batchEdit(designStakeholderMainAddVO);
+        return Result.OK("添加成功！");
+    }
+
 
     @AutoLog(value = "设计壮游-编辑壮游-相关人员映射表-删除")
     @ApiOperation(value = "设计壮游-编辑壮游-相关人员映射表-删除", notes = "编辑壮游-相关人员映射表-删除")
@@ -190,6 +189,14 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
         designMainStakeholderService.removeById(id);
         return Result.OK("删除成功！");
     }
+//    @AutoLog(value = "设计壮游-编辑壮游-相关人员映射表-查询")
+//    @ApiOperation(value = "设计壮游-编辑壮游-相关人员映射表-查询", notes = "编辑壮游-相关人员映射表-查询")
+//    //@RequiresPermissions("gooddesign:design_main_stakeholder:add")
+//    @DeleteMapping(value = "/queryByMainIdAndType")
+//    public Result<String> reoveRecommended(@RequestParam("id") Integer id) {
+//        designMainStakeholderService.removeById(id);
+//        return Result.OK("删除成功！");
+//    }
 
     @RequestMapping(value = "/importExcel", method = RequestMethod.POST)
     public Result<?> importExcel(HttpServletRequest request, HttpServletResponse response) {
