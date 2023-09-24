@@ -34,10 +34,13 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
 
     /**
      * 根据登陆ID获取所有报名信息
+     *
      * @param id
      * @return
      */
     List<DesignTopJudgesDetailVO> queryDetailByLoginId(String loginid);
 
     List<DesignEnrollJudges> getByLoginId(String loginId);
+
+    void batchEditScreenStatus(List<Integer> enrollIds, int screenStatus);
 }

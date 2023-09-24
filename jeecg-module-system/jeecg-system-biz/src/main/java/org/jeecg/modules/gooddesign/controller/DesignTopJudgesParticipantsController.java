@@ -11,10 +11,12 @@ import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
 import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
+import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 
@@ -44,6 +46,8 @@ import org.jeecg.common.aspect.annotation.AutoLog;
 @RequestMapping("/designJudgesParticipants")
 @Slf4j
 public class DesignTopJudgesParticipantsController extends JeecgController<DesignEnrollParticipants, IDesignTopJudgesParticipantsService> {
+    @Autowired
+    IDesignActivityService designActivityService;
     @Autowired
     IDesignEnrollJudgesService designEnrollJudgesService;
     @Autowired
@@ -195,17 +199,26 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     @ApiOperation(value = "好设计-报名-查询所有初审通过的设计师集合列表", notes = "好设计-报名-查询所有初审通过的设计师集合")
     @GetMapping(value = "/listScreenEnroll")
     public Result<List<DesignEnrollScoreVO>> listEnroll(@RequestParam(name = "userId") @ApiParam("评委ID") String juedgsId,
-                                                        @RequestParam(name = "activityId") @ApiParam("活动ID") Integer activityId,
-                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                        @RequestParam(name = "screenStatus", defaultValue = "1") @ApiParam("筛选状态 通过1 不通过0") Integer screenStatus,
+//                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+//                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
 
-
+        DesignActivity activity = designActivityService.getActivity();
+        if (activity == null || activity.getId() == null) {
+            return Result.error("未获取到当前活动ID");
+        }
+        Integer activityId = activity.getId();
         //初筛通过数据
         QueryWrapper<DesignEnrollJudges> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("activity_id", activityId);
-        queryWrapper.eq("screen_status", 1);
+        queryWrapper.eq("screen_status", screenStatus);
         queryWrapper.orderByAsc("id");
+
+
+//        Page<DesignEnrollJudges> page = new Page<DesignEnrollJudges>(pageNo, pageSize);
+//        IPage<DesignEnrollJudges> pageList = designEnrollJudgesService.page(page, queryWrapper);
+//        List<DesignEnrollJudges> records = pageList.getRecords();
         List<DesignEnrollJudges> records = designEnrollJudgesService.list(queryWrapper);
 
         //评分数据
@@ -226,11 +239,11 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         List<DesignEnrollScoreVO> result = records.stream().map(data -> {
             DesignEnrollScoreVO designEnrollScoreVO = new DesignEnrollScoreVO();
             BeanUtils.copyProperties(data, designEnrollScoreVO);
-            designEnrollScoreVO.setScoreStatus(scoreStatusMap.getOrDefault(data.getId(), 4));
+            designEnrollScoreVO.setScoreStatus(scoreStatusMap.getOrDefault(data.getId(), 3));
             return designEnrollScoreVO;
         }).collect(Collectors.toList());
-
         return Result.OK(result);
     }
+
 
 }

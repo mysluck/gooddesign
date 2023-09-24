@@ -174,6 +174,11 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     }
 
 
+    @Override
+    public void batchEditScreenStatus(List<Integer> enrollIds, int screenStatus) {
+        this.baseMapper.batchEditScreenStatus(enrollIds,screenStatus);
+    }
+
     private String getDesignNo() {
         return "FX" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss");
     }

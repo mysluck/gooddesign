@@ -169,6 +169,21 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         return Result.OK("编辑成功!");
     }
 
+
+    @AutoLog(value = "好设计-管理员初筛-批量修改通过状态")
+    @ApiOperation(value = "好设计-管理员初筛-批量修改通过状态", notes = "好设计-管理员初筛-批量修改通过状态")
+    //@RequiresPermissions("gooddesign:design_top_judges:edit")
+    @RequestMapping(value = "/batchEditScreenStatus", method = {RequestMethod.POST})
+    public Result<String> batchEditScreenStatus(@RequestBody ScreeStatusEditParam screeStatusEditParam) {
+
+        if (CollectionUtils.isEmpty(screeStatusEditParam.getEnrollIds())) {
+            return Result.error("请输入设计师ID!");
+        }
+        designEnrollJudgesService.batchEditScreenStatus(screeStatusEditParam.getEnrollIds(), screeStatusEditParam.getScreenStatus());
+        return Result.OK("编辑成功!");
+    }
+
+
     /**
      * 通过id删除
      *
