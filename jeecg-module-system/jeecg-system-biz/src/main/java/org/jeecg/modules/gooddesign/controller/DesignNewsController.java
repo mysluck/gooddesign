@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -55,6 +56,10 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
                                                    @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                    HttpServletRequest req) {
+
+        if (designNews != null && StringUtils.isNotEmpty(designNews.getTitle())) {
+            designNews.setTitle(designNews.getTitle() + "*");
+        }
         QueryWrapper<DesignNews> queryWrapper = QueryGenerator.initQueryWrapper(designNews, req.getParameterMap());
         queryWrapper.orderByDesc("publish_time");
         Page<DesignNews> page = new Page<DesignNews>(pageNo, pageSize);
@@ -76,7 +81,7 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
         DesignNews designNews = new DesignNews();
         BeanUtils.copyProperties(designNewsVO, designNews);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             designNews.setCreateBy(sysUser.getUsername());
         }
         designNews.setCreateTime(new Date());
@@ -87,7 +92,7 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
     /**
      * 编辑
      *
-     * @param designNews
+     * @param
      * @return
      */
     @AutoLog(value = "咨询中心-编辑")
@@ -97,7 +102,7 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
         DesignNews designNews = new DesignNews();
         BeanUtils.copyProperties(designNewsVO, designNews);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if(sysUser!=null) {
+        if (sysUser != null) {
             designNews.setUpdateBy(sysUser.getUsername());
         }
         designNews.setUpdateTime(new Date());

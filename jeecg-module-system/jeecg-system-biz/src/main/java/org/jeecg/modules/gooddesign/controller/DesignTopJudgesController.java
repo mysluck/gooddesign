@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
@@ -66,6 +67,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
+        if (designTopJudges != null && StringUtils.isNotEmpty(designTopJudges.getRealName())) {
+            designTopJudges.setRealName(designTopJudges.getRealName() + "*");
+        }
         QueryWrapper<DesignTopJudges> queryWrapper = QueryGenerator.initQueryWrapper(designTopJudges, req.getParameterMap());
         queryWrapper.orderByAsc("sort");
         Page<DesignTopJudges> page = new Page<DesignTopJudges>(pageNo, pageSize);

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -27,6 +28,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -62,6 +64,11 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
                                                    @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                    HttpServletRequest req) {
+        if (designMain != null) {
+            if (StringUtils.isNotEmpty(designMain.getTitle())) {
+                designMain.setTitle(designMain.getTitle() + "*");
+            }
+        }
         QueryWrapper<DesignMain> queryWrapper = QueryGenerator.initQueryWrapper(designMain, req.getParameterMap());
         queryWrapper.orderByDesc("id");
         Page<DesignMain> page = new Page<DesignMain>(pageNo, pageSize);
