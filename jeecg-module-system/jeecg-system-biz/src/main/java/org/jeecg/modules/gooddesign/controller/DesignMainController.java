@@ -64,10 +64,8 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
                                                    @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                    HttpServletRequest req) {
-        if (designMain != null) {
-            if (StringUtils.isNotEmpty(designMain.getTitle())) {
-                designMain.setTitle(designMain.getTitle() + "*");
-            }
+        if (designMain != null && StringUtils.isNotEmpty(designMain.getTitle())) {
+            designMain.setTitle("*" + designMain.getTitle() + "*");
         }
         QueryWrapper<DesignMain> queryWrapper = QueryGenerator.initQueryWrapper(designMain, req.getParameterMap());
         queryWrapper.orderByDesc("id");

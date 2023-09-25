@@ -60,7 +60,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
                                                            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                            HttpServletRequest req) {
         if (designEnrollJudges != null && org.apache.commons.lang.StringUtils.isNotEmpty(designEnrollJudges.getRealName())) {
-            designEnrollJudges.setRealName(designEnrollJudges.getRealName() + "*");
+            designEnrollJudges.setRealName("*" + designEnrollJudges.getRealName() + "*");
         }
         QueryWrapper<DesignEnrollJudges> queryWrapper = QueryGenerator.initQueryWrapper(designEnrollJudges, req.getParameterMap());
         Page<DesignEnrollJudges> page = new Page<DesignEnrollJudges>(pageNo, pageSize);

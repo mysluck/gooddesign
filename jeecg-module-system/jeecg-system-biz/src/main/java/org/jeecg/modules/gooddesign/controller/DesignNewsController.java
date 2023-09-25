@@ -58,7 +58,7 @@ public class DesignNewsController extends JeecgController<DesignNews, IDesignNew
                                                    HttpServletRequest req) {
 
         if (designNews != null && StringUtils.isNotEmpty(designNews.getTitle())) {
-            designNews.setTitle(designNews.getTitle() + "*");
+            designNews.setTitle("*" +designNews.getTitle() + "*");
         }
         QueryWrapper<DesignNews> queryWrapper = QueryGenerator.initQueryWrapper(designNews, req.getParameterMap());
         queryWrapper.orderByDesc("publish_time");

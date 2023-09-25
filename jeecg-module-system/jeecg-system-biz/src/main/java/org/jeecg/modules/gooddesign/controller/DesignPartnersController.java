@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -55,6 +56,9 @@ public class DesignPartnersController extends JeecgController<DesignPartners, ID
                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                        HttpServletRequest req) {
+        if (designPartners != null && StringUtils.isNotEmpty(designPartners.getPartnerName())) {
+            designPartners.setPartnerName("*" + designPartners.getPartnerName() + "*");
+        }
         QueryWrapper<DesignPartners> queryWrapper = QueryGenerator.initQueryWrapper(designPartners, req.getParameterMap());
         Page<DesignPartners> page = new Page<DesignPartners>(pageNo, pageSize);
         IPage<DesignPartners> pageList = designPartnersService.page(page, queryWrapper);

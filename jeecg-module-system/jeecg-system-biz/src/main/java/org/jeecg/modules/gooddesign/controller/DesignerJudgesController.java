@@ -57,7 +57,7 @@ public class DesignerJudgesController extends JeecgController<DesignJudges, IUse
                                                      @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                      HttpServletRequest req) {
         if (userDesigner.getRealName() != null) {
-            userDesigner.setRealName(userDesigner.getRealName() + "*");
+            userDesigner.setRealName("*" + userDesigner.getRealName() + "*");
         }
         QueryWrapper<DesignJudges> queryWrapper = QueryGenerator.initQueryWrapper(userDesigner, req.getParameterMap());
         queryWrapper.orderByAsc("sort");

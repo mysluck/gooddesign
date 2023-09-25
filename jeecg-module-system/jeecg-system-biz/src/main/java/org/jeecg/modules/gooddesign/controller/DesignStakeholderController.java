@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -59,7 +60,9 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
                                                           @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                           @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                           HttpServletRequest req) {
-
+        if (designStakeholderVO != null && StringUtils.isNotEmpty(designStakeholderVO.getName())) {
+            designStakeholderVO.setName("*" + designStakeholderVO.getName() + "*");
+        }
         DesignStakeholder designStakeholder = new DesignStakeholder();
         BeanUtils.copyProperties(designStakeholderVO, designStakeholder);
         QueryWrapper<DesignStakeholder> queryWrapper = QueryGenerator.initQueryWrapper(designStakeholder, req.getParameterMap());
@@ -99,7 +102,7 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     @AutoLog(value = "相关人员-编辑")
     @ApiOperation(value = "相关人员-编辑", notes = "相关人员-编辑")
     //@RequiresPermissions("gooddesign:design_stakeholder:edit")
-    @RequestMapping(value = "/edit", method = { RequestMethod.POST})
+    @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignStakeholderVO designStakeholderVO) {
         DesignStakeholder designStakeholder = new DesignStakeholder();
         BeanUtils.copyProperties(designStakeholderVO, designStakeholder);
