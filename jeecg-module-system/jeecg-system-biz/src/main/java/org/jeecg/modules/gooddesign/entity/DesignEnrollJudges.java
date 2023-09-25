@@ -157,8 +157,10 @@ public class DesignEnrollJudges implements Serializable {
     private Integer willStatus;
 
     @ApiModelProperty(value = "知识产权无争议 1是 0否")
-    private Integer  disputeStatus;
+    private Integer disputeStatus;
 
+    @ApiModelProperty(value = "管理员删除标志 1删除 0未删除")
+    private Integer managerDelStatus;
 
 
 }

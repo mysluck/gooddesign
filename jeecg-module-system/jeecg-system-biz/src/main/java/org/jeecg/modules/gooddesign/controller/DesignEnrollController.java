@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -258,5 +259,17 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         return Result.OK(loginVO);
     }
 
+    @AutoLog(value = "好设计-报名-管理员删除")
+    @ApiOperation(value = "好设计-报名-管理员删除", notes = "好设计-报名-管理员删除")
+    //@RequiresPermissions("gooddesign:design_top_judges:delete")
+    @DeleteMapping(value = "/editManagerDeleteStatus")
+    public Result<String> managerDelete(@RequestParam(name = "id", required = true) @ApiParam("主键ID") Integer id,
+                                        @RequestParam(name = "status", required = true) @ApiParam("管理员删除状态 1删除 0不删除") Integer status) {
+        DesignEnrollJudges enrollJudges = new DesignEnrollJudges();
+        enrollJudges.setId(id);
+        enrollJudges.setManagerDelStatus(status);
+        designEnrollJudgesService.updateById(enrollJudges);
+        return Result.OK("删除成功!");
+    }
 
 }
