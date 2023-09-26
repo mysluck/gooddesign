@@ -67,6 +67,7 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
         BeanUtils.copyProperties(designStakeholderVO, designStakeholder);
         QueryWrapper<DesignStakeholder> queryWrapper = QueryGenerator.initQueryWrapper(designStakeholder, req.getParameterMap());
         Page<DesignStakeholder> page = new Page<DesignStakeholder>(pageNo, pageSize);
+        queryWrapper.orderByDesc("id");
         IPage<DesignStakeholder> pageList = designStakeholderService.page(page, queryWrapper);
         return Result.OK(pageList);
     }
@@ -96,7 +97,7 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     /**
      * 编辑
      *
-     * @param designStakeholder
+     * @param
      * @return
      */
     @AutoLog(value = "相关人员-编辑")

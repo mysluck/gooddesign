@@ -62,4 +62,9 @@ public class  DesignActivity implements Serializable {
 	@Excel(name = "状态（1 启动 0未启动 2结束）", width = 15)
     @ApiModelProperty(value = "状态（1 启动 0未启动 2结束）")
     private Integer activityStatus;
+
+    @ApiModelProperty(value = "类型（1跨年启停 2评分 3top100）")
+    private Integer type;
+
+
 }
