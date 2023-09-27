@@ -243,6 +243,8 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         return Result.OK(designTopJudgesScoreVOS);
     }
 
+
+
     @ApiOperation(value = "好设计-报名-判断是否报名", notes = "好设计-报名-判断是否报名")
     @GetMapping(value = "/queryEnrollData")
     public Result<LoginVO> queryEnroll(HttpServletRequest request, HttpServletResponse response, @RequestParam String loginId) {

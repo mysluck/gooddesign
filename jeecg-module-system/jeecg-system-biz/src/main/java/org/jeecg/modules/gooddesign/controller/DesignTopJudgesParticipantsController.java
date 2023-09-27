@@ -242,6 +242,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
             designEnrollScoreVO.setScoreStatus(scoreStatusMap.getOrDefault(data.getId(), 3));
             return designEnrollScoreVO;
         }).collect(Collectors.toList());
+
         return Result.OK(result);
     }
 
