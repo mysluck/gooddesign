@@ -56,6 +56,9 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                        HttpServletRequest req) {
+        if (designActivity != null && org.apache.commons.lang.StringUtils.isNotEmpty(designActivity.getActivityName())) {
+            designActivity.setActivityName("*" + designActivity.getActivityName() + "*");
+        }
         designActivity.setType(1);
         QueryWrapper<DesignActivity> queryWrapper = QueryGenerator.initQueryWrapper(designActivity, req.getParameterMap());
         Page<DesignActivity> page = new Page<DesignActivity>(pageNo, pageSize);
@@ -170,7 +173,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     }
 
 
-    @ApiOperation(value = "检查是否处于活动开启状态", notes = "检查是否处于活动开启状态e")
+    @ApiOperation(value = "合作伙伴-序号检查", notes = "合作伙伴-序号检查，判断编码是否存在，存在，返回true")
     @PostMapping(value = "/checkActivityStatus")
     public Result checkActivityStatus() {
         if (designActivityService.checkActivityStatus()) {
