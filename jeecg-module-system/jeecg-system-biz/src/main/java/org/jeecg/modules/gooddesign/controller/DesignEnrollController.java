@@ -227,11 +227,19 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     }
 
     @AutoLog(value = "好设计-报名-将报名数据添加到top100")
-    @ApiOperation(value = "好设计-报名-评委通过后将报名数据添加到top100", notes = "好设计-报名-评委通过后将报名数据添加到top100")
+    @ApiOperation(value = "好设计-报名-推荐发现100", notes = "好设计-报名-推荐发现100")
     @GetMapping(value = "/addTop100")
-    public Result<String> addTop100(@RequestBody Integer id) {
-        DesignTopJudgesDetailVO designTopJudgesDetailVO = designEnrollJudgesService.queryDetailById(id);
-        designTopJudgesService.addDetail(designTopJudgesDetailVO);
+    public Result<String> addTop100(@RequestParam @ApiParam("参赛设计师ID") Integer id) {
+
+        designEnrollJudgesService.addTop100(id);
+        return Result.OK("添加成功！");
+    }
+
+    @AutoLog(value = "好设计-报名-将报名数据添加到top100")
+    @ApiOperation(value = "好设计-报名-批量推荐发现100", notes = "好设计-报名-批量推荐发现100")
+    @GetMapping(value = "/batchAddTop100")
+    public Result<String> batchAddTop100(@RequestParam @ApiParam("参赛设计师ID集合") List<Integer> ids) {
+        designEnrollJudgesService.batchAddTop100(ids);
         return Result.OK("添加成功！");
     }
 
@@ -242,7 +250,6 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = designEnrollJudgesService.queryByTopJudgesId();
         return Result.OK(designTopJudgesScoreVOS);
     }
-
 
 
     @ApiOperation(value = "好设计-报名-判断是否报名", notes = "好设计-报名-判断是否报名")
@@ -264,14 +271,32 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @AutoLog(value = "好设计-报名-管理员删除")
     @ApiOperation(value = "好设计-报名-管理员删除", notes = "好设计-报名-管理员删除")
     //@RequiresPermissions("gooddesign:design_top_judges:delete")
-    @DeleteMapping(value = "/editManagerDeleteStatus")
-    public Result<String> managerDelete(@RequestParam(name = "id", required = true) @ApiParam("主键ID") Integer id,
-                                        @RequestParam(name = "status", required = true) @ApiParam("管理员删除状态 1删除 0不删除") Integer status) {
+    @GetMapping(value = "/editManagerDeleteStatus")
+    public Result<String> editManagerDeleteStatus(@RequestParam(name = "id", required = true) @ApiParam("主键ID") Integer id,
+                                                  @RequestParam(name = "status", required = true) @ApiParam("管理员删除状态 1删除 0不删除") Integer status) {
         DesignEnrollJudges enrollJudges = new DesignEnrollJudges();
         enrollJudges.setId(id);
         enrollJudges.setManagerDelStatus(status);
         designEnrollJudgesService.updateById(enrollJudges);
         return Result.OK("删除成功!");
     }
+
+    @AutoLog(value = "好设计-报名-管理员批量删除")
+    @ApiOperation(value = "好设计-报名-管理员批量删除", notes = "好设计-报名-管理员批量删除")
+    //@RequiresPermissions("gooddesign:design_top_judges:delete")
+    @GetMapping(value = "/batchEditManagerDeleteStatus")
+    public Result<String> batchEditManagerDeleteStatus(@RequestParam(name = "ids", required = true) @ApiParam("主键ID集合") List<Integer> ids,
+                                                       @RequestParam(name = "status", required = true) @ApiParam("管理员删除状态 1删除 0不删除") Integer status) {
+        if (CollectionUtils.isNotEmpty(ids)) {
+            ids.forEach(id -> {
+                DesignEnrollJudges enrollJudges = new DesignEnrollJudges();
+                enrollJudges.setId(id);
+                enrollJudges.setManagerDelStatus(status);
+                designEnrollJudgesService.updateById(enrollJudges);
+            });
+        }
+        return Result.OK("删除成功!");
+    }
+
 
 }

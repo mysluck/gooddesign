@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jeecgframework.poi.excel.annotation.Excel;
+import org.springframework.data.annotation.Transient;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -135,6 +136,7 @@ public class DesignEnrollJudges implements Serializable {
 
     @TableField(exist = false)
     @ApiModelProperty(value = "开始时间")
+    @Transient
     private Date publishTime;
 
     @ApiModelProperty(value = "筛选状态 通过1 不通过0")

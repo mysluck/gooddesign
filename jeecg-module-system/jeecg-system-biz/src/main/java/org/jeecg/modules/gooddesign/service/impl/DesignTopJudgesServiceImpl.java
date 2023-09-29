@@ -6,6 +6,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.mapper.DesignActivityMapper;
@@ -138,6 +139,7 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     private String getDesignNo() {
         return "FX" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss");
     }
+
 
 
 }

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeecg.weibo.exception.BusinessException;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
@@ -14,10 +15,12 @@ import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
+import org.jeecg.modules.gooddesign.service.IDesignEnrollParticipantsScoreService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -51,6 +54,8 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     @Autowired
     IDesignEnrollJudgesService designEnrollJudgesService;
     @Autowired
+    IDesignEnrollParticipantsScoreService designJudgesParticipants;
+    @Autowired
     private IDesignTopJudgesParticipantsService designJudgesParticipantsService;
 
     /**
@@ -75,6 +80,33 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         return Result.OK(pageList);
     }
 
+    @ApiOperation(value = "推荐委员评选-根据姓名、评分状态分页查询", notes = "推荐委员评选-根据姓名、评分状态分页查询，只获取评委自己名下数据")
+    @GetMapping(value = "/pageByNameAndScoreStatus")
+    public Result<IPage<DesignEnrollParticipantsScoreVO>> pageByNameAndScoreStatus(@RequestParam(value = "realName", required = false) String realName,
+                                                                                   @RequestParam(value = "screeStatus", required = false) @ApiParam("打分状态 0待定  1推荐 2不推荐 3 未打分,查询待定和未打分，传0和3") List<Integer> screeStatus,
+                                                                                   @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                                                   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                                                   HttpServletRequest req) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if (sysUser == null || sysUser.getId() == null) {
+            throw new BusinessException("未获取到用户信息，请重新登录！");
+        }
+        Page<DesignEnrollParticipantsScoreVO> page = new Page<DesignEnrollParticipantsScoreVO>(pageNo, pageSize);
+        return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, screeStatus, sysUser.getId()));
+    }
+
+
+    @ApiOperation(value = "推荐委员评选-开始打分", notes = "推荐委员评选-开始打分,，获取第一个待定或未打分的数据")
+    @GetMapping(value = "/doStartScore")
+    public Result<DesignEnrollParticipantsScoreVO> doStartScore() {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if (sysUser == null || sysUser.getId() == null) {
+            throw new BusinessException("未获取到用户信息，请重新登录！");
+        }
+        return Result.OK(designJudgesParticipants.doStartScore(sysUser.getId()));
+    }
+
+
     /**
      * 添加
      *
@@ -86,17 +118,20 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     //@RequiresPermissions("gooddesign:design_judges_participants:add")
     @PostMapping(value = "/add")
     public Result<String> add(@RequestBody DesignJudgesParticipantsVO designJudgesParticipantsVO) {
-        DesignEnrollParticipants designJudgesParticipants = new DesignEnrollParticipants();
-        BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysUser != null) {
-            designJudgesParticipants.setCreateBy(sysUser.getUsername());
-        }
-        designJudgesParticipants.setCreateTime(new Date());
 
-        designJudgesParticipantsService.save(designJudgesParticipants);
+        designJudgesParticipantsService.add(designJudgesParticipantsVO);
         return Result.OK("添加成功！");
     }
+
+    @AutoLog(value = "评委通过表，保存评委评分数据-批量添加")
+    @ApiOperation(value = "评委评分数据-批量添加", notes = "评委评分数据-批量添加")
+    //@RequiresPermissions("gooddesign:design_judges_participants:add")
+    @PostMapping(value = "/batchAdd")
+    public Result<String> batchAdd(@RequestBody List<DesignJudgesParticipantsVO> designJudgesParticipantsVOs) {
+        designJudgesParticipantsService.batchAdd(designJudgesParticipantsVOs);
+        return Result.OK("添加成功！");
+    }
+
 
     /**
      * 编辑
@@ -110,17 +145,19 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignJudgesParticipantsVO designJudgesParticipantsVO) {
 
-        DesignEnrollParticipants designJudgesParticipants = new DesignEnrollParticipants();
-        BeanUtils.copyProperties(designJudgesParticipantsVO, designJudgesParticipants);
-        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
-        if (sysUser != null) {
-            designJudgesParticipants.setUpdateBy(sysUser.getUsername());
-        }
-        designJudgesParticipants.setUpdateTime(new Date());
-
-        designJudgesParticipantsService.updateById(designJudgesParticipants);
+        designJudgesParticipantsService.edit(designJudgesParticipantsVO);
         return Result.OK("编辑成功!");
     }
+
+    @AutoLog(value = "评委通过表，保存评委评分数据-批量编辑")
+    @ApiOperation(value = "评委通过表，保存评委评分数据-批量编辑", notes = "评委通过表，保存评委评分数据-批量编辑")
+    //@RequiresPermissions("gooddesign:design_judges_participants:edit")
+    @RequestMapping(value = "/batchEdit", method = {RequestMethod.POST})
+    public Result<String> batchEdit(@RequestBody List<DesignJudgesParticipantsVO> designJudgesParticipantsVOs) {
+        designJudgesParticipantsService.batchEdit(designJudgesParticipantsVOs);
+        return Result.OK("编辑成功!");
+    }
+
 
     /**
      * 通过id删除

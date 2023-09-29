@@ -29,4 +29,5 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
     DesignTopJudgesDetailVO queryDetailById(Integer id);
 
     DesignTopJudges getByLoginId(String loginId);
+
 }

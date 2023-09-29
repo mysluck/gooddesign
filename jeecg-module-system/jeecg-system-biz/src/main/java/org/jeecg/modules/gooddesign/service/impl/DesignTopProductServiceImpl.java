@@ -52,6 +52,7 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
             bean.setCreateBy(sysUser.getUsername());
         }
         bean.setCreateTime(new Date());
+        bean.setId(null);
         this.save(bean);
 
         Integer productId = bean.getId();
@@ -74,6 +75,7 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
                 designTopProductWork.setCreateBy(sysUser.getUsername());
             }
             designTopProductWork.setCreateTime(new Date());
+            designTopProductWork.setId(null);
             designTopProductWorkList.add(designTopProductWork);
         }
 

@@ -38,6 +38,8 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     @Autowired
     DesignActivityMapper designActivityMapper;
     @Autowired
+    IDesignTopJudgesService designTopJudgesService;
+    @Autowired
     IDesignTopJudgesParticipantsService designTopJudgesParticipantsService;
 
     @Override
@@ -176,12 +178,26 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
 
     @Override
     public void batchEditScreenStatus(List<Integer> enrollIds, int screenStatus) {
-        this.baseMapper.batchEditScreenStatus(enrollIds,screenStatus);
+        this.baseMapper.batchEditScreenStatus(enrollIds, screenStatus);
     }
 
     private String getDesignNo() {
         return "FX" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmsss");
     }
 
+    @Override
+    public void addTop100(Integer id) {
+        DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
+        designEnrollJudges.setId(id);
+        designEnrollJudges.setTopRecommendStatus(1);
+        this.updateById(designEnrollJudges);
+        DesignTopJudgesDetailVO designTopJudgesDetailVO = this.queryDetailById(id);
+        designTopJudgesDetailVO.setId(null);
+        designTopJudgesService.addDetail(designTopJudgesDetailVO);
+    }
 
+    @Override
+    public void batchAddTop100(List<Integer> ids) {
+        ids.forEach(id -> addTop100(id));
+    }
 }

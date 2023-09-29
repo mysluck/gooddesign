@@ -43,4 +43,8 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
     List<DesignEnrollJudges> getByLoginId(String loginId);
 
     void batchEditScreenStatus(List<Integer> enrollIds, int screenStatus);
+
+    void addTop100(Integer id);
+
+    void batchAddTop100(List<Integer> id);
 }
