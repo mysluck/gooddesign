@@ -3,6 +3,7 @@ package org.jeecg.modules.gooddesign.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jeecg.weibo.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +20,7 @@ import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.*;
@@ -249,6 +251,19 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     public Result<List<DesignTopJudgesScoreVO>> queryTop100() {
         List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = designEnrollJudgesService.queryByTopJudgesId();
         return Result.OK(designTopJudgesScoreVOS);
+    }
+
+    @ApiOperation(value = "好设计-报名-管理员查看报名数据", notes = "好设计-报名-管理员查看报名数据")
+    @GetMapping(value = "/pageByNameAndScoreStatus")
+    public Result<Page<DesignTopJudgesScoreVO>> pageByNameAndTopStatus(@RequestParam(value = "realName", required = false) @ApiParam("设计师姓名") String realName,
+                                                                        @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
+                                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                                        HttpServletRequest req) {
+
+        Page<DesignTopJudgesScoreVO> page = new Page<DesignTopJudgesScoreVO>(pageNo, pageSize);
+
+        return Result.OK(designEnrollJudgesService.pageByNameAndTopStatus(page, realName, topRecommendStatus));
     }
 
 

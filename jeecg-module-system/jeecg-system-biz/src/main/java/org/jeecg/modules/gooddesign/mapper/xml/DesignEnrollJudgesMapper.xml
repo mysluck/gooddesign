@@ -9,4 +9,19 @@
             #{id}
         </foreach>
     </update>
+
+
+    <select id="pageByNameAndTopStatus"
+            resultType="org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO">
+        select * from design_enroll_judges
+        where 1=1
+        <if test="realName!=null">
+            and real_name like CONCAT('%',#{realName},'%')
+        </if>
+        <if test="topStatus!=null">
+            and top_recommend_status =#{topStatus}
+        </if>
+
+
+    </select>
 </mapper>

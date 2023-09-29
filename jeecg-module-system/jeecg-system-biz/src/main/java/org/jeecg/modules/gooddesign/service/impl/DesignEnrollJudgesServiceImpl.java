@@ -1,6 +1,7 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
@@ -9,6 +10,7 @@ import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
+import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
@@ -199,5 +201,34 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     @Override
     public void batchAddTop100(List<Integer> ids) {
         ids.forEach(id -> addTop100(id));
+    }
+
+    @Override
+    public Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus) {
+        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus);
+
+        List<DesignTopJudgesScoreVO> result = new ArrayList<>();
+
+
+        List<DesignTopParticipantsScoreVO> totalScore = designTopJudgesParticipantsService.getTotalScore();
+        if (!totalScore.isEmpty()) {
+            List<Integer> judgesIds = new ArrayList<>();
+            Map<Integer, Double> scoreMap = new HashMap<>(totalScore.size());
+            for (int i = 0; i < totalScore.size(); i++) {
+                DesignTopParticipantsScoreVO designTopParticipantsScoreVO = totalScore.get(i);
+                judgesIds.add(designTopParticipantsScoreVO.getJudgesId());
+                scoreMap.put(designTopParticipantsScoreVO.getJudgesId(), designTopParticipantsScoreVO.getTotalScore());
+            }
+            designTopJudgesScoreVOS = designTopJudgesScoreVOS.stream().map(designTopJudge -> {
+                DesignTopJudgesScoreVO scoreVO = new DesignTopJudgesScoreVO();
+                BeanUtils.copyProperties(designTopJudge, scoreVO);
+                scoreVO.setScore(scoreMap.get(designTopJudge.getId()));
+                return scoreVO;
+            }).collect(Collectors.toList());
+        }
+        Page<DesignTopJudgesScoreVO> designEnrollParticipantsScoreVOPage = page.setRecords(designTopJudgesScoreVOS);
+        return designEnrollParticipantsScoreVOPage;
+
+
     }
 }
