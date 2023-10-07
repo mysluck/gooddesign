@@ -16,6 +16,7 @@ import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsSaveEditVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
@@ -83,7 +84,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     @ApiOperation(value = "推荐委员评选-根据姓名、评分状态分页查询", notes = "推荐委员评选-根据姓名、评分状态分页查询，只获取评委自己名下数据")
     @GetMapping(value = "/pageByNameAndScoreStatus")
     public Result<IPage<DesignEnrollParticipantsScoreVO>> pageByNameAndScoreStatus(@RequestParam(value = "realName", required = false) String realName,
-                                                                                   @RequestParam(value = "screeStatus", required = false) @ApiParam("打分状态 0待定  1推荐 2不推荐 3 未打分,查询待定和未打分，传0和3") List<Integer> screeStatus,
+                                                                                   @RequestParam(value = "scoreStatus", required = false) @ApiParam("打分状态 0待定  1推荐 2不推荐 3 未打分,查询待定和未打分，传0和3") List<Integer> scoreStatus,
                                                                                    @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                                                    HttpServletRequest req) {
@@ -92,7 +93,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
             throw new BusinessException("未获取到用户信息，请重新登录！");
         }
         Page<DesignEnrollParticipantsScoreVO> page = new Page<DesignEnrollParticipantsScoreVO>(pageNo, pageSize);
-        return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, screeStatus, sysUser.getId()));
+        return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, scoreStatus, sysUser.getId()));
     }
 
 
@@ -149,11 +150,11 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         return Result.OK("编辑成功!");
     }
 
-    @AutoLog(value = "评委通过表，保存评委评分数据-批量编辑")
-    @ApiOperation(value = "评委通过表，保存评委评分数据-批量编辑", notes = "评委通过表，保存评委评分数据-批量编辑")
+    @AutoLog(value = "评委通过表，保存评委评分数据-批量添加保存编辑")
+    @ApiOperation(value = "评委通过表，保存评委评分数据-批量添加保存编辑", notes = "评委通过表，保存评委评分数据-批量添加保存编辑")
     //@RequiresPermissions("gooddesign:design_judges_participants:edit")
     @RequestMapping(value = "/batchEdit", method = {RequestMethod.POST})
-    public Result<String> batchEdit(@RequestBody List<DesignJudgesParticipantsVO> designJudgesParticipantsVOs) {
+    public Result<String> batchEdit(@RequestBody List<DesignEnrollParticipantsSaveEditVO> designJudgesParticipantsVOs) {
         designJudgesParticipantsService.batchEdit(designJudgesParticipantsVOs);
         return Result.OK("编辑成功!");
     }

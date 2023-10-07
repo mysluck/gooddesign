@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service;
 
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsSaveEditVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
 
@@ -29,5 +30,5 @@ public interface IDesignTopJudgesParticipantsService extends IService<DesignEnro
 
     void edit(DesignJudgesParticipantsVO designJudgesParticipants);
 
-    void batchEdit(List<DesignJudgesParticipantsVO> designJudgesParticipants);
+    void batchEdit(List<DesignEnrollParticipantsSaveEditVO> designJudgesParticipants);
 }

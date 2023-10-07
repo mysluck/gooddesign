@@ -1,22 +1,29 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.jeecg.weibo.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
+import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsSaveEditVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.mapper.DesignTopJudgesParticipantsMapper;
+import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 评委通过表，保存评委评分数据
@@ -27,6 +34,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class DesignTopJudgesParticipantsServiceImpl extends ServiceImpl<DesignTopJudgesParticipantsMapper, DesignEnrollParticipants> implements IDesignTopJudgesParticipantsService {
+    @Autowired
+    IDesignActivityService designActivityService;
+
     @Override
     public List<DesignTopParticipantsScoreVO> getTotalScore() {
         return this.baseMapper.getScore();
@@ -71,7 +81,41 @@ public class DesignTopJudgesParticipantsServiceImpl extends ServiceImpl<DesignTo
     }
 
     @Override
-    public void batchEdit(List<DesignJudgesParticipantsVO> designJudgesParticipants) {
-        designJudgesParticipants.stream().forEach(data -> edit(data));
+    public void batchEdit(List<DesignEnrollParticipantsSaveEditVO> designJudgesParticipants) {
+
+        DesignActivity activity = designActivityService.getActivity();
+        if (activity == null) {
+            throw new BusinessException("未开启活动！");
+        }
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if (sysUser == null) {
+            throw new BusinessException("为获取评委信息！");
+        }
+
+        List<DesignEnrollParticipants> result = designJudgesParticipants.stream().map(data -> {
+            DesignEnrollParticipants designEnrollParticipants = new DesignEnrollParticipants();
+            designEnrollParticipants.setParticipantId(data.getId());
+            designEnrollParticipants.setScoreStatus(data.getScoreStatus());
+            designEnrollParticipants.setActivityId(activity.getId());
+            designEnrollParticipants.setJudgeId(sysUser.getId());
+            return designEnrollParticipants;
+        }).collect(Collectors.toList());
+
+        result.stream().forEach(data -> saveOrUpdateData(data));
+    }
+
+    private void saveOrUpdateData(DesignEnrollParticipants designJudgesParticipants) {
+        QueryWrapper<DesignEnrollParticipants> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("participant_id", designJudgesParticipants.getParticipantId());
+        queryWrapper.eq("judge_id", designJudgesParticipants.getJudgeId());
+        queryWrapper.eq("activity_id", designJudgesParticipants.getActivityId());
+        DesignEnrollParticipants designEnrollParticipants = this.baseMapper.selectOne(queryWrapper);
+        if (designEnrollParticipants == null) {
+            this.save(designJudgesParticipants);
+        } else {
+            designEnrollParticipants.setScoreStatus(designJudgesParticipants.getScoreStatus());
+            this.updateById(designEnrollParticipants);
+        }
+
     }
 }
