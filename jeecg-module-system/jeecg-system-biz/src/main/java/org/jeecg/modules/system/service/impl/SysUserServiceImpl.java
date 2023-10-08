@@ -154,6 +154,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 			});
 		}
 
+		result.setCode(200);
 		result.setSuccess(true);
 		result.setResult(pageList);
 		//log.info(pageList.toString());
