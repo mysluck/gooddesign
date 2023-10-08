@@ -102,7 +102,7 @@ public class SysUserVO implements Serializable {
      * 打分权重
      */
     @ApiModelProperty(value = "打分权重")
-    private Integer weight;
+    private Double weight;
 
     @ApiModelProperty(value = "用户描述")
     private String userDesc;

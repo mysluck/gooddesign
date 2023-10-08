@@ -215,7 +215,7 @@ public class SysUser implements Serializable {
      */
     @Excel(name = "打分权重", width = 15)
     @ApiModelProperty(value = "打分权重")
-    private Integer weight;
+    private Double weight;
 
     @Excel(name = "用户描述", width = 15)
     @ApiModelProperty(value = "用户描述")

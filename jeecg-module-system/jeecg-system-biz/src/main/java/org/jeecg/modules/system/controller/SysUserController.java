@@ -185,6 +185,7 @@ public class SysUserController {
             log.error(e.getMessage(), e);
             result.error500(e.getMessage());
         }
+        result.setCode(200);
         return result;
     }
 
@@ -212,6 +213,7 @@ public class SysUserController {
             log.error(e.getMessage(), e);
             result.error500(e.getMessage());
         }
+        result.setCode(200);
         return result;
     }
 
@@ -281,6 +283,7 @@ public class SysUserController {
             result.setResult(sysUser);
             result.setSuccess(true);
         }
+        result.setCode(200);
         return result;
     }
 
@@ -316,6 +319,7 @@ public class SysUserController {
             return result;
         }
         result.setSuccess(true);
+        result.setCode(200);
         return result;
     }
 
@@ -357,6 +361,7 @@ public class SysUserController {
                 result.setSuccess(false);
                 result.setMessage("查找失败");
             }
+            result.setCode(CommonConstant.SC_OK_200);
             return result;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
