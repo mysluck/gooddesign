@@ -69,7 +69,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/sys/user")
-@Api(tags="好设计-用户")
+@Api(tags = "好设计-用户")
 public class SysUserController {
 
     @Autowired
@@ -119,9 +119,12 @@ public class SysUserController {
      */
     @PermissionData(pageComponent = "system/UserList")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @ApiOperation(value="用户-分页查询", notes="用户-分页查询")
+    @ApiOperation(value = "用户-分页查询", notes = "用户-分页查询")
     public Result<IPage<SysUser>> queryPageList(SysUser user, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                 @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize, HttpServletRequest req) {
+        if (user != null && StringUtils.isNotBlank(user.getUsername())) {
+            user.setUsername("%" + user.getUsername() + "%");
+        }
         QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
         //------------------------------------------------------------------------------------------------
         //是否开启系统管理模块的多租户数据隔离【SAAS多租户模式】
@@ -151,7 +154,7 @@ public class SysUserController {
      */
     ////@RequiresPermissions("system:user:listAll")
     @RequestMapping(value = "/listAll", method = RequestMethod.GET)
-    @ApiOperation(value="用户-获取系统用户数据", notes="用户-获取系统用户数据")
+    @ApiOperation(value = "用户-获取系统用户数据", notes = "用户-获取系统用户数据")
     public Result<IPage<SysUser>> queryAllPageList(SysUser user, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize, HttpServletRequest req) {
         QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
@@ -160,7 +163,7 @@ public class SysUserController {
 
     ////@RequiresPermissions("system:user:add")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @ApiOperation(value="用户-添加用户", notes="用户-添加用户")
+    @ApiOperation(value = "用户-添加用户", notes = "用户-添加用户")
     public Result<SysUser> add(@RequestBody SysUserVO sysUserVO) {
         Result<SysUser> result = new Result<SysUser>();
 
@@ -190,7 +193,7 @@ public class SysUserController {
     }
 
     ////@RequiresPermissions("system:user:edit")
-    @ApiOperation(value="用户-编辑用户", notes="用户-编辑用户")
+    @ApiOperation(value = "用户-编辑用户", notes = "用户-编辑用户")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<SysUser> edit(@RequestBody SysUserVO sysUserVO) {
         Result<SysUser> result = new Result<SysUser>();
@@ -201,7 +204,7 @@ public class SysUserController {
                 result.error500("未找到对应实体");
             } else {
                 SysUser user = new SysUser();
-                BeanUtils.copyProperties(sysUserVO,user);
+                BeanUtils.copyProperties(sysUserVO, user);
                 user.setUpdateTime(new Date());
                 //String passwordEncode = PasswordUtil.encrypt(user.getUsername(), user.getPassword(), sysUser.getSalt());
                 user.setPassword(sysUser.getPassword());
@@ -221,7 +224,7 @@ public class SysUserController {
      * 删除用户
      */
     ////@RequiresPermissions("system:user:delete")
-    @ApiOperation(value="用户-删除用户", notes="用户-删除用户")
+    @ApiOperation(value = "用户-删除用户", notes = "用户-删除用户")
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public Result<?> delete(@RequestParam(name = "id", required = true) String id) {
         baseCommonService.addLog("删除用户，id： " + id, CommonConstant.LOG_TYPE_2, 3);
@@ -233,7 +236,7 @@ public class SysUserController {
      * 批量删除用户
      */
     ////@RequiresPermissions("system:user:deleteBatch")
-    @ApiOperation(value="用户-批量删除用户", notes="用户-批量删除用户")
+    @ApiOperation(value = "用户-批量删除用户", notes = "用户-批量删除用户")
     @RequestMapping(value = "/deleteBatch", method = RequestMethod.DELETE)
     public Result<?> deleteBatch(@RequestParam(name = "ids", required = true) String ids) {
         baseCommonService.addLog("批量删除用户， ids： " + ids, CommonConstant.LOG_TYPE_2, 3);
@@ -248,7 +251,7 @@ public class SysUserController {
      * @return
      */
     ////@RequiresPermissions("system:user:frozenBatch")
-    @ApiOperation(value="用户-解冻用户", notes="用户-解冻用户")
+    @ApiOperation(value = "用户-解冻用户", notes = "用户-解冻用户")
     @RequestMapping(value = "/frozenBatch", method = RequestMethod.PUT)
     public Result<SysUser> frozenBatch(@RequestBody JSONObject jsonObject) {
         Result<SysUser> result = new Result<SysUser>();
@@ -272,7 +275,7 @@ public class SysUserController {
     }
 
     ////@RequiresPermissions("system:user:queryById")
-    @ApiOperation(value="用户-根据ID查询", notes="用户-根据ID查询")
+    @ApiOperation(value = "用户-根据ID查询", notes = "用户-根据ID查询")
     @RequestMapping(value = "/queryById", method = RequestMethod.GET)
     public Result<SysUser> queryById(@RequestParam(name = "id", required = true) String id) {
         Result<SysUser> result = new Result<SysUser>();
@@ -288,8 +291,6 @@ public class SysUserController {
     }
 
 
-
-
     /**
      * 校验用户账号是否唯一<br>
      * 可以校验其他 需要检验什么就传什么。。。
@@ -297,7 +298,7 @@ public class SysUserController {
      * @param sysUser
      * @return
      */
-    @ApiOperation(value="用户-校验用户账号是否唯一", notes="用户-校验用户账号是否唯一")
+    @ApiOperation(value = "用户-校验用户账号是否唯一", notes = "用户-校验用户账号是否唯一")
     @RequestMapping(value = "/checkOnlyUser", method = RequestMethod.GET)
     public Result<Boolean> checkOnlyUser(SysUser sysUser) {
         Result<Boolean> result = new Result<>();
@@ -327,7 +328,7 @@ public class SysUserController {
      * 修改密码
      */
     ////@RequiresPermissions("system:user:changepwd")
-    @ApiOperation(value="用户-修改密码", notes="用户-修改密码")
+    @ApiOperation(value = "用户-修改密码", notes = "用户-修改密码")
     @RequestMapping(value = "/changePassword", method = RequestMethod.PUT)
     public Result<?> changePassword(@RequestBody SysUser sysUser) {
         SysUser u = this.sysUserService.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername, sysUser.getUsername()));
