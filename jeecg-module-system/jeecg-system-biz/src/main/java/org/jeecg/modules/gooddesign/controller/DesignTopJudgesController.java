@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
@@ -17,10 +18,7 @@ import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecg.modules.gooddesign.entity.vo.DesignActivityDetailVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
+import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
@@ -68,7 +66,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
         if (designTopJudges != null && StringUtils.isNotEmpty(designTopJudges.getRealName())) {
-            designTopJudges.setRealName("*" +designTopJudges.getRealName() + "*");
+            designTopJudges.setRealName("*" + designTopJudges.getRealName() + "*");
         }
         QueryWrapper<DesignTopJudges> queryWrapper = QueryGenerator.initQueryWrapper(designTopJudges, req.getParameterMap());
         queryWrapper.orderByAsc("sort");
@@ -254,5 +252,14 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         result.sort(Comparator.comparing(DesignActivityDetailVO::getPublishYear));
         return Result.OK(result);
     }
+
+
+    @ApiOperation(value = "好设计-管理员修改序号", notes = "好设计-管理员修改序号")
+    @RequestMapping(value = "/updateSort", method = {RequestMethod.POST})
+    public Result<String> updateSort(@RequestBody UpdateSortParam updateSortParam) {
+        designTopJudgesService.updateSortByDesignNo(updateSortParam.getDesignNo(), updateSortParam.getSort());
+        return Result.OK("编辑成功!");
+    }
+
 
 }

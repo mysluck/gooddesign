@@ -189,7 +189,6 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
         return Result.OK("编辑成功!");
     }
 
-
     /**
      * 通过id删除
      *
@@ -257,13 +256,14 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @GetMapping(value = "/pageByNameAndScoreStatus")
     public Result<Page<DesignTopJudgesScoreVO>> pageByNameAndTopStatus(@RequestParam(value = "realName", required = false) @ApiParam("设计师姓名") String realName,
                                                                        @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
+                                                                       @RequestParam(value = "sortStatus", required = false) @ApiParam("根据总分排序 1正叙 2倒叙，默认不排序") Integer sortStatus,
                                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                                        HttpServletRequest req) {
 
         Page<DesignTopJudgesScoreVO> page = new Page<DesignTopJudgesScoreVO>(pageNo, pageSize);
 
-        return Result.OK(designEnrollJudgesService.pageByNameAndTopStatus(page, realName, topRecommendStatus));
+        return Result.OK(designEnrollJudgesService.pageByNameAndTopStatus(page, realName, topRecommendStatus, sortStatus));
     }
 
 

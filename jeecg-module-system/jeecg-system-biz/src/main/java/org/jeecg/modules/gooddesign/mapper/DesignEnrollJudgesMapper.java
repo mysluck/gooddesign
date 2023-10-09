@@ -20,7 +20,7 @@ public interface DesignEnrollJudgesMapper extends BaseMapper<DesignEnrollJudges>
     void batchEditScreenStatus(@Param("enrollIds") List<Integer> enrollIds, @Param("screenStatus") int screenStatus);
 
 
-    List<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus);
+    List<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus);
 
 
 }

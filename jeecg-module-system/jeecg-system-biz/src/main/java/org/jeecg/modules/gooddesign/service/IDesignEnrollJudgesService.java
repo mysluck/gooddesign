@@ -2,9 +2,7 @@ package org.jeecg.modules.gooddesign.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 
@@ -51,5 +49,5 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
     void batchAddTop100(List<Integer> id);
 
 
-    Page<DesignTopJudgesScoreVO>pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus);
+    Page<DesignTopJudgesScoreVO>pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus);
 }
