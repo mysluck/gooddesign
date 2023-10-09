@@ -123,7 +123,7 @@ public class SysUserController {
     public Result<IPage<SysUser>> queryPageList(SysUser user, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                 @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize, HttpServletRequest req) {
         if (user != null && StringUtils.isNotBlank(user.getUsername())) {
-            user.setUsername("%" + user.getUsername() + "%");
+            user.setUsername("*" + user.getUsername() + "*");
         }
         QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
         //------------------------------------------------------------------------------------------------

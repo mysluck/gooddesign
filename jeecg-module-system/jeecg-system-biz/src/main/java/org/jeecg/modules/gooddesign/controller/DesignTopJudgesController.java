@@ -69,6 +69,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
             designTopJudges.setRealName("*" + designTopJudges.getRealName() + "*");
         }
         QueryWrapper<DesignTopJudges> queryWrapper = QueryGenerator.initQueryWrapper(designTopJudges, req.getParameterMap());
+        queryWrapper.gt("sort", 0);
         queryWrapper.orderByAsc("sort");
         Page<DesignTopJudges> page = new Page<DesignTopJudges>(pageNo, pageSize);
         IPage<DesignTopJudges> pageList = designTopJudgesService.page(page, queryWrapper);
