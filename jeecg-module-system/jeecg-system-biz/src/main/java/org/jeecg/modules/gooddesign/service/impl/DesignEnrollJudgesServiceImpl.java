@@ -14,7 +14,6 @@ import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.mapper.DesignActivityMapper;
 import org.jeecg.modules.gooddesign.mapper.DesignEnrollJudgesMapper;
@@ -189,19 +188,28 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     }
 
     @Override
-    public void addTop100(Integer id) {
-        DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
-        designEnrollJudges.setId(id);
-        designEnrollJudges.setTopRecommendStatus(1);
-        this.updateById(designEnrollJudges);
-        DesignTopJudgesDetailVO designTopJudgesDetailVO = this.queryDetailById(id);
-        designTopJudgesDetailVO.setId(null);
-        designTopJudgesService.addDetail(designTopJudgesDetailVO);
+    public void addTop100(Integer id, int status) {
+        if (status == 1) {
+            DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
+            designEnrollJudges.setId(id);
+            designEnrollJudges.setTopRecommendStatus(1);
+            this.updateById(designEnrollJudges);
+            DesignTopJudgesDetailVO designTopJudgesDetailVO = this.queryDetailById(id);
+            designTopJudgesDetailVO.setId(null);
+            designTopJudgesService.addDetail(designTopJudgesDetailVO);
+        } else {
+            DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
+            designEnrollJudges.setId(id);
+            designEnrollJudges.setTopRecommendStatus(0);
+            this.updateById(designEnrollJudges);
+            //todo 删除数据
+//            designTopJudgesService.deleteById();
+        }
     }
 
     @Override
     public void batchAddTop100(List<Integer> ids) {
-        ids.forEach(id -> addTop100(id));
+        ids.forEach(id -> addTop100(id, 1));
     }
 
 

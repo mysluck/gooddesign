@@ -233,16 +233,23 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @GetMapping(value = "/addTop100")
     public Result<String> addTop100(@RequestParam @ApiParam("参赛设计师ID") Integer id) {
 
-        designEnrollJudgesService.addTop100(id);
+        designEnrollJudgesService.addTop100(id,1);
         return Result.OK("添加成功！");
     }
 
     @AutoLog(value = "好设计-报名-将报名数据添加到top100")
     @ApiOperation(value = "好设计-报名-批量推荐发现100", notes = "好设计-报名-批量推荐发现100")
     @GetMapping(value = "/batchAddTop100")
-    public Result<String> batchAddTop100(@RequestParam @ApiParam("参赛设计师ID集合") List<Integer> ids) {
-        designEnrollJudgesService.batchAddTop100(ids);
-        return Result.OK("添加成功！");
+    public Result<String> batchAddTop100(@RequestParam @ApiParam("参赛设计师ID集合") List<Integer> ids,
+                                         @RequestParam @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") int topRecommendStatus) {
+        if (topRecommendStatus == 1) {
+            designEnrollJudgesService.batchAddTop100(ids);
+            return Result.OK("添加成功！");
+        } else {
+            designEnrollJudgesService.batchAddTop100(ids);
+            return Result.OK("修改成功！");
+
+        }
     }
 
 

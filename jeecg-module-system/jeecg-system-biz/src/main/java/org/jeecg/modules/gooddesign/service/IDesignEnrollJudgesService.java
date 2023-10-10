@@ -45,7 +45,7 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
 
     void batchEditScreenStatus(List<Integer> enrollIds, int screenStatus);
 
-    void addTop100(Integer id);
+    void addTop100(Integer id, int status);
 
     void batchAddTop100(List<Integer> id);
 
