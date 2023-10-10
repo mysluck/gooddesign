@@ -27,4 +27,7 @@ public class DesignTopJudgesScoreVO extends DesignTopJudgesVO implements Seriali
     @ApiModelProperty(value = "评分")
     private Double score;
 
+    @ApiModelProperty(value = "管理员推荐到top100标志 1推荐 0未推荐")
+    private Integer topRecommendStatus;
+
 }

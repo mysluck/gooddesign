@@ -258,8 +258,13 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @ApiOperation(value = "好设计-管理员修改序号", notes = "好设计-管理员修改序号")
     @RequestMapping(value = "/updateSort", method = {RequestMethod.POST})
     public Result<String> updateSort(@RequestBody UpdateSortParam updateSortParam) {
-        designTopJudgesService.updateSortByDesignNo(updateSortParam.getDesignNo(), updateSortParam.getSort());
-        return Result.OK("编辑成功!");
+        try {
+            designTopJudgesService.updateSortByDesignNo(updateSortParam.getDesignNo(), updateSortParam.getSort());
+            return Result.OK("编辑成功!");
+        } catch (Exception e) {
+            return Result.error("推荐编号已存在，请重新输入!");
+        }
+
     }
 
 

@@ -16,7 +16,7 @@
         select *,IFNULL(total_score,0) AS score from design_enroll_judges j left join (
         select p.participant_id,sum(u.weight) as total_score from design_enroll_participants p left join sys_user u on
         p.judge_id=u.id group by participant_id
-        )tmp on j.id=tmp.participant_id where 1=1
+        )tmp on j.id=tmp.participant_id where j.manager_del_status=0
         <if test="realName!=null">
             and j.real_name like CONCAT('%',#{realName},'%')
         </if>
