@@ -14,14 +14,21 @@
     <select id="pageByNameAndTopStatus"
             resultType="org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO">
         select * from design_enroll_judges
-        where 1=1
+        where manager_del_status=0
         <if test="realName!=null">
             and real_name like CONCAT('%',#{realName},'%')
         </if>
         <if test="topStatus!=null">
             and top_recommend_status =#{topStatus}
         </if>
+    </select>
 
-
+    <select id="queryScoreHistory"
+            resultType="org.jeecg.modules.gooddesign.entity.vo.JudgesScoreVO">
+        select u.weight,u.realname,p.score_status from design_top_judges_participants p left join sys_user u on
+        p.judge_id=u.id
+        <if test="id!=null">
+            where p.participant_id=#{id}
+        </if>
     </select>
 </mapper>

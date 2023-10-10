@@ -256,10 +256,10 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @ApiOperation(value = "好设计-报名-管理员查看报名数据", notes = "好设计-报名-管理员查看报名数据")
     @GetMapping(value = "/pageByNameAndScoreStatus")
     public Result<Page<DesignTopJudgesScoreVO>> pageByNameAndTopStatus(@RequestParam(value = "realName", required = false) @ApiParam("设计师姓名") String realName,
-                                                                        @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
-                                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                                        HttpServletRequest req) {
+                                                                       @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
+                                                                       @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                                       @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                                       HttpServletRequest req) {
 
         Page<DesignTopJudgesScoreVO> page = new Page<DesignTopJudgesScoreVO>(pageNo, pageSize);
 
@@ -311,6 +311,23 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
             });
         }
         return Result.OK("删除成功!");
+    }
+
+
+    @AutoLog(value = "好设计-报名-查看评委打分记录")
+    @ApiOperation(value = "好设计-报名-查看评委打分记录", notes = "好设计-报名-查看评委打分记录")
+    //@RequiresPermissions("gooddesign:design_top_judges:delete")
+    @GetMapping(value = "/queryScoreHistory")
+    public Result<List<JudgesScoreVO>> queryScoreHistory(@RequestParam(name = "id", required = true) @ApiParam("参赛者ID") int id) {
+        List<JudgesScoreVO> result = designEnrollJudgesService.queryScoreHistory(id);
+        result.forEach(data -> {
+            if (1 == data.getScoreStatus()) {
+                data.setScore(data.getWeight());
+            } else {
+                data.setScore(0L);
+            }
+        });
+        return Result.OK(result);
     }
 
 

@@ -7,6 +7,7 @@ import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
+import org.jeecg.modules.gooddesign.entity.vo.JudgesScoreVO;
 
 import java.util.List;
 
@@ -52,4 +53,6 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
 
 
     Page<DesignTopJudgesScoreVO>pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus);
+
+    List<JudgesScoreVO> queryScoreHistory(int id);
 }

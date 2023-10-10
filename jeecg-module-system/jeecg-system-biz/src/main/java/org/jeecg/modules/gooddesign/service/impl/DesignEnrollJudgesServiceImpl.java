@@ -11,10 +11,7 @@ import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
+import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.mapper.DesignActivityMapper;
 import org.jeecg.modules.gooddesign.mapper.DesignEnrollJudgesMapper;
 import org.jeecg.modules.gooddesign.service.*;
@@ -207,8 +204,6 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     public Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus) {
         List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus);
 
-        List<DesignTopJudgesScoreVO> result = new ArrayList<>();
-
 
         List<DesignTopParticipantsScoreVO> totalScore = designTopJudgesParticipantsService.getTotalScore();
         if (!totalScore.isEmpty()) {
@@ -230,5 +225,10 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
         return designEnrollParticipantsScoreVOPage;
 
 
+    }
+
+    @Override
+    public List<JudgesScoreVO> queryScoreHistory(int id) {
+        return this.baseMapper.queryScoreHistory(id);
     }
 }
