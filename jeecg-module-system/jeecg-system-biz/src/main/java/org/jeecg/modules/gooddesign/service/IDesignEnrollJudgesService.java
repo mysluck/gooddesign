@@ -49,9 +49,7 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
 
     void batchAddTop100(List<Integer> id);
 
-
-    Page<DesignTopJudgesScoreVO>pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus);
-
     List<JudgesScoreVO> queryScoreHistory(int id);
-    Page<DesignTopJudgesScoreVO>pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus);
+
+    Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus);
 }
