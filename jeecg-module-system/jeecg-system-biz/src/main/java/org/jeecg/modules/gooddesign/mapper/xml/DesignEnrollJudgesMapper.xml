@@ -13,14 +13,23 @@
 
     <select id="pageByNameAndTopStatus"
             resultType="org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO">
-        select * from design_enroll_judges
-        where manager_del_status=0
+        select *,IFNULL(total_score,0) AS score from design_enroll_judges j left join (
+        select p.participant_id,sum(u.weight) as total_score from design_enroll_participants p left join sys_user u on
+        p.judge_id=u.id group by participant_id
+        )tmp on j.id=tmp.participant_id where 1=1
         <if test="realName!=null">
-            and real_name like CONCAT('%',#{realName},'%')
+            and j.real_name like CONCAT('%',#{realName},'%')
         </if>
         <if test="topStatus!=null">
-            and top_recommend_status =#{topStatus}
+            and j.top_recommend_status =#{topStatus}
         </if>
+        <if test="sortStatus!=null and sortStatus==1">
+            order by score asc
+        </if>
+        <if test="sortStatus!=null and sortStatus==2">
+            order by score desc
+        </if>
+
     </select>
 
     <select id="queryScoreHistory"

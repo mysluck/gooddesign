@@ -14,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface DesignTopJudgesMapper extends BaseMapper<DesignTopJudges> {
 
+    void updateSortByDesignNo(String designNo, int sort);
 }

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.gooddesign.mapper.DesignTopJudgesMapper">
-
+    <update id="updateSortByDesignNo">
+        update design_top_judges
+        set sort = #{sort}
+        where design_no = #{designNo}
+    </update>
 </mapper>

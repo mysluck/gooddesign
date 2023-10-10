@@ -141,5 +141,8 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     }
 
 
-
+    @Override
+    public void updateSortByDesignNo(String designNo, int sort) {
+        this.baseMapper.updateSortByDesignNo(designNo, sort);
+    }
 }
