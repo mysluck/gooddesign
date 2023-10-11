@@ -3,6 +3,8 @@ package org.jeecg.modules.gooddesign.service;
 import org.jeecg.modules.gooddesign.entity.DesignTopProductWork;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * @Description: 好设计-发现100-项目作品
  * @Author: jeecg-boot
@@ -11,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IDesignTopProductWorkService extends IService<DesignTopProductWork> {
 
+    void deleteByProductIds(List<Integer> productIdList);
 }

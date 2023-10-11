@@ -184,6 +184,17 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         return Result.OK("删除成功!");
     }
 
+    @AutoLog(value = "好设计-发现100-设计师信息-通过id删除top100信息和作品信息")
+    @ApiOperation(value = "好设计-发现100-设计师信息-通过id删除top100信息和作品信息", notes = "好设计-发现100-设计师信息-通过id删除top100信息和作品信息")
+    //@RequiresPermissions("gooddesign:design_top_judges:delete")
+    @DeleteMapping(value = "/deleteBatchDetail")
+    public Result<String> deleteBatchDetail(@RequestParam(name = "ids", required = true) String ids) {
+        List<Integer> idList = Arrays.asList(ids.split(",")).stream().map(Integer::new).collect(Collectors.toList());
+        designTopJudgesService.deleteBatchDetail(idList);
+        return Result.OK("删除成功!");
+    }
+
+
     /**
      * 批量删除
      *

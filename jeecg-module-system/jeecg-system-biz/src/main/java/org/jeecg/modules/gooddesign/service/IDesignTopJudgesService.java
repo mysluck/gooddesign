@@ -31,4 +31,6 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
     DesignTopJudges getByLoginId(String loginId);
 
     void updateSortByDesignNo(String designNo, int sort);
+
+    void deleteBatchDetail(List<Integer> asList);
 }

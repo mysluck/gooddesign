@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jeecg.weibo.exception.BusinessException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
@@ -144,5 +145,13 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     @Override
     public void updateSortByDesignNo(String designNo, int sort) {
         this.baseMapper.updateSortByDesignNo(designNo, sort);
+    }
+
+    @Override
+    public void deleteBatchDetail(List<Integer> asList) {
+        if (CollectionUtils.isNotEmpty(asList)) {
+            designTopProductService.deleteByTopJudgesIds(asList);
+            this.removeByIds(asList);
+        }
     }
 }
