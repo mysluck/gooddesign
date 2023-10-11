@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -62,16 +63,15 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @ApiOperation(value = "好设计-发现100-设计师信息-分页列表查询", notes = "好设计-发现100-设计师信息-分页列表查询")
     @GetMapping(value = "/list")
     public Result<IPage<DesignTopJudges>> queryPageList(DesignTopJudges designTopJudges,
+                                                        @RequestParam(name = "sortFlag", required = false) @ApiParam("查询有编号的数据，top100传1 1是 0否") Integer sortFlag,
                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
         if (designTopJudges != null && StringUtils.isNotEmpty(designTopJudges.getRealName())) {
             designTopJudges.setRealName("*" + designTopJudges.getRealName() + "*");
         }
-        Integer sortFlag = designTopJudges.getSortFlag();
-        designTopJudges.setSortFlag(null);
         QueryWrapper<DesignTopJudges> queryWrapper = QueryGenerator.initQueryWrapper(designTopJudges, req.getParameterMap());
-        if (1 == sortFlag) {
+        if (sortFlag != null && 1 == sortFlag) {
             queryWrapper.gt("sort", 0);
         }
         queryWrapper.orderByAsc("sort");

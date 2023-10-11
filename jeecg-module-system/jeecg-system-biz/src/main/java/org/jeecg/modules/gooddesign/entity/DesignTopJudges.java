@@ -160,9 +160,6 @@ public class DesignTopJudges implements Serializable {
     private Integer  disputeStatus;
 
 
-    @ApiModelProperty(value = "查询有编号的数据 1是 0否")
-    private Integer  sortFlag;
-
 
 
 }
