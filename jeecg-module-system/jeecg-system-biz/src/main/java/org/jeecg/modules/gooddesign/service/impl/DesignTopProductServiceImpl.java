@@ -173,4 +173,14 @@ public class DesignTopProductServiceImpl extends ServiceImpl<DesignTopProductMap
         }).collect(Collectors.toList());
         return result;
     }
+
+    @Override
+    public void deleteByTopJudgesIds(List<Integer> asList) {
+        QueryWrapper<DesignTopProduct> queryWrapper = new QueryWrapper();
+        queryWrapper.in("top_judges_id", asList);
+        List<DesignTopProduct> designTopProducts = this.baseMapper.selectList(queryWrapper);
+        List<Integer> productIdList = designTopProducts.stream().map(DesignTopProduct::getId).collect(Collectors.toList());
+        designTopProductWorkService.deleteByProductIds(productIdList);
+        this.remove(queryWrapper);
+    }
 }

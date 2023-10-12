@@ -22,4 +22,6 @@ public interface IDesignTopProductService extends IService<DesignTopProduct> {
     DesignTopProductVO queryByProductId(Integer id);
 
     List<DesignTopProductVO> queryByTopJudgesId(Integer id);
+
+    void deleteByTopJudgesIds(List<Integer> asList);
 }

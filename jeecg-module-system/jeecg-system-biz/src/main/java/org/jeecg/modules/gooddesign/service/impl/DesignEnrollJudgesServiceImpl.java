@@ -10,6 +10,7 @@ import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
+import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopParticipantsScoreVO;
@@ -189,27 +190,52 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
 
     @Override
     public void addTop100(Integer id, int status) {
-        if (status == 1) {
-            DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
-            designEnrollJudges.setId(id);
-            designEnrollJudges.setTopRecommendStatus(1);
-            this.updateById(designEnrollJudges);
-            DesignTopJudgesDetailVO designTopJudgesDetailVO = this.queryDetailById(id);
-            designTopJudgesDetailVO.setId(null);
-            designTopJudgesService.addDetail(designTopJudgesDetailVO);
-        } else {
-            DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
-            designEnrollJudges.setId(id);
-            designEnrollJudges.setTopRecommendStatus(0);
-            this.updateById(designEnrollJudges);
-            //todo 删除数据
-//            designTopJudgesService.deleteById();
-        }
+        DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
+        designEnrollJudges.setId(id);
+        designEnrollJudges.setTopRecommendStatus(1);
+        this.updateById(designEnrollJudges);
+        DesignTopJudgesDetailVO designTopJudgesDetailVO = this.queryDetailById(id);
+        designTopJudgesDetailVO.setId(null);
+        designTopJudgesService.addDetail(designTopJudgesDetailVO);
+//        } else {
+//            DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
+//            designEnrollJudges.setId(id);
+//            designEnrollJudges.setTopRecommendStatus(0);
+//            this.updateById(designEnrollJudges);
+//            //todo 删除数据
+////            designTopJudgesService.deleteById();
+//        }
     }
 
     @Override
     public void batchAddTop100(List<Integer> ids) {
         ids.forEach(id -> addTop100(id, 1));
+    }
+
+    @Override
+    public void batchRemoveFromTop100(List<Integer> ids) {
+        ids.forEach(id -> removeFromTop100(id));
+    }
+
+    @Override
+    public void removeFromTop100(int id) {
+        DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
+        designEnrollJudges.setId(id);
+        designEnrollJudges.setTopRecommendStatus(0);
+        this.updateById(designEnrollJudges);
+
+        DesignEnrollJudges designTopJudges = this.getById(id);
+        QueryWrapper<DesignTopJudges>queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("design_no",designTopJudges.getDesignNo());
+        List<DesignTopJudges> list = designTopJudgesService.list(queryWrapper);
+        if (CollectionUtils.isNotEmpty(list)){
+            DesignTopJudges topJudges = list.get(0);
+            Integer topJudgesId = topJudges.getId();
+
+
+
+        }
+
     }
 
 

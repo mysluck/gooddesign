@@ -241,7 +241,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @ApiOperation(value = "好设计-报名-批量推荐发现100", notes = "好设计-报名-批量推荐发现100")
     @GetMapping(value = "/batchAddTop100")
     public Result<String> batchAddTop100(@RequestParam @ApiParam("参赛设计师ID集合") List<Integer> ids,
-                                         @RequestParam @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") int topRecommendStatus) {
+                                         @RequestParam @ApiParam("管理员推荐到top100标志 1推荐 0未推荐/撤销") int topRecommendStatus) {
         if (topRecommendStatus == 1) {
             designEnrollJudgesService.batchAddTop100(ids);
             return Result.OK("添加成功！");
