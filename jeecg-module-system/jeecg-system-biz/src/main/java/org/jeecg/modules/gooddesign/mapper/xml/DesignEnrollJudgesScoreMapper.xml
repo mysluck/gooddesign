@@ -4,10 +4,10 @@
 
 
     <select id="page" resultType="org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO">
-        select * from ( select j.*,IFNULL(p.score_status ,0) as score_status from design_enroll_judges j left join
+        select * from ( select j.*,IFNULL(p.score_status ,3) as score_status from design_enroll_judges j left join
         (select * from design_enroll_participants
         where judge_id = #{userId}
-        ) p on j.id=p.participant_id where j.screen_status=1 )tmp
+        ) p on j.id=p.participant_id where j.screen_status=1 and  j.manager_del_status=0 )tmp
         where 1=1
         <if test="judgesName != null  and judgesName !=''">
             and tmp.real_name like CONCAT('%',#{judgesName},'%')

@@ -233,7 +233,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @GetMapping(value = "/addTop100")
     public Result<String> addTop100(@RequestParam @ApiParam("参赛设计师ID") Integer id) {
 
-        designEnrollJudgesService.addTop100(id,1);
+        designEnrollJudgesService.addTop100(id, 1);
         return Result.OK("添加成功！");
     }
 

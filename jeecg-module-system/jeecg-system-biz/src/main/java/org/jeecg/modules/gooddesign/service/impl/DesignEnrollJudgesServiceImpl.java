@@ -225,14 +225,12 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
         this.updateById(designEnrollJudges);
 
         DesignEnrollJudges designTopJudges = this.getById(id);
-        QueryWrapper<DesignTopJudges>queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("design_no",designTopJudges.getDesignNo());
+        QueryWrapper<DesignTopJudges> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("design_no", designTopJudges.getDesignNo());
         List<DesignTopJudges> list = designTopJudgesService.list(queryWrapper);
-        if (CollectionUtils.isNotEmpty(list)){
+        if (CollectionUtils.isNotEmpty(list)) {
             DesignTopJudges topJudges = list.get(0);
             Integer topJudgesId = topJudges.getId();
-
-
 
         }
 
@@ -242,24 +240,24 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     @Override
     public Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus) {
         List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus, sortStatus);
-//        List<DesignTopJudgesScoreVO> result = new ArrayList<>();
-//
-//        List<DesignTopParticipantsScoreVO> totalScore = designTopJudgesParticipantsService.getTotalScore();
-//        if (!totalScore.isEmpty()) {
-//            List<Integer> judgesIds = new ArrayList<>();
-//            Map<Integer, Double> scoreMap = new HashMap<>(totalScore.size());
-//            for (int i = 0; i < totalScore.size(); i++) {
-//                DesignTopParticipantsScoreVO designTopParticipantsScoreVO = totalScore.get(i);
-//                judgesIds.add(designTopParticipantsScoreVO.getJudgesId());
-//                scoreMap.put(designTopParticipantsScoreVO.getJudgesId(), designTopParticipantsScoreVO.getTotalScore());
-//            }
-//            designTopJudgesScoreVOS = designTopJudgesScoreVOS.stream().map(designTopJudge -> {
-//                DesignTopJudgesScoreVO scoreVO = new DesignTopJudgesScoreVO();
-//                BeanUtils.copyProperties(designTopJudge, scoreVO);
-//                scoreVO.setScore(scoreMap.get(designTopJudge.getId()));
-//                return scoreVO;
-//            }).collect(Collectors.toList());
-//        }
+        if (CollectionUtils.isNotEmpty(designTopJudgesScoreVOS)) {
+            List<Integer> activityIds = designTopJudgesScoreVOS.stream().map(DesignTopJudgesScoreVO::getActivityId).collect(Collectors.toList());
+            QueryWrapper<DesignActivity> designActivityWrapper = new QueryWrapper();
+            designActivityWrapper.in("id", activityIds);
+            List<DesignActivity> list = designActivityService.list(designActivityWrapper);
+
+            Map<Integer, DesignActivity> designActivityMap = list.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
+
+            designTopJudgesScoreVOS.stream().forEach(designTopJudge -> {
+                Integer activityId = designTopJudge.getActivityId();
+                if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {
+                    DesignActivity designActivity = designActivityMap.get(activityId);
+                    designTopJudge.setActivityName(designActivity.getActivityName());
+                    designTopJudge.setPublishTime(designActivity.getPublishTime());
+                }
+            });
+        }
+
         Page<DesignTopJudgesScoreVO> designEnrollParticipantsScoreVOPage = page.setRecords(designTopJudgesScoreVOS);
         return designEnrollParticipantsScoreVOPage;
 
