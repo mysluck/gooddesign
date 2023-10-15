@@ -62,16 +62,15 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @ApiOperation(value = "好设计-发现100-设计师信息-分页列表查询", notes = "好设计-发现100-设计师信息-分页列表查询")
     @GetMapping(value = "/list")
     public Result<IPage<DesignTopJudges>> queryPageList(DesignTopJudges designTopJudges,
+                                                        @RequestParam(name = "sortFlag", required = false) Integer sortFlag,
                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
         if (designTopJudges != null && StringUtils.isNotEmpty(designTopJudges.getRealName())) {
             designTopJudges.setRealName("*" + designTopJudges.getRealName() + "*");
         }
-        Integer sortFlag = designTopJudges.getSortFlag();
-        designTopJudges.setSortFlag(null);
         QueryWrapper<DesignTopJudges> queryWrapper = QueryGenerator.initQueryWrapper(designTopJudges, req.getParameterMap());
-        if (1 == sortFlag) {
+        if (sortFlag != null && 1 == sortFlag) {
             queryWrapper.gt("sort", 0);
         }
         queryWrapper.orderByAsc("sort");

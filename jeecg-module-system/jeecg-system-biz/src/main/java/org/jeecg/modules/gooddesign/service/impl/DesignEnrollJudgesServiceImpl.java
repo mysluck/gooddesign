@@ -7,6 +7,7 @@ import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
@@ -231,7 +232,9 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
         if (CollectionUtils.isNotEmpty(list)) {
             DesignTopJudges topJudges = list.get(0);
             Integer topJudgesId = topJudges.getId();
-
+            List<Integer> idList = new ArrayList<>();
+            idList.add(topJudgesId);
+            designTopJudgesService.deleteBatchDetail(idList);
         }
 
     }

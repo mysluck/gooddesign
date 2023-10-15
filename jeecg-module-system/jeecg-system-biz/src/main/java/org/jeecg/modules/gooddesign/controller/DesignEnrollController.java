@@ -246,7 +246,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
             designEnrollJudgesService.batchAddTop100(ids);
             return Result.OK("添加成功！");
         } else {
-            designEnrollJudgesService.batchAddTop100(ids);
+            designEnrollJudgesService.batchRemoveFromTop100(ids);
             return Result.OK("修改成功！");
 
         }

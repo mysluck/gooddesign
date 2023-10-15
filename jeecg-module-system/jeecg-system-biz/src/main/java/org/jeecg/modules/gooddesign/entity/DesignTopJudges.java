@@ -159,10 +159,4 @@ public class DesignTopJudges implements Serializable {
     @ApiModelProperty(value = "知识产权无争议 1是 0否")
     private Integer  disputeStatus;
 
-
-    @ApiModelProperty(value = "查询有编号的数据 1是 0否")
-    private Integer  sortFlag;
-
-
-
 }
