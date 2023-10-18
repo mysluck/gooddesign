@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "相关人员对象", description = "相关人员（推荐委员、发现大使、观点讲者）")
-public class DesignStakeholderMainVO extends DesignStakeholderVO implements Serializable {
+public class DesignStakeholderMainParam extends DesignStakeholderParam implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "是否最近添加（1添加 0未添加）")

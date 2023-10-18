@@ -1,5 +1,7 @@
 package org.jeecg.modules.gooddesign.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
@@ -16,12 +19,14 @@ import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
 import org.jeecg.modules.gooddesign.entity.DesignStakeholder;
-import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainParam;
+import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderParam;
 import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderVO;
 import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
 import org.jeecg.modules.gooddesign.service.IDesignStakeholderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,10 +61,10 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     //@AutoLog(value = "相关人员（推荐委员、发现大使、观点讲者）-分页列表查询")
     @ApiOperation(value = "相关人员-分页列表查询", notes = "相关人员-分页列表查询")
     @GetMapping(value = "/list")
-    public Result<IPage<DesignStakeholder>> queryPageList(DesignStakeholderVO designStakeholderVO,
-                                                          @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                          @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                          HttpServletRequest req) {
+    public Result<IPage<DesignStakeholderVO>> queryPageList(DesignStakeholderParam designStakeholderVO,
+                                                            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                            HttpServletRequest req) {
         if (designStakeholderVO != null && StringUtils.isNotEmpty(designStakeholderVO.getName())) {
             designStakeholderVO.setName("*" + designStakeholderVO.getName() + "*");
         }
@@ -69,7 +74,21 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
         Page<DesignStakeholder> page = new Page<DesignStakeholder>(pageNo, pageSize);
         queryWrapper.orderByDesc("id");
         IPage<DesignStakeholder> pageList = designStakeholderService.page(page, queryWrapper);
-        return Result.OK(pageList);
+
+        Page<DesignStakeholderVO> pageResult = new Page<DesignStakeholderVO>(pageNo, pageSize);
+        pageResult.setPages(pageList.getPages());
+        pageResult.setTotal(pageList.getTotal());
+        pageResult.setCurrent(pageList.getCurrent());
+        pageResult.setRecords(pageList.getRecords().stream().map(data -> {
+            DesignStakeholderVO vo = new DesignStakeholderVO();
+            BeanUtils.copyProperties(data, vo);
+            if (StringUtils.isNotBlank(data.getProductUrl())) {
+                List<String> urls = JSONObject.parseArray(data.getProductUrl(), String.class);
+                vo.setProductUrls(urls);
+            }
+            return vo;
+        }).collect(Collectors.toList()));
+        return Result.OK(pageResult);
     }
 
     /**
@@ -82,12 +101,15 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     @ApiOperation(value = "相关人员-添加", notes = "相关人员-添加")
     //@RequiresPermissions("gooddesign:design_stakeholder:add")
     @PostMapping(value = "/add")
-    public Result<String> add(@RequestBody DesignStakeholderVO designStakeholderVO) {
+    public Result<String> add(@RequestBody DesignStakeholderParam designStakeholderVO) {
         DesignStakeholder designStakeholder = new DesignStakeholder();
         BeanUtils.copyProperties(designStakeholderVO, designStakeholder);
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if (sysUser != null) {
             designStakeholder.setUpdateBy(sysUser.getUsername());
+        }
+        if (CollectionUtils.isNotEmpty(designStakeholderVO.getProductUrlList())) {
+            designStakeholder.setProductUrl(JSONObject.toJSONString(designStakeholderVO.getProductUrlList()));
         }
         designStakeholder.setUpdateTime(new Date());
         designStakeholderService.save(designStakeholder);
@@ -104,9 +126,12 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     @ApiOperation(value = "相关人员-编辑", notes = "相关人员-编辑")
     //@RequiresPermissions("gooddesign:design_stakeholder:edit")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
-    public Result<String> edit(@RequestBody DesignStakeholderVO designStakeholderVO) {
+    public Result<String> edit(@RequestBody DesignStakeholderParam designStakeholderParam) {
         DesignStakeholder designStakeholder = new DesignStakeholder();
-        BeanUtils.copyProperties(designStakeholderVO, designStakeholder);
+        BeanUtils.copyProperties(designStakeholderParam, designStakeholder);
+        if (CollectionUtils.isNotEmpty(designStakeholderParam.getProductUrlList())) {
+            designStakeholder.setProductUrl(JSONObject.toJSONString(designStakeholderParam.getProductUrlList()));
+        }
         designStakeholderService.updateById(designStakeholder);
         return Result.OK("编辑成功!");
     }
@@ -161,9 +186,9 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
 
     @ApiOperation(value = "相关人员-列表查询-关联编辑壮游", notes = "相关人员-列表查询-关联编辑壮游判断是否以添加")
     @GetMapping(value = "/listByMain")
-    public Result<List<DesignStakeholderMainVO>> listByMain(@RequestParam(name = "mainId") @ApiParam("当前编辑壮游ID") Integer mainId,
-                                                            @RequestParam(name = "type") @ApiParam("查询类型 1推荐委员 2发现大使 3观点讲者") Integer type,
-                                                            HttpServletRequest req) {
+    public Result<List<DesignStakeholderMainParam>> listByMain(@RequestParam(name = "mainId") @ApiParam("当前编辑壮游ID") Integer mainId,
+                                                               @RequestParam(name = "type") @ApiParam("查询类型 1推荐委员 2发现大使 3观点讲者") Integer type,
+                                                               HttpServletRequest req) {
 
 
         QueryWrapper<DesignStakeholder> queryWrapper = new QueryWrapper();
@@ -179,8 +204,8 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
 
 
         if (designStakeholders != null) {
-            List<DesignStakeholderMainVO> result = designStakeholders.stream().map(designStakeholder -> {
-                DesignStakeholderMainVO designStakeholderMainVO = new DesignStakeholderMainVO();
+            List<DesignStakeholderMainParam> result = designStakeholders.stream().map(designStakeholder -> {
+                DesignStakeholderMainParam designStakeholderMainVO = new DesignStakeholderMainParam();
                 BeanUtils.copyProperties(designStakeholder, designStakeholderMainVO);
                 if (stakeholderIds != null && stakeholderIds.contains(designStakeholder.getId())) {
                     designStakeholderMainVO.setRecentAdd(1);
@@ -189,7 +214,7 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
                 }
                 return designStakeholderMainVO;
             }).collect(Collectors.toList());
-            result.sort(Comparator.comparing(DesignStakeholderMainVO::getRecentAdd).reversed());
+            result.sort(Comparator.comparing(DesignStakeholderMainParam::getRecentAdd).reversed());
             return Result.OK(result);
         }
         return Result.OK(new ArrayList<>());
