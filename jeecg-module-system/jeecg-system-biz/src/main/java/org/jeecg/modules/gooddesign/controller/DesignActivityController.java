@@ -59,7 +59,6 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
         if (designActivity != null && org.apache.commons.lang.StringUtils.isNotEmpty(designActivity.getActivityName())) {
             designActivity.setActivityName("*" + designActivity.getActivityName() + "*");
         }
-        designActivity.setType(1);
         QueryWrapper<DesignActivity> queryWrapper = QueryGenerator.initQueryWrapper(designActivity, req.getParameterMap());
         Page<DesignActivity> page = new Page<DesignActivity>(pageNo, pageSize);
         IPage<DesignActivity> pageList = designActivityService.page(page, queryWrapper);
@@ -181,66 +180,5 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
         }
         return Result.OK("当前无进行中活动，可以修改！", false);
     }
-
-
-    /**
-     * @return
-     */
-    @ApiOperation(value = "添加评分、top100活动", notes = "添加活动")
-    @GetMapping(value = "/addStatus")
-    public Result<String> addStatus(@RequestParam("type") @ApiParam("活动类型-2评分 3top100") int type,
-                                    @RequestParam("status") @ApiParam("状态（1 启动 0未启动 2结束）") int status) {
-
-        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
-        queryWrapper.eq("type", type);
-        List<DesignActivity> list = designActivityService.list(queryWrapper);
-        if (CollectionUtils.isNotEmpty(list)) {
-            return Result.error("以存在该活动，请勿重复添加!");
-        }
-
-        DesignActivity designActivity = new DesignActivity();
-        designActivity.setType(type);
-        designActivity.setActivityStatus(status);
-        designActivityService.save(designActivity);
-        return Result.ok("添加成功!");
-    }
-
-    @ApiOperation(value = "编辑评分、top100活动", notes = "编辑活动")
-    @GetMapping(value = "/updateStatus")
-    public Result<String> updateStatus(@RequestParam("id") @ApiParam("id") int id,
-                                       @RequestParam("status") @ApiParam("状态（1 启动 0未启动 2结束）") int status) {
-
-        DesignActivity designActivity = new DesignActivity();
-        designActivity.setId(id);
-        designActivity.setActivityStatus(status);
-        designActivityService.updateById(designActivity);
-        return Result.ok("编辑成功!");
-    }
-
-
-    @AutoLog(value = "删除评分、top100活动")
-    @ApiOperation(value = "删除评分、top100活动", notes = "删除评分、top100活动")
-    //@RequiresPermissions("gooddesign:design_activity:delete")
-    @DeleteMapping(value = "/deleteStatus")
-    public Result<String> deleteStatus(@RequestParam(name = "id", required = true) int id) {
-        designActivityService.removeById(id);
-        return Result.OK("删除成功!");
-    }
-
-
-    @AutoLog(value = "查询评分、top100活动")
-    @ApiOperation(value = "查询评分、top100活动", notes = "查询评分、top100活动")
-    //@RequiresPermissions("gooddesign:design_activity:delete")
-    @DeleteMapping(value = "/queryStatus")
-    public Result<DesignActivity> queryStatus(@RequestParam(name = "type", required = true) @ApiParam("活动类型 2：评分 3：top100") int type) {
-        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
-        queryWrapper.eq("type", type);
-        List<DesignActivity> list = designActivityService.list(queryWrapper);
-        if (CollectionUtils.isNotEmpty(list)) {
-            return Result.OK(list.get(0));
-        }
-        return Result.error("不存在当前活动，请添加!");
-    }
-
 
 }
