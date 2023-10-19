@@ -26,7 +26,6 @@ import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
 import org.jeecg.modules.gooddesign.service.IDesignStakeholderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +60,7 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     //@AutoLog(value = "相关人员（推荐委员、发现大使、观点讲者）-分页列表查询")
     @ApiOperation(value = "相关人员-分页列表查询", notes = "相关人员-分页列表查询")
     @GetMapping(value = "/list")
-    public Result<IPage<DesignStakeholderVO>> queryPageList(DesignStakeholderParam designStakeholderVO,
+    public Result<IPage<DesignStakeholderVO>> queryPageList(DesignStakeholderVO designStakeholderVO,
                                                             @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                             HttpServletRequest req) {
@@ -108,8 +107,8 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
         if (sysUser != null) {
             designStakeholder.setUpdateBy(sysUser.getUsername());
         }
-        if (CollectionUtils.isNotEmpty(designStakeholderVO.getProductUrlList())) {
-            designStakeholder.setProductUrl(JSONObject.toJSONString(designStakeholderVO.getProductUrlList()));
+        if (CollectionUtils.isNotEmpty(designStakeholderVO.getProductUrls())) {
+            designStakeholder.setProductUrl(JSONObject.toJSONString(designStakeholderVO.getProductUrls()));
         }
         designStakeholder.setUpdateTime(new Date());
         designStakeholderService.save(designStakeholder);
@@ -129,8 +128,8 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     public Result<String> edit(@RequestBody DesignStakeholderParam designStakeholderParam) {
         DesignStakeholder designStakeholder = new DesignStakeholder();
         BeanUtils.copyProperties(designStakeholderParam, designStakeholder);
-        if (CollectionUtils.isNotEmpty(designStakeholderParam.getProductUrlList())) {
-            designStakeholder.setProductUrl(JSONObject.toJSONString(designStakeholderParam.getProductUrlList()));
+        if (CollectionUtils.isNotEmpty(designStakeholderParam.getProductUrls())) {
+            designStakeholder.setProductUrl(JSONObject.toJSONString(designStakeholderParam.getProductUrls()));
         }
         designStakeholderService.updateById(designStakeholder);
         return Result.OK("编辑成功!");
@@ -175,12 +174,17 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
     //@AutoLog(value = "相关人员-通过id查询")
     @ApiOperation(value = "相关人员-通过id查询", notes = "相关人员-通过id查询")
     @GetMapping(value = "/queryById")
-    public Result<DesignStakeholder> queryById(@RequestParam(name = "id", required = true) String id) {
+    public Result<DesignStakeholderVO> queryById(@RequestParam(name = "id", required = true) String id) {
         DesignStakeholder designStakeholder = designStakeholderService.getById(id);
         if (designStakeholder == null) {
             return Result.error("未找到对应数据");
         }
-        return Result.OK(designStakeholder);
+        DesignStakeholderVO vo = new DesignStakeholderVO();
+        BeanUtils.copyProperties(designStakeholder, vo);
+        if (StringUtils.isNotEmpty(designStakeholder.getProductUrl())) {
+            vo.setProductUrls(JSONArray.parseArray(designStakeholder.getProductUrl(), String.class));
+        }
+        return Result.OK(vo);
     }
 
 

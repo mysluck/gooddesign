@@ -54,5 +54,5 @@ public class DesignStakeholderParam implements Serializable {
     private Integer type;
 
     @ApiModelProperty(value = "作品集合")
-    List<String> productUrlList;
+    List<String> productUrls;
 }
