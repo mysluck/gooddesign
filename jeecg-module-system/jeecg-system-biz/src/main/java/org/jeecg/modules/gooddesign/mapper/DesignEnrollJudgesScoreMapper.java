@@ -2,11 +2,7 @@ package org.jeecg.modules.gooddesign.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Param;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
-import org.jeecg.modules.system.entity.SysAnnouncement;
 
 import java.util.List;
 
@@ -18,6 +14,6 @@ import java.util.List;
  */
 public interface DesignEnrollJudgesScoreMapper extends BaseMapper<DesignEnrollParticipantsScoreVO> {
 
-    List<DesignEnrollParticipantsScoreVO> page(Page<DesignEnrollParticipantsScoreVO> page, String judgesName, List<Integer> scoreStatus, String userId);
+    List<DesignEnrollParticipantsScoreVO> page(Page<DesignEnrollParticipantsScoreVO> page, String judgesName, List<Integer> scoreStatus, String userId, String designNo);
 
 }

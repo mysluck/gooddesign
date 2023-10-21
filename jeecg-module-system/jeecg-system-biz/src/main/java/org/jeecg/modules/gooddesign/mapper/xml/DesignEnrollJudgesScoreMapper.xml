@@ -12,6 +12,12 @@
         <if test="judgesName != null  and judgesName !=''">
             and tmp.real_name like CONCAT('%',#{judgesName},'%')
         </if>
+        <if test="designNo != null  and designNo !=''">
+            and tmp.design_no like CONCAT('%',#{designNo},'%')
+        </if>
+
+
+
         <if test="scoreStatus != null ">
             and tmp.score_status in
             <foreach collection="scoreStatus" index="index" item="item" open="(" separator="," close=")">

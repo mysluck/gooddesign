@@ -20,8 +20,8 @@ public class DesignEnrollParticipantsScoreServiceImpl extends ServiceImpl<Design
     IDesignActivityService designActivityService;
 
     @Override
-    public Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId) {
-        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, realName, screeStatus, userId);
+    public Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId, String designNo) {
+        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, realName, screeStatus, userId, designNo);
         if (CollectionUtils.isNotEmpty(result)) {
             Integer activityId = result.get(0).getActivityId();
             DesignActivity activity = designActivityService.getById(activityId);
@@ -39,7 +39,7 @@ public class DesignEnrollParticipantsScoreServiceImpl extends ServiceImpl<Design
         screeStatus.add(0);
         screeStatus.add(3);
         Page<DesignEnrollParticipantsScoreVO> page = new Page<DesignEnrollParticipantsScoreVO>(1, 1);
-        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, null, screeStatus, userId);
+        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, null, screeStatus, userId, null);
         if (CollectionUtils.isEmpty(result)) {
             return null;
         }

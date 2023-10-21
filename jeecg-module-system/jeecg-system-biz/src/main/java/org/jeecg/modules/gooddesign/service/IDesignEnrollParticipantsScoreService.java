@@ -20,9 +20,10 @@ public interface IDesignEnrollParticipantsScoreService extends IService<DesignEn
      * @param realName
      * @param screeStatus
      * @param userId 评委ID
+     * @param designNo
      * @return
      */
-    Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId);
+    Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId, String designNo);
 
     DesignEnrollParticipantsScoreVO doStartScore(String id);
 }
