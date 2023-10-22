@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -68,7 +69,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     /**
      * 添加
      *
-     * @param designActivity
+     * @param
      * @return
      */
     @AutoLog(value = "好设计-跨年启停-添加")
@@ -96,7 +97,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     /**
      * 编辑
      *
-     * @param designActivity
+     * @param
      * @return
      */
     @AutoLog(value = "好设计-跨年启停-编辑")
@@ -113,7 +114,9 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
             if (activity != null && activity.getId() != null && !designActivityVO.getId().equals(activity.getId())) {
                 return Result.OK("存在正在进行中的活动，请处理！");
             }
-            bean.setPublishTime(new Date());
+            if (activity.getPublishTime() == null) {
+                bean.setPublishTime(new Date());
+            }
         }
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if (sysUser != null) {
