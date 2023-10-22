@@ -39,5 +39,6 @@
         <if test="id!=null">
             where p.participant_id=#{id}
         </if>
+        and score_status in(1,2)
     </select>
 </mapper>
