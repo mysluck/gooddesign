@@ -43,7 +43,7 @@ public class DesignActivityServiceImpl extends ServiceImpl<DesignActivityMapper,
     public List<DesignActivity> getScoreActivity(int scoreStatus, int topStatus) {
         QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
         queryWrapper.ne("score_status", scoreStatus);
-        queryWrapper.eq("top_status", scoreStatus);
+        queryWrapper.eq("top_status", topStatus);
         List<DesignActivity> list = this.list(queryWrapper);
         return list;
     }
