@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
@@ -20,11 +21,9 @@ public class DesignEnrollParticipantsScoreServiceImpl extends ServiceImpl<Design
     IDesignActivityService designActivityService;
 
     @Override
-    public Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId, String designNo) {
-        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, realName, screeStatus, userId, designNo);
+    public Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId, String designNo, DesignActivity activity) {
+        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, realName, screeStatus, userId, designNo, activity.getId());
         if (CollectionUtils.isNotEmpty(result)) {
-            Integer activityId = result.get(0).getActivityId();
-            DesignActivity activity = designActivityService.getById(activityId);
             result.stream().forEach(vo -> {
                 vo.setActivityName(activity.getActivityName());
             });
@@ -34,17 +33,19 @@ public class DesignEnrollParticipantsScoreServiceImpl extends ServiceImpl<Design
     }
 
     @Override
-    public DesignEnrollParticipantsScoreVO doStartScore(String userId) {
+    public DesignEnrollParticipantsScoreVO doStartScore(String userId, DesignActivity activity) {
         List<Integer> screeStatus = new ArrayList<>();
         screeStatus.add(0);
         screeStatus.add(3);
         Page<DesignEnrollParticipantsScoreVO> page = new Page<DesignEnrollParticipantsScoreVO>(1, 1);
-        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, null, screeStatus, userId, null);
+        if (activity == null || activity.getId() == null) {
+            throw new BusinessException("未发现启动的活动，请确认！");
+        }
+        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.page(page, null, screeStatus, userId, null, activity.getId());
         if (CollectionUtils.isEmpty(result)) {
             return null;
         }
         DesignEnrollParticipantsScoreVO designEnrollParticipantsScoreVO = result.get(0);
-        DesignActivity activity = designActivityService.getById(designEnrollParticipantsScoreVO.getActivityId());
         designEnrollParticipantsScoreVO.setActivityName(activity.getActivityName());
         return designEnrollParticipantsScoreVO;
     }

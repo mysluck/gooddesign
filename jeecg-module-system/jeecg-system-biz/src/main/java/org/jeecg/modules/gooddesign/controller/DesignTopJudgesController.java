@@ -247,9 +247,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
 
     @ApiOperation(value = "好设计-发现100-获取所有活动信息", notes = "好设计-发现100-获取所有活动信息")
     @RequestMapping(value = "/getAdctivity", method = RequestMethod.POST)
-    public Result<List<DesignActivityDetailVO>> getAdctivity() {
+    public Result<List<DesignActivityDetailVO>> upgetAdctivity() {
         QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
-        queryWrapper.eq("activity_status", 2);
+        queryWrapper.eq("top_status", 1);
         List<DesignActivity> list = designActivityService.list(queryWrapper);
 
         List<DesignActivityDetailVO> result = list.stream().map(activity -> {

@@ -93,13 +93,18 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         if (sysUser == null || sysUser.getId() == null) {
             throw new BusinessException("未获取到用户信息，请重新登录！");
         }
+        List<DesignActivity> scoreActivits = designActivityService.getScoreActivity(2, 0);
+        if (CollectionUtils.isEmpty(scoreActivits)) {
+            return Result.error("评委暂时无法打分，请联系管理员!");
+        }
+        DesignActivity activity = scoreActivits.get(0);
         List<Integer> list = null;
         if (scoreStatus != null) {
             list = new ArrayList<>();
             list.add(scoreStatus);
         }
         Page<DesignEnrollParticipantsScoreVO> page = new Page<DesignEnrollParticipantsScoreVO>(pageNo, pageSize);
-        return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, list, sysUser.getId(),designNo));
+        return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, list, sysUser.getId(), designNo, activity));
     }
 
 
@@ -110,7 +115,13 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         if (sysUser == null || sysUser.getId() == null) {
             throw new BusinessException("未获取到用户信息，请重新登录！");
         }
-        return Result.OK(designJudgesParticipants.doStartScore(sysUser.getId()));
+        List<DesignActivity> scoreActivits = designActivityService.getScoreActivity(2, 0);
+        if (CollectionUtils.isEmpty(scoreActivits)) {
+            return Result.error("评委暂时无法打分，请联系管理员!");
+        }
+        DesignActivity activity = scoreActivits.get(0);
+
+        return Result.OK(designJudgesParticipants.doStartScore(sysUser.getId(),activity));
     }
 
 

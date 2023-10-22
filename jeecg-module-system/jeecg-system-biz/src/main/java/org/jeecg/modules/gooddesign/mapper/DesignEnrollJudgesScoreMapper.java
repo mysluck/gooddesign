@@ -14,6 +14,6 @@ import java.util.List;
  */
 public interface DesignEnrollJudgesScoreMapper extends BaseMapper<DesignEnrollParticipantsScoreVO> {
 
-    List<DesignEnrollParticipantsScoreVO> page(Page<DesignEnrollParticipantsScoreVO> page, String judgesName, List<Integer> scoreStatus, String userId, String designNo);
+    List<DesignEnrollParticipantsScoreVO> page(Page<DesignEnrollParticipantsScoreVO> page, String judgesName, List<Integer> scoreStatus, String userId, String designNo, Integer activityId);
 
 }

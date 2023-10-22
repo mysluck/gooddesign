@@ -39,4 +39,12 @@ public class DesignActivityServiceImpl extends ServiceImpl<DesignActivityMapper,
         return list.get(0);
     }
 
+    @Override
+    public List<DesignActivity> getScoreActivity(int scoreStatus, int topStatus) {
+        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
+        queryWrapper.ne("score_status", scoreStatus);
+        queryWrapper.eq("top_status", scoreStatus);
+        List<DesignActivity> list = this.list(queryWrapper);
+        return list;
+    }
 }
