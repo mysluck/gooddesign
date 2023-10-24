@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Description: 好设计-跨年启停
@@ -175,7 +174,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     }
 
 
-    @ApiOperation(value = "合作伙伴-序号检查", notes = "合作伙伴-序号检查，判断编码是否存在，存在，返回true")
+    @ApiOperation(value = "好设计-活动-序号检查", notes = "合作伙伴-序号检查，判断编码是否存在，存在，返回true")
     @PostMapping(value = "/checkActivityStatus")
     public Result checkActivityStatus() {
         if (designActivityService.checkActivityStatus()) {
@@ -183,5 +182,14 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
         }
         return Result.OK("当前无进行中活动，可以修改！", false);
     }
+
+
+    @ApiOperation(value = "好设计-活动-获取当前可以报名的活动", notes = "好设计-活动-获取当前可以报名的活动")
+    @GetMapping(value = "/getEnrollActivity")
+    public Result<DesignActivity> getEnrollActivity() {
+        DesignActivity activity = designActivityService.getActivity();
+        return Result.OK(activity);
+    }
+
 
 }

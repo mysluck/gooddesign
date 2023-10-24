@@ -18,7 +18,21 @@ public interface IDesignActivityService extends IService<DesignActivity> {
      */
     boolean checkActivityStatus();
 
+    /**
+     * 获取正在报名的活动
+     *
+     * @return
+     */
+    List<DesignActivity> getActivityBy(Integer activityStatus, Integer scoreStatus, Integer topStatus);
+
     DesignActivity getActivity();
+
+    /**
+     * 获取当前活动 top100未生成的活动 top100已生成，则活动结束
+     *
+     * @return
+     */
+    DesignActivity getNowActivity();
 
 
     /**
