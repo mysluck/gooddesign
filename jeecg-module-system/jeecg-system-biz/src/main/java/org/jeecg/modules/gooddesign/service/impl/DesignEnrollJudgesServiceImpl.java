@@ -7,7 +7,6 @@ import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
@@ -241,7 +240,10 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
 
 
     @Override
-    public Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus) {
+    public Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus, Integer historyStatus) {
+        if (historyStatus != null && historyStatus == 1) {
+            //todo 查看当前报名数据 历史报名数据
+        }
         List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus, sortStatus);
         if (CollectionUtils.isNotEmpty(designTopJudgesScoreVOS)) {
             List<Integer> activityIds = designTopJudgesScoreVOS.stream().map(DesignTopJudgesScoreVO::getActivityId).collect(Collectors.toList());
