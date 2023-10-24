@@ -105,25 +105,25 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     //@RequiresPermissions("gooddesign:design_activity:edit")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignActivityVO designActivityVO) {
-
-
         DesignActivity bean = new DesignActivity();
         BeanUtils.copyProperties(designActivityVO, bean);
-        if (designActivityVO.getActivityStatus() != null && 1 == designActivityVO.getActivityStatus()) {
-            DesignActivity activity = designActivityService.getActivity();
-            if (activity != null && activity.getId() != null && !designActivityVO.getId().equals(activity.getId())) {
-                return Result.OK("存在正在进行中的活动，请处理！");
-            }
-            if (activity.getPublishTime() == null) {
-                bean.setPublishTime(new Date());
-            }
-        }
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if (sysUser != null) {
             bean.setUpdateBy(sysUser.getUsername());
         }
         bean.setUpdateTime(new Date());
+        if (designActivityVO.getActivityStatus() != null && 1 == designActivityVO.getActivityStatus()) {
+            DesignActivity activity = designActivityService.getActivity();
+            if (activity != null && activity.getId() != null && !designActivityVO.getId().equals(activity.getId())) {
+                return Result.OK("存在正在进行中的活动，请处理！");
+            }
+            DesignActivity byId = designActivityService.getById(designActivityVO.getId());
+            if (byId.getPublishTime() == null) {
+                bean.setPublishTime(new Date());
+            }
+        }
         designActivityService.updateById(bean);
+
         return Result.OK("编辑成功!");
     }
 
