@@ -4,8 +4,10 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jeecg.weibo.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -63,9 +65,31 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @GetMapping(value = "/list")
     public Result<IPage<DesignTopJudges>> queryPageList(DesignTopJudges designTopJudges,
                                                         @RequestParam(name = "sortFlag", required = false) Integer sortFlag,
+                                                        @RequestParam(name = "historyStatus", defaultValue = "0") @ApiParam("0：查询当前top数据(默认) 1：查询历史数据 2：查询所有数据") int historyStatus,
                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
+
+        List<Integer> activityIds = new ArrayList<>();
+        Map<Integer, DesignActivity> designActivityMap = new HashMap<>();
+        if (historyStatus == 0) {
+            DesignActivity nowActivity = designActivityService.getNowActivity();
+            if (nowActivity == null) {
+                throw new BusinessException("未获取到发现100状态为未生成的活动，请确认!");
+            }
+            designActivityMap.put(nowActivity.getId(), nowActivity);
+            activityIds.add(nowActivity.getId());
+        } else if (historyStatus == 1) {
+            List<DesignActivity> activityBy = designActivityService.getActivityBy(null, null, 1);
+            if (CollectionUtils.isEmpty(activityBy)) {
+                throw new BusinessException("未获取到历史活动，请确认!");
+            }
+            activityIds.addAll(activityBy.stream().map(DesignActivity::getId).collect(Collectors.toList()));
+            activityBy.forEach(data -> {
+                designActivityMap.put(data.getId(), data);
+            });
+        }
+
         if (designTopJudges != null && StringUtils.isNotEmpty(designTopJudges.getRealName())) {
             designTopJudges.setRealName("*" + designTopJudges.getRealName() + "*");
         }
@@ -74,17 +98,13 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
             queryWrapper.gt("sort", 0);
         }
         queryWrapper.orderByAsc("sort");
+        if (CollectionUtils.isNotEmpty(activityIds)) {
+            queryWrapper.in("activity_id", activityIds);
+        }
         Page<DesignTopJudges> page = new Page<DesignTopJudges>(pageNo, pageSize);
         IPage<DesignTopJudges> pageList = designTopJudgesService.page(page, queryWrapper);
         List<DesignTopJudges> records = pageList.getRecords();
         if (!records.isEmpty()) {
-            List<Integer> activityIds = records.stream().map(DesignTopJudges::getActivityId).collect(Collectors.toList());
-            QueryWrapper<DesignActivity> designActivityWrapper = new QueryWrapper();
-            designActivityWrapper.in("id", activityIds);
-            List<DesignActivity> list = designActivityService.list(designActivityWrapper);
-
-            Map<Integer, DesignActivity> designActivityMap = list.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
-
             records.stream().forEach(designTopJudge -> {
                 Integer activityId = designTopJudge.getActivityId();
                 if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {

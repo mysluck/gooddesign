@@ -59,9 +59,22 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @ApiOperation(value = "好设计-报名-设计师信息-分页列表查询", notes = "好设计-报名-设计师信息-分页列表查询")
     @GetMapping(value = "/list")
     public Result<IPage<DesignEnrollJudges>> queryPageList(DesignEnrollJudges designEnrollJudges,
+                                                           @RequestParam(name = "historyStatus", defaultValue = "0") @ApiParam("0：查询当前top数据(默认) 1：查询历史数据 2：查询所有数据") int historyStatus,
                                                            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                            HttpServletRequest req) {
+        if (historyStatus == 0) {
+            return queryPageList(designEnrollJudges, pageNo, pageSize, req);
+        } else if (historyStatus == 1) {
+            return listHistory(designEnrollJudges, pageNo, pageSize, req);
+        } else {
+            return listAll(designEnrollJudges, pageNo, pageSize, req);
+        }
+
+    }
+
+
+    public Result<IPage<DesignEnrollJudges>> queryPageList(DesignEnrollJudges designEnrollJudges, Integer pageNo, Integer pageSize, HttpServletRequest req) {
         DesignActivity nowActivity = designActivityService.getNowActivity();
         if (nowActivity == null) {
             return Result.error("发现100状态已生成，报名结束!");
@@ -70,6 +83,37 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
             designEnrollJudges.setRealName("*" + designEnrollJudges.getRealName() + "*");
         }
         designEnrollJudges.setActivityId(nowActivity.getId());
+        QueryWrapper<DesignEnrollJudges> queryWrapper = QueryGenerator.initQueryWrapper(designEnrollJudges, req.getParameterMap());
+        Page<DesignEnrollJudges> page = new Page<DesignEnrollJudges>(pageNo, pageSize);
+        IPage<DesignEnrollJudges> pageList = designEnrollJudgesService.page(page, queryWrapper);
+        List<DesignEnrollJudges> records = pageList.getRecords();
+        if (!records.isEmpty()) {
+            List<Integer> activityIds = records.stream().map(DesignEnrollJudges::getActivityId).collect(Collectors.toList());
+            QueryWrapper<DesignActivity> designActivityWrapper = new QueryWrapper();
+            designActivityWrapper.in("id", activityIds);
+            List<DesignActivity> list = designActivityService.list(designActivityWrapper);
+
+            Map<Integer, DesignActivity> designActivityMap = list.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
+
+            records.stream().forEach(designTopJudge -> {
+                Integer activityId = designTopJudge.getActivityId();
+                if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {
+                    DesignActivity designActivity = designActivityMap.get(activityId);
+                    designTopJudge.setActivityName(designActivity.getActivityName());
+                    designTopJudge.setPublishTime(designActivity.getPublishTime());
+                }
+            });
+            pageList.setRecords(records);
+        }
+
+        return Result.OK(pageList);
+    }
+
+    public Result<IPage<DesignEnrollJudges>> listAll(DesignEnrollJudges designEnrollJudges, Integer pageNo, Integer pageSize, HttpServletRequest req) {
+
+        if (designEnrollJudges != null && org.apache.commons.lang.StringUtils.isNotEmpty(designEnrollJudges.getRealName())) {
+            designEnrollJudges.setRealName("*" + designEnrollJudges.getRealName() + "*");
+        }
         QueryWrapper<DesignEnrollJudges> queryWrapper = QueryGenerator.initQueryWrapper(designEnrollJudges, req.getParameterMap());
         Page<DesignEnrollJudges> page = new Page<DesignEnrollJudges>(pageNo, pageSize);
         IPage<DesignEnrollJudges> pageList = designEnrollJudgesService.page(page, queryWrapper);
@@ -106,12 +150,8 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
      * @param req
      * @return
      */
-    @ApiOperation(value = "好设计-报名-设计师信息-分页列表查询历史报名数据", notes = "好设计-报名-设计师信息-分页列表查询历史报名数据")
-    @GetMapping(value = "/listHistory")
-    public Result<IPage<DesignEnrollJudges>> listHistory(DesignEnrollJudges designEnrollJudges,
-                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                         HttpServletRequest req) {
+
+    public Result<IPage<DesignEnrollJudges>> listHistory(DesignEnrollJudges designEnrollJudges, Integer pageNo, Integer pageSize, HttpServletRequest req) {
         List<DesignActivity> activityList = designActivityService.getActivityBy(null, null, 1);
         if (CollectionUtils.isEmpty(activityList)) {
             return Result.error("top100状态关闭，无历史报名数据！");
@@ -317,7 +357,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     public Result<Page<DesignTopJudgesScoreVO>> pageByNameAndTopStatus(@RequestParam(value = "realName", required = false) @ApiParam("设计师姓名") String realName,
                                                                        @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
                                                                        @RequestParam(value = "sortStatus", required = false) @ApiParam("根据总分排序 1正叙 2倒叙，默认不排序") Integer sortStatus,
-                                                                       @RequestParam(value = "historyStatus", required = false) @ApiParam("1：查询历史数据 0：查询所有数据") int historyStatus,
+                                                                       @RequestParam(value = "historyStatus", defaultValue = "0") @ApiParam("0：查询当前活动报名数据 1：查询历史数据 2：查询所有数据") int historyStatus,
                                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                                        HttpServletRequest req) {

@@ -238,21 +238,39 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
 
     }
 
+    /**
+     * @param page
+     * @param realName
+     * @param topStatus
+     * @param sortStatus
+     * @param historyStatus 0：查询当前活动报名数据 1：查询历史数据 2：查询所有数据
+     * @return
+     */
 
     @Override
-    public Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus, Integer historyStatus) {
-        if (historyStatus != null && historyStatus == 1) {
-            //todo 查看当前报名数据 历史报名数据
+    public Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus, int historyStatus) {
+        List<Integer> activityIds = new ArrayList<>();
+        Map<Integer, DesignActivity> designActivityMap = new HashMap<>();
+        if (historyStatus == 0) {
+            DesignActivity nowActivity = designActivityService.getNowActivity();
+            if (nowActivity == null) {
+                throw new BusinessException("未获取到发现100状态为未生成的活动，请确认!");
+            }
+            designActivityMap.put(nowActivity.getId(), nowActivity);
+            activityIds.add(nowActivity.getId());
+        } else if (historyStatus == 1) {
+            List<DesignActivity> activityBy = designActivityService.getActivityBy(null, null, 1);
+            if (CollectionUtils.isEmpty(activityBy)) {
+                throw new BusinessException("未获取到历史活动，请确认!");
+            }
+            activityIds.addAll(activityBy.stream().map(DesignActivity::getId).collect(Collectors.toList()));
+            activityBy.forEach(data -> {
+                designActivityMap.put(data.getId(), data);
+            });
         }
-        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus, sortStatus);
+
+        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus, sortStatus,activityIds);
         if (CollectionUtils.isNotEmpty(designTopJudgesScoreVOS)) {
-            List<Integer> activityIds = designTopJudgesScoreVOS.stream().map(DesignTopJudgesScoreVO::getActivityId).collect(Collectors.toList());
-            QueryWrapper<DesignActivity> designActivityWrapper = new QueryWrapper();
-            designActivityWrapper.in("id", activityIds);
-            List<DesignActivity> list = designActivityService.list(designActivityWrapper);
-
-            Map<Integer, DesignActivity> designActivityMap = list.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
-
             designTopJudgesScoreVOS.stream().forEach(designTopJudge -> {
                 Integer activityId = designTopJudge.getActivityId();
                 if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {
