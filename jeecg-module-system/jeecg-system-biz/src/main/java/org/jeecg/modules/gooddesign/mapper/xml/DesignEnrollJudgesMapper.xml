@@ -15,8 +15,8 @@
             resultType="org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO">
         select *,IFNULL(total_score,0) AS score from design_enroll_judges j left join (
         select p.participant_id,sum(u.weight) as total_score from design_enroll_participants p left join sys_user u on
-        p.judge_id=u.id group by participant_id
-        )tmp on j.id=tmp.participant_id where j.manager_del_status=0
+        p.judge_id=u.id  where p.score_status=1 group by participant_id
+        )tmp on j.id=tmp.participant_id where j.manager_del_status=0  and j.screen_status =1
         <if test="realName!=null">
             and j.real_name like CONCAT('%',#{realName},'%')
         </if>
@@ -34,10 +34,11 @@
 
     <select id="queryScoreHistory"
             resultType="org.jeecg.modules.gooddesign.entity.vo.JudgesScoreVO">
-        select u.weight,u.realname,p.score_status from design_top_judges_participants p left join sys_user u on
+        select u.weight,u.realname,p.score_status from design_enroll_participants p left join sys_user u on
         p.judge_id=u.id
         <if test="id!=null">
             where p.participant_id=#{id}
         </if>
+        and score_status in(1,2)
     </select>
 </mapper>

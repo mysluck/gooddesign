@@ -55,5 +55,5 @@ public interface IDesignEnrollJudgesService extends IService<DesignEnrollJudges>
 
     List<JudgesScoreVO> queryScoreHistory(int id);
 
-    Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus);
+    Page<DesignTopJudgesScoreVO> pageByNameAndTopStatus(Page<DesignTopJudgesScoreVO> page, String realName, Integer topStatus, Integer sortStatus, Integer historyStatus);
 }

@@ -60,11 +60,15 @@ public class  DesignActivity implements Serializable {
     private java.util.Date publishTime;
 	/**状态（1 启动 0未启动 2结束）*/
 	@Excel(name = "状态（1 启动 0未启动 2结束）", width = 15)
-    @ApiModelProperty(value = "状态（1 启动 0未启动 2结束）")
+    @ApiModelProperty(value = "报名状态（0：未启动 1报名开始、2报名结束）")
     private Integer activityStatus;
 
-    @ApiModelProperty(value = "类型（1跨年启停 2评分 3top100）")
-    private Integer type;
+    @ApiModelProperty(value = "打分状态 0：未开始 1：打分开始 2打分结束")
+    private Integer scoreStatus;
+
+    @ApiModelProperty(value = "发现100状态：0未生成 1：生成")
+    private Integer topStatus;
+
 
 
 }

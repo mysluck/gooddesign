@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 
 import java.util.List;
@@ -20,9 +21,10 @@ public interface IDesignEnrollParticipantsScoreService extends IService<DesignEn
      * @param realName
      * @param screeStatus
      * @param userId 评委ID
+     * @param designNo
      * @return
      */
-    Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId);
+    Page<DesignEnrollParticipantsScoreVO> pageByNameAndScoreStatus(Page<DesignEnrollParticipantsScoreVO> page, String realName, List<Integer> screeStatus, String userId, String designNo, DesignActivity designActivity);
 
-    DesignEnrollParticipantsScoreVO doStartScore(String id);
+    DesignEnrollParticipantsScoreVO doStartScore(String id, DesignActivity activity);
 }

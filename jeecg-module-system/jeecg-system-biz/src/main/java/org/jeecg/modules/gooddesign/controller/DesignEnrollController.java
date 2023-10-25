@@ -62,9 +62,14 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
                                                            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                            HttpServletRequest req) {
+        DesignActivity nowActivity = designActivityService.getNowActivity();
+        if (nowActivity == null) {
+            return Result.error("发现100状态已生成，报名结束!");
+        }
         if (designEnrollJudges != null && org.apache.commons.lang.StringUtils.isNotEmpty(designEnrollJudges.getRealName())) {
             designEnrollJudges.setRealName("*" + designEnrollJudges.getRealName() + "*");
         }
+        designEnrollJudges.setActivityId(nowActivity.getId());
         QueryWrapper<DesignEnrollJudges> queryWrapper = QueryGenerator.initQueryWrapper(designEnrollJudges, req.getParameterMap());
         Page<DesignEnrollJudges> page = new Page<DesignEnrollJudges>(pageNo, pageSize);
         IPage<DesignEnrollJudges> pageList = designEnrollJudgesService.page(page, queryWrapper);
@@ -90,6 +95,53 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
 
         return Result.OK(pageList);
     }
+
+
+    /**
+     * top100状态生成的活动叫历史活动
+     *
+     * @param designEnrollJudges
+     * @param pageNo
+     * @param pageSize
+     * @param req
+     * @return
+     */
+    @ApiOperation(value = "好设计-报名-设计师信息-分页列表查询历史报名数据", notes = "好设计-报名-设计师信息-分页列表查询历史报名数据")
+    @GetMapping(value = "/listHistory")
+    public Result<IPage<DesignEnrollJudges>> listHistory(DesignEnrollJudges designEnrollJudges,
+                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                         HttpServletRequest req) {
+        List<DesignActivity> activityList = designActivityService.getActivityBy(null, null, 1);
+        if (CollectionUtils.isEmpty(activityList)) {
+            return Result.error("top100状态关闭，无历史报名数据！");
+        }
+        List<Integer> activityIds = activityList.stream().map(DesignActivity::getId).collect(Collectors.toList());
+        if (designEnrollJudges != null && org.apache.commons.lang.StringUtils.isNotEmpty(designEnrollJudges.getRealName())) {
+            designEnrollJudges.setRealName("*" + designEnrollJudges.getRealName() + "*");
+        }
+        QueryWrapper<DesignEnrollJudges> queryWrapper = QueryGenerator.initQueryWrapper(designEnrollJudges, req.getParameterMap());
+        queryWrapper.in("activity_id", activityIds);
+        Page<DesignEnrollJudges> page = new Page<DesignEnrollJudges>(pageNo, pageSize);
+        IPage<DesignEnrollJudges> pageList = designEnrollJudgesService.page(page, queryWrapper);
+        List<DesignEnrollJudges> records = pageList.getRecords();
+        if (!records.isEmpty()) {
+            Map<Integer, DesignActivity> designActivityMap = activityList.stream().collect(Collectors.groupingBy(DesignActivity::getId, Collectors.collectingAndThen(Collectors.toList(), value -> value.get(0))));
+
+            records.stream().forEach(designTopJudge -> {
+                Integer activityId = designTopJudge.getActivityId();
+                if (designActivityMap.containsKey(activityId) && designActivityMap.get(activityId) != null) {
+                    DesignActivity designActivity = designActivityMap.get(activityId);
+                    designTopJudge.setActivityName(designActivity.getActivityName());
+                    designTopJudge.setPublishTime(designActivity.getPublishTime());
+                }
+            });
+            pageList.setRecords(records);
+        }
+
+        return Result.OK(pageList);
+    }
+
 
     @AutoLog(value = "好设计-报名-添加作品信息")
     @ApiOperation(value = "好设计-报名-添加作品信息", notes = "好设计-报名-添加作品信息")
@@ -233,7 +285,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @GetMapping(value = "/addTop100")
     public Result<String> addTop100(@RequestParam @ApiParam("参赛设计师ID") Integer id) {
 
-        designEnrollJudgesService.addTop100(id,1);
+        designEnrollJudgesService.addTop100(id, 1);
         return Result.OK("添加成功！");
     }
 
@@ -246,7 +298,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
             designEnrollJudgesService.batchAddTop100(ids);
             return Result.OK("添加成功！");
         } else {
-            designEnrollJudgesService.batchAddTop100(ids);
+            designEnrollJudgesService.batchRemoveFromTop100(ids);
             return Result.OK("修改成功！");
 
         }
@@ -265,13 +317,13 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     public Result<Page<DesignTopJudgesScoreVO>> pageByNameAndTopStatus(@RequestParam(value = "realName", required = false) @ApiParam("设计师姓名") String realName,
                                                                        @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
                                                                        @RequestParam(value = "sortStatus", required = false) @ApiParam("根据总分排序 1正叙 2倒叙，默认不排序") Integer sortStatus,
+                                                                       @RequestParam(value = "historyStatus", required = false) @ApiParam("1：查询历史数据 0：查询所有数据") int historyStatus,
                                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                                        HttpServletRequest req) {
 
         Page<DesignTopJudgesScoreVO> page = new Page<DesignTopJudgesScoreVO>(pageNo, pageSize);
-
-        return Result.OK(designEnrollJudgesService.pageByNameAndTopStatus(page, realName, topRecommendStatus, sortStatus));
+        return Result.OK(designEnrollJudgesService.pageByNameAndTopStatus(page, realName, topRecommendStatus, sortStatus, historyStatus));
     }
 
 

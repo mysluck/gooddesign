@@ -84,7 +84,8 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
     @ApiOperation(value = "推荐委员评选-根据姓名、评分状态分页查询", notes = "推荐委员评选-根据姓名、评分状态分页查询，只获取评委自己名下数据")
     @GetMapping(value = "/pageByNameAndScoreStatus")
     public Result<IPage<DesignEnrollParticipantsScoreVO>> pageByNameAndScoreStatus(@RequestParam(value = "realName", required = false) String realName,
-                                                                                   @RequestParam(value = "scoreStatus", required = false) @ApiParam("打分状态 0待定  1推荐 2不推荐 3 未打分,查询待定和未打分，传0和3") List<Integer> scoreStatus,
+                                                                                   @RequestParam(value = "designNo", required = false) @ApiParam("报奖编号模糊查询") String designNo,
+                                                                                   @RequestParam(value = "scoreStatus", required = false) @ApiParam("打分状态 0待定  1推荐 2不推荐 3 未打分,查询待定和未打分，传0和3") Integer scoreStatus,
                                                                                    @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                                                    @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                                                    HttpServletRequest req) {
@@ -92,8 +93,18 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         if (sysUser == null || sysUser.getId() == null) {
             throw new BusinessException("未获取到用户信息，请重新登录！");
         }
+        List<DesignActivity> scoreActivits = designActivityService.getScoreActivity(2, 0);
+        if (CollectionUtils.isEmpty(scoreActivits)) {
+            return Result.error("评委暂时无法打分，请联系管理员!");
+        }
+        DesignActivity activity = scoreActivits.get(0);
+        List<Integer> list = null;
+        if (scoreStatus != null) {
+            list = new ArrayList<>();
+            list.add(scoreStatus);
+        }
         Page<DesignEnrollParticipantsScoreVO> page = new Page<DesignEnrollParticipantsScoreVO>(pageNo, pageSize);
-        return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, scoreStatus, sysUser.getId()));
+        return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, list, sysUser.getId(), designNo, activity));
     }
 
 
@@ -104,7 +115,13 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         if (sysUser == null || sysUser.getId() == null) {
             throw new BusinessException("未获取到用户信息，请重新登录！");
         }
-        return Result.OK(designJudgesParticipants.doStartScore(sysUser.getId()));
+        List<DesignActivity> scoreActivits = designActivityService.getScoreActivity(2, 0);
+        if (CollectionUtils.isEmpty(scoreActivits)) {
+            return Result.error("评委暂时无法打分，请联系管理员!");
+        }
+        DesignActivity activity = scoreActivits.get(0);
+
+        return Result.OK(designJudgesParticipants.doStartScore(sysUser.getId(),activity));
     }
 
 

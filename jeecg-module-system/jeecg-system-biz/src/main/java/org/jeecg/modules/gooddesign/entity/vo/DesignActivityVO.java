@@ -34,9 +34,13 @@ public class DesignActivityVO implements Serializable {
     @ApiModelProperty(value = "名称")
     private String activityName;
 
-    /**
-     * 状态（1 启动 0未启动 2结束）
-     */
-    @ApiModelProperty(value = "状态（1 启动 0未启动 2结束）")
-    private int activityStatus;
+
+    @ApiModelProperty(value = "报名状态（0：未启动 1报名开始、2报名结束）")
+    private Integer activityStatus;
+
+    @ApiModelProperty(value = "打分状态 0：未开始 1：打分开始 2打分结束")
+    private Integer scoreStatus;
+
+    @ApiModelProperty(value = "发现100状态：0未生成 1：生成")
+    private Integer topStatus;
 }

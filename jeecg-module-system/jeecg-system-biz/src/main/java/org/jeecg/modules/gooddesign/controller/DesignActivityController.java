@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Description: 好设计-跨年启停
@@ -59,7 +59,6 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
         if (designActivity != null && org.apache.commons.lang.StringUtils.isNotEmpty(designActivity.getActivityName())) {
             designActivity.setActivityName("*" + designActivity.getActivityName() + "*");
         }
-        designActivity.setType(1);
         QueryWrapper<DesignActivity> queryWrapper = QueryGenerator.initQueryWrapper(designActivity, req.getParameterMap());
         Page<DesignActivity> page = new Page<DesignActivity>(pageNo, pageSize);
         IPage<DesignActivity> pageList = designActivityService.page(page, queryWrapper);
@@ -69,7 +68,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     /**
      * 添加
      *
-     * @param designActivity
+     * @param
      * @return
      */
     @AutoLog(value = "好设计-跨年启停-添加")
@@ -97,7 +96,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     /**
      * 编辑
      *
-     * @param designActivity
+     * @param
      * @return
      */
     @AutoLog(value = "好设计-跨年启停-编辑")
@@ -105,23 +104,25 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     //@RequiresPermissions("gooddesign:design_activity:edit")
     @RequestMapping(value = "/edit", method = {RequestMethod.POST})
     public Result<String> edit(@RequestBody DesignActivityVO designActivityVO) {
-
-
         DesignActivity bean = new DesignActivity();
         BeanUtils.copyProperties(designActivityVO, bean);
-        if (1 == designActivityVO.getActivityStatus()) {
-            DesignActivity activity = designActivityService.getActivity();
-            if (activity != null && activity.getId() != null && !designActivityVO.getId().equals(activity.getId())) {
-                return Result.OK("存在正在进行中的活动，请处理！");
-            }
-            bean.setPublishTime(new Date());
-        }
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if (sysUser != null) {
             bean.setUpdateBy(sysUser.getUsername());
         }
         bean.setUpdateTime(new Date());
+        if (designActivityVO.getActivityStatus() != null && 1 == designActivityVO.getActivityStatus()) {
+            DesignActivity activity = designActivityService.getActivity();
+            if (activity != null && activity.getId() != null && !designActivityVO.getId().equals(activity.getId())) {
+                return Result.OK("存在正在进行中的活动，请处理！");
+            }
+            DesignActivity byId = designActivityService.getById(designActivityVO.getId());
+            if (byId.getPublishTime() == null) {
+                bean.setPublishTime(new Date());
+            }
+        }
         designActivityService.updateById(bean);
+
         return Result.OK("编辑成功!");
     }
 
@@ -173,7 +174,7 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     }
 
 
-    @ApiOperation(value = "合作伙伴-序号检查", notes = "合作伙伴-序号检查，判断编码是否存在，存在，返回true")
+    @ApiOperation(value = "好设计-活动-序号检查", notes = "合作伙伴-序号检查，判断编码是否存在，存在，返回true")
     @PostMapping(value = "/checkActivityStatus")
     public Result checkActivityStatus() {
         if (designActivityService.checkActivityStatus()) {
@@ -183,63 +184,11 @@ public class DesignActivityController extends JeecgController<DesignActivity, ID
     }
 
 
-    /**
-     * @return
-     */
-    @ApiOperation(value = "添加评分、top100活动", notes = "添加活动")
-    @GetMapping(value = "/addStatus")
-    public Result<String> addStatus(@RequestParam("type") @ApiParam("活动类型-2评分 3top100") int type,
-                                    @RequestParam("status") @ApiParam("状态（1 启动 0未启动 2结束）") int status) {
-
-        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
-        queryWrapper.eq("type", type);
-        List<DesignActivity> list = designActivityService.list(queryWrapper);
-        if (CollectionUtils.isNotEmpty(list)) {
-            return Result.error("以存在该活动，请勿重复添加!");
-        }
-
-        DesignActivity designActivity = new DesignActivity();
-        designActivity.setType(type);
-        designActivity.setActivityStatus(status);
-        designActivityService.save(designActivity);
-        return Result.ok("添加成功!");
-    }
-
-    @ApiOperation(value = "编辑评分、top100活动", notes = "编辑活动")
-    @GetMapping(value = "/updateStatus")
-    public Result<String> updateStatus(@RequestParam("id") @ApiParam("id") int id,
-                                       @RequestParam("status") @ApiParam("状态（1 启动 0未启动 2结束）") int status) {
-
-        DesignActivity designActivity = new DesignActivity();
-        designActivity.setId(id);
-        designActivity.setActivityStatus(status);
-        designActivityService.updateById(designActivity);
-        return Result.ok("编辑成功!");
-    }
-
-
-    @AutoLog(value = "删除评分、top100活动")
-    @ApiOperation(value = "删除评分、top100活动", notes = "删除评分、top100活动")
-    //@RequiresPermissions("gooddesign:design_activity:delete")
-    @DeleteMapping(value = "/deleteStatus")
-    public Result<String> deleteStatus(@RequestParam(name = "id", required = true) int id) {
-        designActivityService.removeById(id);
-        return Result.OK("删除成功!");
-    }
-
-
-    @AutoLog(value = "查询评分、top100活动")
-    @ApiOperation(value = "查询评分、top100活动", notes = "查询评分、top100活动")
-    //@RequiresPermissions("gooddesign:design_activity:delete")
-    @DeleteMapping(value = "/queryStatus")
-    public Result<DesignActivity> queryStatus(@RequestParam(name = "type", required = true) @ApiParam("活动类型 2：评分 3：top100") int type) {
-        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
-        queryWrapper.eq("type", type);
-        List<DesignActivity> list = designActivityService.list(queryWrapper);
-        if (CollectionUtils.isNotEmpty(list)) {
-            return Result.OK(list.get(0));
-        }
-        return Result.error("不存在当前活动，请添加!");
+    @ApiOperation(value = "好设计-活动-获取当前可以报名的活动", notes = "好设计-活动-获取当前可以报名的活动")
+    @GetMapping(value = "/getEnrollActivity")
+    public Result<DesignActivity> getEnrollActivity() {
+        DesignActivity activity = designActivityService.getActivity();
+        return Result.OK(activity);
     }
 
 

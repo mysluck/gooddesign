@@ -29,6 +29,22 @@ public class DesignActivityServiceImpl extends ServiceImpl<DesignActivityMapper,
     }
 
     @Override
+    public List<DesignActivity> getActivityBy(Integer activityStatus, Integer scoreStatus, Integer topStatus) {
+        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
+        if (activityStatus != null) {
+            queryWrapper.eq("activity_status", activityStatus);
+        }
+        if (scoreStatus != null) {
+            queryWrapper.eq("score_status", scoreStatus);
+        }
+        if (topStatus != null) {
+            queryWrapper.eq("top_status", topStatus);
+        }
+        List<DesignActivity> list = this.list(queryWrapper);
+        return list;
+    }
+
+    @Override
     public DesignActivity getActivity() {
         QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
         queryWrapper.eq("activity_status", 1);
@@ -39,4 +55,24 @@ public class DesignActivityServiceImpl extends ServiceImpl<DesignActivityMapper,
         return list.get(0);
     }
 
+    @Override
+    public DesignActivity getNowActivity() {
+        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("top_status", 0);
+        List<DesignActivity> list = this.list(queryWrapper);
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+
+    @Override
+    public List<DesignActivity> getScoreActivity(int scoreStatus, int topStatus) {
+        QueryWrapper<DesignActivity> queryWrapper = new QueryWrapper();
+        queryWrapper.ne("score_status", scoreStatus);
+        queryWrapper.eq("top_status", topStatus);
+        List<DesignActivity> list = this.list(queryWrapper);
+        return list;
+    }
 }

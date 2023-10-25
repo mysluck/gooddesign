@@ -14,6 +14,7 @@
         from design_main_stakeholder m
                  left join design_stakeholder d on m.stakeholder_id = d.id
         where m.main_id = #{mainId}
+          and d.type is not null;
     </select>
 
     <select id="queryMainStakeholderByType" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO">
@@ -22,6 +23,7 @@
                  left join design_stakeholder d on m.stakeholder_id = d.id
         where m.main_id = #{mainId}
           and m.type = #{type}
+          and d.type is not null;
     </select>
 
 </mapper>
