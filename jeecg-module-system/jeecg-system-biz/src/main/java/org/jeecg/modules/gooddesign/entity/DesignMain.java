@@ -66,4 +66,9 @@ public class DesignMain implements Serializable {
     @ApiModelProperty(value = "介绍")
     private String content;
 
+    @ApiModelProperty(value = "状态 0：报名 1:提交")
+    private Integer commitStatus;
+
+
+
 }
