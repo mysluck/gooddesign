@@ -65,14 +65,19 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @GetMapping(value = "/list")
     public Result<IPage<DesignTopJudges>> queryPageList(DesignTopJudges designTopJudges,
                                                         @RequestParam(name = "sortFlag", required = false) Integer sortFlag,
-                                                        @RequestParam(name = "historyStatus", defaultValue = "0") @ApiParam("0：查询当前top数据(默认) 1：查询历史数据 2：查询所有数据") int historyStatus,
+                                                        @RequestParam(name = "historyStatus", required = false) @ApiParam("0：查询当前top数据 1：查询历史数据 不传:查询所有数据") Integer historyStatus,
                                                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
 
         List<Integer> activityIds = new ArrayList<>();
         Map<Integer, DesignActivity> designActivityMap = new HashMap<>();
-        if (historyStatus == 0) {
+        if (historyStatus == null) {
+            List<DesignActivity> activityBy = designActivityService.list();
+            activityBy.forEach(data -> {
+                designActivityMap.put(data.getId(), data);
+            });
+        } else if (historyStatus == 0) {
             DesignActivity nowActivity = designActivityService.getNowActivity();
             if (nowActivity == null) {
                 throw new BusinessException("未获取到发现100状态为未生成的活动，请确认!");
@@ -89,6 +94,7 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
                 designActivityMap.put(data.getId(), data);
             });
         }
+
 
         if (designTopJudges != null && StringUtils.isNotEmpty(designTopJudges.getRealName())) {
             designTopJudges.setRealName("*" + designTopJudges.getRealName() + "*");

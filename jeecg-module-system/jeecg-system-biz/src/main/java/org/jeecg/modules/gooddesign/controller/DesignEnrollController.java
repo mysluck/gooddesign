@@ -357,7 +357,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     public Result<Page<DesignTopJudgesScoreVO>> pageByNameAndTopStatus(@RequestParam(value = "realName", required = false) @ApiParam("设计师姓名") String realName,
                                                                        @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
                                                                        @RequestParam(value = "sortStatus", required = false) @ApiParam("根据总分排序 1正叙 2倒叙，默认不排序") Integer sortStatus,
-                                                                       @RequestParam(value = "historyStatus", defaultValue = "0") @ApiParam("0：查询当前活动报名数据 1：查询历史数据 2：查询所有数据") int historyStatus,
+                                                                       @RequestParam(value = "historyStatus", defaultValue = "0") @ApiParam("0：查询当前活动报名数据 1：查询历史数据") int historyStatus,
                                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                                        HttpServletRequest req) {
