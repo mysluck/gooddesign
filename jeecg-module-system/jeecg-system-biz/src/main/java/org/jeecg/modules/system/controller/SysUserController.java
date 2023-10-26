@@ -30,6 +30,7 @@ import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.*;
 import org.jeecg.modules.system.entity.*;
+import org.jeecg.modules.system.mapper.SysUserMapper;
 import org.jeecg.modules.system.model.DepartIdModel;
 import org.jeecg.modules.system.model.SysUserSysDepartModel;
 import org.jeecg.modules.system.service.*;
@@ -228,7 +229,10 @@ public class SysUserController {
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public Result<?> delete(@RequestParam(name = "id", required = true) String id) {
         baseCommonService.addLog("删除用户，id： " + id, CommonConstant.LOG_TYPE_2, 3);
-        this.sysUserService.deleteUser(id);
+        if (StringUtils.isNotBlank(id)) {
+            sysUserService.removeLogicDeleted(Arrays.asList(id.split(",")));
+        }
+//        sysUserService.deleteUser(id);
         return Result.ok("删除用户成功");
     }
 
