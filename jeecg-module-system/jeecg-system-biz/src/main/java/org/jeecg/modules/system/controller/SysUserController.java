@@ -127,6 +127,7 @@ public class SysUserController {
             user.setUsername("*" + user.getUsername() + "*");
         }
         QueryWrapper<SysUser> queryWrapper = QueryGenerator.initQueryWrapper(user, req.getParameterMap());
+        queryWrapper.orderByDesc("create_time");
         //------------------------------------------------------------------------------------------------
         //是否开启系统管理模块的多租户数据隔离【SAAS多租户模式】
         if (MybatisPlusSaasConfig.OPEN_SYSTEM_TENANT_CONTROL) {
