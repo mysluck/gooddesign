@@ -142,6 +142,8 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 	 */
 	int deleteLogicDeleted(@Param("userIds") List<String> userIds);
 
+	int deleteByIds(@Param("userIds") List<String> userIds);
+
     /**
      * 更新空字符串为null【此写法有sql注入风险，禁止随便用】
      * @param fieldName
