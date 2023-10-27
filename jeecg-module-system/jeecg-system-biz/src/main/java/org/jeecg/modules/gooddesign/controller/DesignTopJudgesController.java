@@ -304,8 +304,14 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         } catch (Exception e) {
             return Result.error("推荐编号已存在，请重新输入!");
         }
-
     }
 
+
+    @ApiOperation(value = "好设计-top100-首页展示", notes = "好设计-top100-首页展示")
+    @GetMapping(value = "/index")
+    public Result<DesignTopJudges> index() {
+        DesignTopJudges designTopJudges = designTopJudgesService.index();
+        return Result.OK(designTopJudges);
+    }
 
 }

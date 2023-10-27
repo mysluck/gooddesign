@@ -6,4 +6,12 @@
         set sort = #{sort}
         where design_no = #{designNo}
     </update>
+    <select id="index" resultType="org.jeecg.modules.gooddesign.entity.DesignTopJudges">
+        select j.*
+        from design_top_judges j
+                 left join design_activity t on j.activity_id = t.id
+        where t.top_status = 1
+        order by j.create_time desc
+        limit 1
+    </select>
 </mapper>

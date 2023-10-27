@@ -33,4 +33,6 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
     void updateSortByDesignNo(String designNo, int sort);
 
     void deleteBatchDetail(List<Integer> asList);
+
+    DesignTopJudges index();
 }

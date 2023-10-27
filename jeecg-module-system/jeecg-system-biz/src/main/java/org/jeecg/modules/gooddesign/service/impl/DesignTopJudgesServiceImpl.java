@@ -154,4 +154,9 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
             this.removeByIds(asList);
         }
     }
+
+    @Override
+    public DesignTopJudges index() {
+        return this.baseMapper.index();
+    }
 }
