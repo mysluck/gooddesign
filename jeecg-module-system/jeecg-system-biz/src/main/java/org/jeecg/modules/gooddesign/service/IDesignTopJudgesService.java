@@ -1,11 +1,9 @@
 package org.jeecg.modules.gooddesign.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import com.baomidou.mybatisplus.extension.service.IService;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesAllVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesScoreVO;
 
 import java.util.List;
 
@@ -34,5 +32,5 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
 
     void deleteBatchDetail(List<Integer> asList);
 
-    DesignTopJudges index();
+    List<DesignTopJudges>  index();
 }

@@ -1,10 +1,9 @@
 package org.jeecg.modules.gooddesign.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
+
+import java.util.List;
 
 /**
  * @Description: 好设计-发现100-设计师信息
@@ -16,5 +15,5 @@ public interface DesignTopJudgesMapper extends BaseMapper<DesignTopJudges> {
 
     void updateSortByDesignNo(String designNo, int sort);
 
-    DesignTopJudges index();
+    List<DesignTopJudges>  index();
 }

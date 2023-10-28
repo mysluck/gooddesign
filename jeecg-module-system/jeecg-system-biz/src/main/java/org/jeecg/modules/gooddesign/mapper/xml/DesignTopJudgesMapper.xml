@@ -11,7 +11,6 @@
         from design_top_judges j
                  left join design_activity t on j.activity_id = t.id
         where t.top_status = 1
-        order by j.create_time desc
-        limit 1
+        order by j.create_time desc limit 100
     </select>
 </mapper>

@@ -10,7 +10,7 @@
     </select>
 
     <select id="queryMainStakeholder" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO">
-        select m.id, m.main_id, m.stakeholder_id, d.name, d.type, d.user_desc, d.user_img_url
+        select m.id, m.main_id, m.stakeholder_id, d.name, d.type, d.user_desc, d.user_img_url,d.product_url
         from design_main_stakeholder m
                  left join design_stakeholder d on m.stakeholder_id = d.id
         where m.main_id = #{mainId}
@@ -18,7 +18,7 @@
     </select>
 
     <select id="queryMainStakeholderByType" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO">
-        select m.id, m.main_id, m.stakeholder_id, d.name, d.type, d.user_desc, d.user_img_url
+        select m.id, m.main_id, m.stakeholder_id, d.name, d.type, d.user_desc, d.user_img_url,d.product_url
         from design_main_stakeholder m
                  left join design_stakeholder d on m.stakeholder_id = d.id
         where m.main_id = #{mainId}

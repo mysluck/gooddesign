@@ -156,7 +156,7 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     }
 
     @Override
-    public DesignTopJudges index() {
+    public  List<DesignTopJudges>  index() {
         return this.baseMapper.index();
     }
 }

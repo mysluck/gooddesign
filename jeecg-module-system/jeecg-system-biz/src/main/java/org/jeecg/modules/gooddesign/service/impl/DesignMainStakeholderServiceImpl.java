@@ -1,16 +1,16 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
-import org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderAddParam;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignStakeholderMainAddVO;
 import org.jeecg.modules.gooddesign.mapper.DesignMainStakeholderMapper;
 import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
 import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,12 +32,24 @@ public class DesignMainStakeholderServiceImpl extends ServiceImpl<DesignMainStak
     @Override
     public List<DesignMainStakeholderVO> queryMainStakeholder(int mainId) {
         List<DesignMainStakeholderVO> designMainStakeholderVOS = this.baseMapper.queryMainStakeholder(mainId);
+        if (CollectionUtils.isNotEmpty(designMainStakeholderVOS)) {
+            designMainStakeholderVOS.forEach(designMainStakeholderVO -> {
+                if (StringUtils.isNotEmpty(designMainStakeholderVO.getProductUrl())) {
+                    designMainStakeholderVO.setProductUrls(JSONArray.parseArray(designMainStakeholderVO.getProductUrl(), String.class));
+                }
+            });
+        }
         return designMainStakeholderVOS;
     }
 
     @Override
     public List<DesignMainStakeholderVO> queryMainStakeholderByType(int mainId, int type) {
         List<DesignMainStakeholderVO> designMainStakeholderVOS = this.baseMapper.queryMainStakeholderByType(mainId, type);
+        designMainStakeholderVOS.forEach(designMainStakeholderVO -> {
+            if (StringUtils.isNotEmpty(designMainStakeholderVO.getProductUrl())) {
+                designMainStakeholderVO.setProductUrls(JSONArray.parseArray(designMainStakeholderVO.getProductUrl(), String.class));
+            }
+        });
         return designMainStakeholderVOS;
     }
 

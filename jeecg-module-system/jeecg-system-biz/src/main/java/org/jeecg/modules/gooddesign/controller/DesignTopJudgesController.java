@@ -309,8 +309,8 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
 
     @ApiOperation(value = "好设计-top100-首页展示", notes = "好设计-top100-首页展示")
     @GetMapping(value = "/index")
-    public Result<DesignTopJudges> index() {
-        DesignTopJudges designTopJudges = designTopJudgesService.index();
+    public Result<List<DesignTopJudges>> index() {
+        List<DesignTopJudges> designTopJudges = designTopJudgesService.index();
         return Result.OK(designTopJudges);
     }
 
