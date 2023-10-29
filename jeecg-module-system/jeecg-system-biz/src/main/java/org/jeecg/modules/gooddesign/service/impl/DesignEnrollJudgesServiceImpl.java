@@ -22,6 +22,7 @@ import org.jeecg.modules.gooddesign.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -208,6 +209,7 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     }
 
     @Override
+    @Transactional
     public void batchAddTop100(List<Integer> ids) {
         ids.forEach(id -> addTop100(id, 1));
     }

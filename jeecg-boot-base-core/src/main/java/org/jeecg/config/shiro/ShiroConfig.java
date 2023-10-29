@@ -92,6 +92,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/designMain/**", "anon");//壮游
         filterChainDefinitionMap.put("/designerJudges/**", "anon");//发现设计
         filterChainDefinitionMap.put("/designStakeholder/**", "anon");//发现设计
+        filterChainDefinitionMap.put("/designStaeholder/**", "anon");//发现设计
         filterChainDefinitionMap.put("/excel/**", "anon");//发现设计
         filterChainDefinitionMap.put("/designTopJudges/**", "anon");//添加设计师-发现100
 //        filterChainDefinitionMap.put("/designMain/list", "anon");//壮游查询

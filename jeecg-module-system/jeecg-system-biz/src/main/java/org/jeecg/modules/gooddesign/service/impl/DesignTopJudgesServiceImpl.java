@@ -1,15 +1,16 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecg.modules.gooddesign.entity.vo.*;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.mapper.DesignActivityMapper;
 import org.jeecg.modules.gooddesign.mapper.DesignTopJudgesMapper;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
@@ -18,13 +19,10 @@ import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 好设计-发现100-设计师信息
@@ -47,7 +45,7 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     @Override
     public void addDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {
 
-        DesignActivity activity = designActivityService.getActivity();
+        DesignActivity activity = designActivityService.getNowActivity();
         if (activity == null)
             throw new BusinessException("当前不存在开启活动，请开起活动！");
 
@@ -76,7 +74,7 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     @Override
     public void editDetail(DesignTopJudgesDetailVO designTopJudgesAllVO) {
 
-        DesignActivity activity = designActivityService.getActivity();
+        DesignActivity activity = designActivityService.getNowActivity();
         if (activity == null)
             throw new BusinessException("当前不存在开启活动，请开起活动！");
 
