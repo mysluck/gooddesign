@@ -5,11 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecgframework.poi.excel.annotation.Excel;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @Description: 好设计-发现100-设计师信息
@@ -27,7 +24,7 @@ public class DesignTopJudgesScoreVO extends DesignTopJudgesVO implements Seriali
     @ApiModelProperty(value = "评分")
     private Double score;
 
-    @ApiModelProperty(value = "管理员推荐到top100标志 1推荐 0未推荐")
+    @ApiModelProperty(value = "管理员推荐到top100标志 0不推荐 1推荐 2未处理")
     private Integer topRecommendStatus;
 
 }

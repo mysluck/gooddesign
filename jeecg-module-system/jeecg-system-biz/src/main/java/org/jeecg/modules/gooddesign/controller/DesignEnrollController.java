@@ -3,7 +3,6 @@ package org.jeecg.modules.gooddesign.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jeecg.weibo.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,7 +19,6 @@ import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollProduct;
 import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.*;
@@ -30,7 +28,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -333,7 +334,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @ApiOperation(value = "好设计-报名-批量推荐发现100", notes = "好设计-报名-批量推荐发现100")
     @GetMapping(value = "/batchAddTop100")
     public Result<String> batchAddTop100(@RequestParam @ApiParam("参赛设计师ID集合") List<Integer> ids,
-                                         @RequestParam @ApiParam("管理员推荐到top100标志 1推荐 0未推荐/撤销") int topRecommendStatus) {
+                                         @RequestParam @ApiParam("管理员推荐到top100标志 0不推荐  1推荐  2未处理") int topRecommendStatus) {
         if (topRecommendStatus == 1) {
             designEnrollJudgesService.batchAddTop100(ids);
             return Result.OK("添加成功！");
@@ -355,7 +356,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @ApiOperation(value = "好设计-报名-管理员查看报名数据", notes = "好设计-报名-管理员查看报名数据")
     @GetMapping(value = "/pageByNameAndScoreStatus")
     public Result<Page<DesignTopJudgesScoreVO>> pageByNameAndTopStatus(@RequestParam(value = "realName", required = false) @ApiParam("设计师姓名") String realName,
-                                                                       @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 1推荐 0未推荐") Integer topRecommendStatus,
+                                                                       @RequestParam(value = "topRecommendStatus", required = false) @ApiParam("管理员推荐到top100标志 0不推荐 1推荐 2未处理") Integer topRecommendStatus,
                                                                        @RequestParam(value = "sortStatus", required = false) @ApiParam("根据总分排序 1正叙 2倒叙，默认不排序") Integer sortStatus,
                                                                        @RequestParam(value = "historyStatus", defaultValue = "0") @ApiParam("0：查询当前活动报名数据 1：查询历史数据") int historyStatus,
                                                                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,

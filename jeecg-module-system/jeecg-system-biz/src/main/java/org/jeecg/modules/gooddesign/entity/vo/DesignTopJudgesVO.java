@@ -1,6 +1,5 @@
 package org.jeecg.modules.gooddesign.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -109,7 +108,9 @@ public class DesignTopJudgesVO extends DesignTopJudges implements Serializable {
     private Integer willStatus;
 
     @ApiModelProperty(value = "知识产权无争议 1是 0否")
-    private Integer  disputeStatus;
+    private Integer disputeStatus;
 
+    @ApiModelProperty(value = "管理员推荐到top100标志 0不推荐 1推荐 2未处理（初始状态")
+    private Integer topRecommendStatus;
 
 }

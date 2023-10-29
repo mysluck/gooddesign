@@ -164,7 +164,7 @@ public class DesignEnrollJudges implements Serializable {
     @ApiModelProperty(value = "管理员删除标志 1删除 0未删除")
     private Integer managerDelStatus;
 
-    @ApiModelProperty(value = "管理员推荐到top100标志 1推荐 0未推荐")
+    @ApiModelProperty(value = "管理员推荐到top100标志 0不推荐 1推荐 2未处理")
     private Integer topRecommendStatus;
 
 
