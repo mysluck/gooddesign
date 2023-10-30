@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jeecg.weibo.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,7 +19,10 @@ import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
-import org.jeecg.modules.gooddesign.entity.vo.*;
+import org.jeecg.modules.gooddesign.entity.vo.DesignActivityDetailVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesVO;
+import org.jeecg.modules.gooddesign.entity.vo.UpdateSortParam;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
@@ -80,14 +82,16 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
         } else if (historyStatus == 0) {
             DesignActivity nowActivity = designActivityService.getNowActivity();
             if (nowActivity == null) {
-                throw new BusinessException("未获取到发现100状态为未生成的活动，请确认!");
+//                throw new BusinessException("未获取到发现100状态为未生成的活动，请确认!");
+                return Result.OK();
             }
             designActivityMap.put(nowActivity.getId(), nowActivity);
             activityIds.add(nowActivity.getId());
         } else if (historyStatus == 1) {
             List<DesignActivity> activityBy = designActivityService.getActivityBy(null, null, 1);
             if (CollectionUtils.isEmpty(activityBy)) {
-                throw new BusinessException("未获取到历史活动，请确认!");
+//                throw new BusinessException("未获取到历史活动，请确认!");
+                return Result.OK();
             }
             activityIds.addAll(activityBy.stream().map(DesignActivity::getId).collect(Collectors.toList()));
             activityBy.forEach(data -> {
