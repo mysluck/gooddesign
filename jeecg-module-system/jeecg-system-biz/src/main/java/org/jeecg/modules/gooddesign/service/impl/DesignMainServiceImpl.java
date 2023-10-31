@@ -1,11 +1,14 @@
 package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.jeecg.modules.gooddesign.entity.DesignMain;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainBasicVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignMainStakeholderVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignMainVO;
 import org.jeecg.modules.gooddesign.mapper.DesignMainMapper;
 import org.jeecg.modules.gooddesign.service.IDesignMainImageService;
 import org.jeecg.modules.gooddesign.service.IDesignMainMovieService;
@@ -14,8 +17,6 @@ import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,13 @@ public class DesignMainServiceImpl extends ServiceImpl<DesignMainMapper, DesignM
         addDetail(designMainDetailVO, designMain.getId());
         return designMainDetailVO;
     }
+
+    @Override
+    public Page<DesignMainVO> pageDesignMain(Page<DesignMainVO> page, DesignMain designMain) {
+        List<DesignMainVO> designMainVOS = this.baseMapper.pageDesignMain(page, designMain);
+        return page.setRecords(designMainVOS);
+    }
+
 
     private void addDetail(DesignMainDetailVO designMainDetailVO, int mainId) {
         designMainDetailVO.setImages(designMainImageService.queryByMainId(mainId));

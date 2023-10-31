@@ -2,4 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.jeecg.modules.gooddesign.mapper.DesignMainMapper">
 
+    <select id="pageDesignMain" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignMainVO">
+        select m.*, d.value as city, d1.value as year
+        from design_main m left join design_extra_dict d
+        on m.city_id=d.id
+        left join design_extra_dict d1 on m.year_id =d1.id
+        where 1=1
+        <if test="designMain.title!=null">
+            and m.title like CONCAT('%',#{designMain.title},'%')
+        </if>
+        <if test="designMain.yearId!=null">
+            and m.year_id =#{designMain.yearId}
+        </if>
+        <if test="designMain.cityId!=null">
+            and m.city_id =#{cityId}
+        </if>
+        <if test="designMain.commitStatus!=null">
+            and m.commit_status =#{commitStatus}
+        </if>
+        order by id desc
+
+    </select>
 </mapper>

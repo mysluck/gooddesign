@@ -1,20 +1,16 @@
 package org.jeecg.modules.gooddesign.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
-import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignMain;
-import org.jeecg.modules.gooddesign.entity.DesignMainStakeholder;
 import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.IDesignMainService;
 import org.jeecg.modules.gooddesign.service.IDesignMainStakeholderService;
@@ -28,8 +24,6 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @Description: 设计壮游
@@ -57,20 +51,20 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
      * @param req
      * @return
      */
-    //@AutoLog(value = "设计壮游-分页列表查询")
+    @AutoLog(value = "设计壮游-分页列表查询")
     @ApiOperation(value = "设计壮游-分页列表查询", notes = "设计壮游-分页列表查询")
     @GetMapping(value = "/list")
-    public Result<IPage<DesignMain>> queryPageList(DesignMain designMain,
-                                                   @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                                   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                                                   HttpServletRequest req) {
-        if (designMain != null && StringUtils.isNotEmpty(designMain.getTitle())) {
-            designMain.setTitle("*" + designMain.getTitle() + "*");
-        }
-        QueryWrapper<DesignMain> queryWrapper = QueryGenerator.initQueryWrapper(designMain, req.getParameterMap());
-        queryWrapper.orderByDesc("id");
-        Page<DesignMain> page = new Page<DesignMain>(pageNo, pageSize);
-        IPage<DesignMain> pageList = designMainService.page(page, queryWrapper);
+    public Result<IPage<DesignMainVO>> queryPageList(DesignMain designMain,
+                                                      @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+                                                      @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+                                                      HttpServletRequest req) {
+//        if (designMain != null && StringUtils.isNotEmpty(designMain.getTitle())) {
+//            designMain.setTitle("*" + designMain.getTitle() + "*");
+//        }
+//        QueryWrapper<DesignMain> queryWrapper = QueryGenerator.initQueryWrapper(designMain, req.getParameterMap());
+//        queryWrapper.orderByDesc("id");
+        Page<DesignMainVO> page = new Page<DesignMainVO>(pageNo, pageSize);
+        IPage<DesignMainVO> pageList = designMainService.pageDesignMain(page, designMain);
         return Result.OK(pageList);
     }
 
