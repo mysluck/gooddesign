@@ -5,15 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
-import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.aspect.annotation.AutoLog;
 import org.jeecg.common.system.base.controller.JeecgController;
-import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignExtraDict;
-import org.jeecg.modules.gooddesign.entity.DesignPartners;
 import org.jeecg.modules.gooddesign.entity.vo.DesignExtraDictVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignPartnersVO;
 import org.jeecg.modules.gooddesign.service.IDesignExtraDictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,6 +92,14 @@ public class DesignEditController extends JeecgController<DesignExtraDict, IDesi
         }
         result.sort(Comparator.comparing(DesignExtraDictVO::getValue).reversed());
         return Result.OK(result);
+    }
+
+
+    @ApiOperation(value = "编辑壮游-关联活动字典", notes = "编辑壮游-关联活动字典2")
+    @GetMapping(value = "/tree")
+    public Result<List<DesignExtraDictVO>> tree() {
+        List<DesignExtraDictVO> list = designExtraDictService.tree();
+        return Result.OK(list);
     }
 
     @ApiOperation(value = "壮游字典（年份、城市）-编辑", notes = "壮游字典（年份、城市）-编辑")

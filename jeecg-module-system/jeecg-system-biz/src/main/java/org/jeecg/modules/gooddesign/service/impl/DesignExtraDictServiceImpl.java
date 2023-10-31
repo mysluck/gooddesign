@@ -2,15 +2,22 @@ package org.jeecg.modules.gooddesign.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignExtraDict;
+import org.jeecg.modules.gooddesign.entity.DesignMain;
+import org.jeecg.modules.gooddesign.entity.vo.DesignExtraDictVO;
 import org.jeecg.modules.gooddesign.mapper.DesignExtraDictMapper;
 import org.jeecg.modules.gooddesign.service.IDesignExtraDictService;
+import org.jeecg.modules.gooddesign.service.IDesignMainService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 壮游字典（年份、城市）
@@ -20,6 +27,8 @@ import java.util.List;
  */
 @Service
 public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMapper, DesignExtraDict> implements IDesignExtraDictService {
+    @Autowired
+    IDesignMainService designMainService;
 
     @Override
     public boolean saveExt(int type, String value) {
@@ -64,5 +73,38 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
         return list;
     }
 
+    @Override
+    public List<DesignExtraDictVO> tree() {
+        QueryWrapper<DesignMain> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("commit_status", 1);
+        List<DesignMain> designMains = designMainService.list(queryWrapper);
+        if (CollectionUtils.isEmpty(designMains)) {
+            return Lists.newArrayList();
+        }
+        Set<Integer> dictIds = new HashSet<>();
+        designMains.forEach(data -> {
+            dictIds.add(data.getCityId());
+            dictIds.add(data.getYearId());
+        });
+        QueryWrapper<DesignExtraDict> dictQueryWrapper = new QueryWrapper<>();
+        dictQueryWrapper.in("id", dictIds);
+        List<DesignExtraDict> designExtraDictList = this.list(dictQueryWrapper);
+        List<DesignExtraDictVO> collect = designExtraDictList.stream().map(data -> {
+            DesignExtraDictVO vo = new DesignExtraDictVO();
+            BeanUtils.copyProperties(data, vo);
+            return vo;
+        }).collect(Collectors.toList());
+
+        List<DesignExtraDictVO> rootList = parseTree(collect, 0);
+        rootList.forEach(data -> {
+            data.setChild(parseTree(collect, data.getId()));
+        });
+
+        return rootList;
+    }
+
+    List<DesignExtraDictVO> parseTree(List<DesignExtraDictVO> list, int parentId) {
+        return list.stream().filter(data -> data.getParentId() == parentId).collect(Collectors.toList());
+    }
 
 }

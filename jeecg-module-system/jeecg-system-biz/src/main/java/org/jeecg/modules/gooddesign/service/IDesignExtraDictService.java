@@ -2,6 +2,7 @@ package org.jeecg.modules.gooddesign.service;
 
 import org.jeecg.modules.gooddesign.entity.DesignExtraDict;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jeecg.modules.gooddesign.entity.vo.DesignExtraDictVO;
 
 import java.util.List;
 
@@ -21,4 +22,5 @@ public interface IDesignExtraDictService extends IService<DesignExtraDict> {
     List<DesignExtraDict> listByParentId(int parentId);
 
 
+    List<DesignExtraDictVO> tree();
 }
