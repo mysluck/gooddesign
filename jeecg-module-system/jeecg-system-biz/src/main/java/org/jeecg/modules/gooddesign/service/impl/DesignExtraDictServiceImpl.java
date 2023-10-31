@@ -99,7 +99,7 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
         rootList.forEach(data -> {
             data.setChild(parseTree(collect, data.getId()));
         });
-
+        rootList.sort(Comparator.comparing(DesignExtraDictVO::getValue).reversed());
         return rootList;
     }
 
