@@ -74,6 +74,12 @@ public class DesignMainServiceImpl extends ServiceImpl<DesignMainMapper, DesignM
         return page.setRecords(designMainVOS);
     }
 
+    @Override
+    public DesignMainVO getDetailById(Integer id) {
+        DesignMainVO designMainVO = this.baseMapper.getDetailById(id);
+        return designMainVO;
+    }
+
 
     private void addDetail(DesignMainDetailVO designMainDetailVO, int mainId) {
         designMainDetailVO.setImages(designMainImageService.queryByMainId(mainId));

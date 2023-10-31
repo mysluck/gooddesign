@@ -19,4 +19,6 @@ public interface IDesignMainService extends IService<DesignMain> {
     DesignMainDetailVO queryDetailByYearAndCity(int yearId,int cityId);
 
     Page<DesignMainVO> pageDesignMain(Page<DesignMainVO> page, DesignMain designMain);
+
+    DesignMainVO getDetailById(Integer id);
 }

@@ -18,4 +18,5 @@ public interface DesignMainMapper extends BaseMapper<DesignMain> {
 
     List<DesignMainVO> pageDesignMain(Page<DesignMainVO> page, @Param("designMain") DesignMain designMain);
 
+    DesignMainVO getDetailById(@Param("id") Integer id);
 }

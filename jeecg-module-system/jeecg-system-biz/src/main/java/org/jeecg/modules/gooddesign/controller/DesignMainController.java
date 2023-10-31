@@ -109,8 +109,8 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
     //@AutoLog(value = "设计壮游-通过id查询")
     @ApiOperation(value = "设计壮游-通过id查询", notes = "设计壮游-通过id查询")
     @GetMapping(value = "/queryById")
-    public Result<DesignMain> queryById(@RequestParam(name = "id", required = true) String id) {
-        DesignMain designMain = designMainService.getById(id);
+    public Result<DesignMainVO> queryById(@RequestParam(name = "id", required = true) Integer id) {
+        DesignMainVO designMain = designMainService.getDetailById(id);
         if (designMain == null) {
             return Result.error("未找到对应数据");
         }

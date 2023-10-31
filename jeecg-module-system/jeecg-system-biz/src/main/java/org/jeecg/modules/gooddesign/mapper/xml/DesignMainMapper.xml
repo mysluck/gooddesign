@@ -23,4 +23,13 @@
         order by id desc
 
     </select>
+
+    <select id="getDetailById" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignMainVO">
+        select m.*, d.value as city, d1.value as year
+        from design_main m left join design_extra_dict d
+        on m.city_id=d.id
+            left join design_extra_dict d1 on m.year_id =d1.id
+        where m.id = #{id}
+    </select>
+
 </mapper>
