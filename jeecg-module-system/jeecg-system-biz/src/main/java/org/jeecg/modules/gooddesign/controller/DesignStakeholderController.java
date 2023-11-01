@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -206,9 +207,10 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
         List<DesignMainStakeholder> mainStakeholders = designMainStakeholderService.list(mainStakeholderQueryWrapper);
         List<Integer> stakeholderIds = mainStakeholders != null ? mainStakeholders.stream().map(DesignMainStakeholder::getStakeholderId).collect(Collectors.toList()) : new ArrayList<>();
 
+        List<DesignStakeholderMainParam> resultList = new ArrayList<>();
 
         if (designStakeholders != null) {
-            List<DesignStakeholderMainParam> result = designStakeholders.stream().map(designStakeholder -> {
+            Map<Integer, DesignStakeholderMainParam> designStakeholderMainParamMap = designStakeholders.stream().map(designStakeholder -> {
                 DesignStakeholderMainParam designStakeholderMainVO = new DesignStakeholderMainParam();
                 BeanUtils.copyProperties(designStakeholder, designStakeholderMainVO);
                 if (stakeholderIds != null && stakeholderIds.contains(designStakeholder.getId())) {
@@ -217,9 +219,19 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
                     designStakeholderMainVO.setRecentAdd(0);
                 }
                 return designStakeholderMainVO;
-            }).collect(Collectors.toList());
-            result.sort(Comparator.comparing(DesignStakeholderMainParam::getRecentAdd).reversed());
-            return Result.OK(result);
+            }).collect(Collectors.toMap(DesignStakeholderMainParam::getId, Function.identity()));
+            stakeholderIds.forEach(id -> {
+                resultList.add(designStakeholderMainParamMap.get(id));
+            });
+            designStakeholderMainParamMap.entrySet().forEach(data -> {
+                        Integer id = data.getKey();
+                        if (!stakeholderIds.contains(id)) {
+                            resultList.add(data.getValue());
+
+                        }
+                    }
+            );
+            return Result.OK(resultList);
         }
         return Result.OK(new ArrayList<>());
     }
