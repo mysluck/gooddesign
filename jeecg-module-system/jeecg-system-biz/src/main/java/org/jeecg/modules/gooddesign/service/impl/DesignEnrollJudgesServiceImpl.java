@@ -271,7 +271,7 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
             });
         }
 
-        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus, sortStatus,activityIds);
+        List<DesignTopJudgesScoreVO> designTopJudgesScoreVOS = this.baseMapper.pageByNameAndTopStatus(page, realName, topStatus, sortStatus, activityIds);
         if (CollectionUtils.isNotEmpty(designTopJudgesScoreVOS)) {
             designTopJudgesScoreVOS.stream().forEach(designTopJudge -> {
                 Integer activityId = designTopJudge.getActivityId();
@@ -291,6 +291,12 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
 
     @Override
     public List<JudgesScoreVO> queryScoreHistory(int id) {
-        return this.baseMapper.queryScoreHistory(id);
+        List<JudgesScoreVO> judgesScoreVOS = this.baseMapper.queryScoreHistory(id);
+        if (CollectionUtils.isNotEmpty(judgesScoreVOS)) {
+            List<JudgesScoreVO> collect = judgesScoreVOS.stream().filter(data -> data.getWeight() != null).collect(Collectors.toList());
+            return collect;
+        }
+        return judgesScoreVOS;
+
     }
 }

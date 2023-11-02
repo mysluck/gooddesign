@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsCountVO;
+import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsScoreVO;
 import org.jeecg.modules.gooddesign.mapper.DesignEnrollJudgesScoreMapper;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollParticipantsScoreService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DesignEnrollParticipantsScoreServiceImpl extends ServiceImpl<DesignEnrollJudgesScoreMapper, DesignEnrollParticipantsScoreVO> implements IDesignEnrollParticipantsScoreService {
@@ -48,5 +50,18 @@ public class DesignEnrollParticipantsScoreServiceImpl extends ServiceImpl<Design
         DesignEnrollParticipantsScoreVO designEnrollParticipantsScoreVO = result.get(0);
         designEnrollParticipantsScoreVO.setActivityName(activity.getActivityName());
         return designEnrollParticipantsScoreVO;
+    }
+
+    @Override
+    public DesignEnrollParticipantsCountVO countByNameAndScoreStatus(String realName, List<Integer> screeStatus, String userId, String designNo, DesignActivity activity) {
+        List<DesignEnrollParticipantsScoreVO> result = this.baseMapper.count(realName, screeStatus, userId, designNo, activity.getId());
+        if (CollectionUtils.isNotEmpty(result)) {
+            int scoreCount = result.stream().filter(data -> {
+                return data.getScoreStatus() == 2 || data.getScoreStatus() == 1;
+            }).collect(Collectors.toList()).size();
+            return DesignEnrollParticipantsCountVO.builder().totalCount(result.size()).scoreCount(scoreCount).build();
+        }
+        return DesignEnrollParticipantsCountVO.builder().build();
+
     }
 }

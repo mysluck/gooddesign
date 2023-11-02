@@ -3,11 +3,12 @@
 <mapper namespace="org.jeecg.modules.gooddesign.mapper.DesignEnrollJudgesScoreMapper">
 
 
-    <select id="page" resultType="org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO">
+    <select id="page" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsScoreVO">
         select * from ( select j.*,IFNULL(p.score_status ,3) as score_status from design_enroll_judges j left join
         (select * from design_enroll_participants
         where judge_id = #{userId}
-        ) p on j.id=p.participant_id where j.screen_status=1 and  j.manager_del_status=0 and j.activity_id= #{activityId} )tmp
+        ) p on j.id=p.participant_id where j.screen_status=1 and j.manager_del_status=0 and j.activity_id= #{activityId}
+        )tmp
         where 1=1
         <if test="judgesName != null  and judgesName !=''">
             and tmp.real_name like CONCAT('%',#{judgesName},'%')
@@ -16,7 +17,27 @@
             and tmp.design_no like CONCAT('%',#{designNo},'%')
         </if>
 
+        <if test="scoreStatus != null ">
+            and tmp.score_status in
+            <foreach collection="scoreStatus" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 
+    </select>
+    <select id="count" resultType="org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsScoreVO">
+        select * from ( select j.*,IFNULL(p.score_status ,3) as score_status from design_enroll_judges j left join
+        (select * from design_enroll_participants
+        where judge_id = #{userId}
+        ) p on j.id=p.participant_id where j.screen_status=1 and j.manager_del_status=0 and j.activity_id= #{activityId}
+        )tmp
+        where 1=1
+        <if test="judgesName != null  and judgesName !=''">
+            and tmp.real_name like CONCAT('%',#{judgesName},'%')
+        </if>
+        <if test="designNo != null  and designNo !=''">
+            and tmp.design_no like CONCAT('%',#{designNo},'%')
+        </if>
 
         <if test="scoreStatus != null ">
             and tmp.score_status in

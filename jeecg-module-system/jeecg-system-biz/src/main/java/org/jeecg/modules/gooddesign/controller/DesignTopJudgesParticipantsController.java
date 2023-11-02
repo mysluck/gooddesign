@@ -1,43 +1,40 @@
 package org.jeecg.modules.gooddesign.controller;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jeecg.weibo.exception.BusinessException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.AutoLog;
+import org.jeecg.common.system.base.controller.JeecgController;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.modules.gooddesign.entity.DesignActivity;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipants;
-import org.jeecg.modules.gooddesign.entity.DesignEnrollParticipantsScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollParticipantsSaveEditVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignEnrollScoreVO;
-import org.jeecg.modules.gooddesign.entity.vo.DesignJudgesParticipantsVO;
+import org.jeecg.modules.gooddesign.entity.vo.*;
 import org.jeecg.modules.gooddesign.service.IDesignActivityService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollParticipantsScoreService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
-
-
-import org.jeecg.common.system.base.controller.JeecgController;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.jeecg.common.aspect.annotation.AutoLog;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 评委通过表，保存评委评分数据
@@ -107,6 +104,30 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         return Result.OK(designJudgesParticipants.pageByNameAndScoreStatus(page, realName, list, sysUser.getId(), designNo, activity));
     }
 
+    @ApiOperation(value = "推荐委员评选-获取评分数量", notes = "推荐委员评选-获取评分数量")
+    @GetMapping(value = "/countByNameAndScoreStatus")
+    public Result<DesignEnrollParticipantsCountVO> countByNameAndScoreStatus(@RequestParam(value = "realName", required = false) String realName,
+                                                                             @RequestParam(value = "designNo", required = false) @ApiParam("报奖编号模糊查询") String designNo,
+                                                                             @RequestParam(value = "scoreStatus", required = false) @ApiParam("打分状态 0待定  1推荐 2不推荐 3 未打分,查询待定和未打分，传0和3") Integer scoreStatus,
+                                                                             HttpServletRequest req) {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        if (sysUser == null || sysUser.getId() == null) {
+            throw new BusinessException("未获取到用户信息，请重新登录！");
+        }
+        List<DesignActivity> scoreActivits = designActivityService.getScoreActivity(2, 0);
+        if (CollectionUtils.isEmpty(scoreActivits)) {
+            return Result.error("评委暂时无法打分，请联系管理员!");
+        }
+        DesignActivity activity = scoreActivits.get(0);
+        List<Integer> list = null;
+        if (scoreStatus != null) {
+            list = new ArrayList<>();
+            list.add(scoreStatus);
+        }
+        DesignEnrollParticipantsCountVO vo = designJudgesParticipants.countByNameAndScoreStatus(realName, list, sysUser.getId(), designNo, activity);
+        return Result.OK(vo);
+    }
+
 
     @ApiOperation(value = "推荐委员评选-开始打分", notes = "推荐委员评选-开始打分,，获取第一个待定或未打分的数据")
     @GetMapping(value = "/doStartScore")
@@ -121,7 +142,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         }
         DesignActivity activity = scoreActivits.get(0);
 
-        return Result.OK(designJudgesParticipants.doStartScore(sysUser.getId(),activity));
+        return Result.OK(designJudgesParticipants.doStartScore(sysUser.getId(), activity));
     }
 
 
