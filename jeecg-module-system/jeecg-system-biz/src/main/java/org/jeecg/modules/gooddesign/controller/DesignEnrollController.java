@@ -60,7 +60,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
     @ApiOperation(value = "好设计-报名-设计师信息-分页列表查询", notes = "好设计-报名-设计师信息-分页列表查询")
     @GetMapping(value = "/list")
     public Result<IPage<DesignEnrollJudges>> queryPageList(DesignEnrollJudges designEnrollJudges,
-                                                           @RequestParam(name = "historyStatus") @ApiParam("0：查询当前top数据(默认) 1：查询历史数据 2：查询所有数据") int historyStatus,
+                                                           @RequestParam(name = "historyStatus", defaultValue = "2") @ApiParam("0：查询当前top数据 1：查询历史数据 2：查询所有数据（默认）") int historyStatus,
                                                            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
                                                            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                            HttpServletRequest req) {
@@ -116,6 +116,7 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
             designEnrollJudges.setRealName("*" + designEnrollJudges.getRealName() + "*");
         }
         QueryWrapper<DesignEnrollJudges> queryWrapper = QueryGenerator.initQueryWrapper(designEnrollJudges, req.getParameterMap());
+        queryWrapper.orderByDesc("create_time");
         Page<DesignEnrollJudges> page = new Page<DesignEnrollJudges>(pageNo, pageSize);
         IPage<DesignEnrollJudges> pageList = designEnrollJudgesService.page(page, queryWrapper);
         List<DesignEnrollJudges> records = pageList.getRecords();
