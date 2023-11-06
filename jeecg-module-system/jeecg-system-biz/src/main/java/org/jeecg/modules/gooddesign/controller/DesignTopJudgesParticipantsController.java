@@ -280,7 +280,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
 //                                                        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                                                         HttpServletRequest req) {
 
-        DesignActivity activity = designActivityService.getActivity();
+        DesignActivity activity = designActivityService.getNowActivity();
         if (activity == null || activity.getId() == null) {
             return Result.error("未获取到当前活动ID");
         }

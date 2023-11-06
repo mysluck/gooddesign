@@ -83,9 +83,9 @@ public class DesignTopJudgesParticipantsServiceImpl extends ServiceImpl<DesignTo
     @Override
     public void batchEdit(List<DesignEnrollParticipantsSaveEditVO> designJudgesParticipants) {
 
-        DesignActivity activity = designActivityService.getActivity();
+        DesignActivity activity = designActivityService.getNowActivity();
         if (activity == null) {
-            throw new BusinessException("未开启活动！");
+            throw new BusinessException("评委暂时无法打分，请联系管理员！");
         }
         LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         if (sysUser == null) {

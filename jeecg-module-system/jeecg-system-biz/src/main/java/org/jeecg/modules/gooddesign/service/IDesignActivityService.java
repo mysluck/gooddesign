@@ -41,7 +41,7 @@ public interface IDesignActivityService extends IService<DesignActivity> {
      * * 获取评委打分数据
      * 获取未启动top100 且打分状态不等于2的，如果有，说明有可以评委打分的活动，可以进行打分
      *
-     * @param scoreStatus
+     * @param scoreStatus 打分状态 0：未开始 1：打分开始 2打分结束
      * @param topStatus   未启动top100 0
      * @return
      */
