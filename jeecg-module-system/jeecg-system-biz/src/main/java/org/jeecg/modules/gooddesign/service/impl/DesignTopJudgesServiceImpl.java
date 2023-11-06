@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jeecg.weibo.exception.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.jeecg.common.system.vo.LoginUser;
@@ -13,16 +14,14 @@ import org.jeecg.modules.gooddesign.entity.vo.DesignTopJudgesDetailVO;
 import org.jeecg.modules.gooddesign.entity.vo.DesignTopProductVO;
 import org.jeecg.modules.gooddesign.mapper.DesignActivityMapper;
 import org.jeecg.modules.gooddesign.mapper.DesignTopJudgesMapper;
-import org.jeecg.modules.gooddesign.service.IDesignActivityService;
-import org.jeecg.modules.gooddesign.service.IDesignTopJudgesParticipantsService;
-import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
-import org.jeecg.modules.gooddesign.service.IDesignTopProductService;
+import org.jeecg.modules.gooddesign.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 好设计-发现100-设计师信息
@@ -32,6 +31,8 @@ import java.util.List;
  */
 @Service
 public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMapper, DesignTopJudges> implements IDesignTopJudgesService {
+    @Autowired
+    IDesignEnrollProductService designEnrollProductService;
     @Autowired
     IDesignTopProductService designTopProductService;
     @Autowired
@@ -57,7 +58,8 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
             bean.setCreateBy(sysUser.getUsername());
         }
         bean.setCreateTime(new Date());
-        bean.setDesignNo(getDesignNo());
+        String designNo = StringUtils.isNotEmpty(designTopJudgesAllVO.getDesignNo()) ? designTopJudgesAllVO.getDesignNo() : getDesignNo();
+        bean.setDesignNo(designNo);
         bean.setActivityId(activity.getId());
         bean.setActivityName(activity.getActivityName());
         this.save(bean);
@@ -148,13 +150,23 @@ public class DesignTopJudgesServiceImpl extends ServiceImpl<DesignTopJudgesMappe
     @Override
     public void deleteBatchDetail(List<Integer> asList) {
         if (CollectionUtils.isNotEmpty(asList)) {
+            updateEntollTopStatus(asList);
             designTopProductService.deleteByTopJudgesIds(asList);
             this.removeByIds(asList);
         }
     }
 
+    private void updateEntollTopStatus(List<Integer> asList) {
+        List<DesignTopJudges> designTopJudges = this.baseMapper.selectBatchIds(asList);
+        if (CollectionUtils.isNotEmpty(designTopJudges)) {
+            List<String> designNos = designTopJudges.stream().map(DesignTopJudges::getDesignNo).filter(data -> StringUtils.isNotEmpty(data)).collect(Collectors.toList());
+            designEnrollProductService.updateTopStatusByDesignNos(designNos);
+
+        }
+    }
+
     @Override
-    public  List<DesignTopJudges>  index() {
+    public List<DesignTopJudges> index() {
         return this.baseMapper.index();
     }
 }

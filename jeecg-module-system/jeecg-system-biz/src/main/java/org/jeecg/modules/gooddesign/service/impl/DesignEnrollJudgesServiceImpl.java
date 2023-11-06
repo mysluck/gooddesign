@@ -223,7 +223,7 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
     public void removeFromTop100(int id) {
         DesignEnrollJudges designEnrollJudges = new DesignEnrollJudges();
         designEnrollJudges.setId(id);
-        designEnrollJudges.setTopRecommendStatus(2);
+        designEnrollJudges.setTopRecommendStatus(0);
         this.updateById(designEnrollJudges);
 
         DesignEnrollJudges designTopJudges = this.getById(id);

@@ -209,7 +209,9 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     //@RequiresPermissions("gooddesign:design_top_judges:delete")
     @DeleteMapping(value = "/delete")
     public Result<String> delete(@RequestParam(name = "id", required = true) Integer id) {
-        designTopJudgesService.removeById(id);
+        List<Integer> idList = new ArrayList<>();
+        idList.add(id);
+        designTopJudgesService.deleteBatchDetail(idList);
         return Result.OK("删除成功!");
     }
 

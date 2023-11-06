@@ -25,4 +25,5 @@ public interface IDesignEnrollProductService extends IService<DesignEnrollProduc
 
     List<DesignTopProductVO> queryDetailByJudgesId(Integer id);
 
+    void updateTopStatusByDesignNos(List<String>designNos);
 }

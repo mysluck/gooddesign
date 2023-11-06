@@ -178,6 +178,11 @@ public class DesignEnrollProductServiceImpl extends ServiceImpl<DesignEnrollProd
     }
 
     @Override
+    public void updateTopStatusByDesignNos(List<String> designNos) {
+        this.baseMapper.updateTopStatusByDesignNos(designNos,2);
+    }
+
+    @Override
     public List<DesignTopProductVO> queryByTopJudgesId(Integer topJudgesId) {
         QueryWrapper<DesignEnrollProduct> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("top_judges_id", topJudgesId);
