@@ -85,7 +85,7 @@ public class DesignEditController extends JeecgController<DesignExtraDict, IDesi
                     BeanUtils.copyProperties(child, vo);
                     return vo;
                 }).collect(Collectors.toList());
-//                childs.sort(Comparator.comparing(DesignExtraDictVO::getId).reversed());
+                childs.sort(Comparator.comparing(DesignExtraDictVO::getId).reversed());
                 designExtraDictVO.setChild(childs);
                 return designExtraDictVO;
             }).collect(Collectors.toList());

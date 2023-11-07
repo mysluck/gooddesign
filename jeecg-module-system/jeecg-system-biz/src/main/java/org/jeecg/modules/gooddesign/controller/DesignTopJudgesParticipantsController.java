@@ -92,7 +92,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         }
         List<DesignActivity> scoreActivits = designActivityService.getScoreActivity(2, 0);
         if (CollectionUtils.isEmpty(scoreActivits)) {
-            return Result.error("评委暂时无法打分，请联系管理员!");
+            return Result.error("推荐委员本年度评审工作已结束");
         }
         DesignActivity activity = scoreActivits.get(0);
         List<Integer> list = null;
@@ -138,7 +138,7 @@ public class DesignTopJudgesParticipantsController extends JeecgController<Desig
         }
         List<DesignActivity> scoreActivits = designActivityService.getScoreActivity(2, 0);
         if (CollectionUtils.isEmpty(scoreActivits)) {
-            return Result.error("评委暂时无法打分，请联系管理员!");
+            return Result.error("推荐委员本年度评审工作已结束");
         }
         DesignActivity activity = scoreActivits.get(0);
 

@@ -80,7 +80,7 @@ public class DesignEnrollJudgesServiceImpl extends ServiceImpl<DesignEnrollJudge
 
         DesignActivity activity = designActivityService.getActivity();
         if (activity == null)
-            throw new BusinessException("当前不存在开启活动，请开起活动！");
+            throw new BusinessException("本年度“发现100年度设计师”投报已结束或未开启!");
 
 //        DesignTopJudgesVO designTopJudges = designTopJudgesAllVO.getDesignTopJudges();
         DesignEnrollJudges bean = new DesignEnrollJudges();

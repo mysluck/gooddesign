@@ -104,7 +104,9 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
     }
 
     List<DesignExtraDictVO> parseTree(List<DesignExtraDictVO> list, int parentId) {
-        return list.stream().filter(data -> data.getParentId() == parentId).collect(Collectors.toList());
+        List<DesignExtraDictVO> result = list.stream().filter(data -> data.getParentId() == parentId).collect(Collectors.toList());
+        result.sort(Comparator.comparing(DesignExtraDictVO::getId).reversed());
+        return result;
     }
 
 }
