@@ -316,7 +316,13 @@ public class DesignTopJudgesController extends JeecgController<DesignTopJudges, 
     @ApiOperation(value = "好设计-top100-首页展示", notes = "好设计-top100-首页展示")
     @GetMapping(value = "/index")
     public Result<List<DesignTopJudges>> index() {
-        List<DesignTopJudges> designTopJudges = designTopJudgesService.index();
+        List<DesignActivity> activityBy = designActivityService.getActivityBy(null, null, 1);
+        if (CollectionUtils.isEmpty(activityBy)) {
+            return Result.OK();
+        }
+        Collections.sort(activityBy, Comparator.comparing(DesignActivity::getCreateTime).reversed());
+        Integer id = activityBy.get(0).getId();
+        List<DesignTopJudges> designTopJudges = designTopJudgesService.index(id);
         return Result.OK(designTopJudges);
     }
 

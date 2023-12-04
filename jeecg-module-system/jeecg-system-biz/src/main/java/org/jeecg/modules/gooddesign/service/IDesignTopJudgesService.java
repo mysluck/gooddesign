@@ -32,5 +32,5 @@ public interface IDesignTopJudgesService extends IService<DesignTopJudges> {
 
     void deleteBatchDetail(List<Integer> asList);
 
-    List<DesignTopJudges>  index();
+    List<DesignTopJudges>  index(int id);
 }

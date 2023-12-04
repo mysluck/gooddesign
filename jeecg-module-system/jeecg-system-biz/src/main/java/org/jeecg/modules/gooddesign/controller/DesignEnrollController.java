@@ -134,6 +134,11 @@ public class DesignEnrollController extends JeecgController<DesignEnrollProduct,
                     DesignActivity designActivity = designActivityMap.get(activityId);
                     designTopJudge.setActivityName(designActivity.getActivityName());
                     designTopJudge.setPublishTime(designActivity.getPublishTime());
+                    Integer topStatus = designActivity.getTopStatus();
+                    Integer topRecommendStatus = designTopJudge.getTopRecommendStatus();
+                    if (1 == topStatus && topRecommendStatus == 2) {
+                        designTopJudge.setTopRecommendStatus(0);
+                    }
                 }
             });
             pageList.setRecords(records);
