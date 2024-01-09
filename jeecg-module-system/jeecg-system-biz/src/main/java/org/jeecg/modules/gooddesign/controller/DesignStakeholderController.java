@@ -204,6 +204,7 @@ public class DesignStakeholderController extends JeecgController<DesignStakehold
         QueryWrapper<DesignMainStakeholder> mainStakeholderQueryWrapper = new QueryWrapper();
         mainStakeholderQueryWrapper.eq("main_id", mainId);
         mainStakeholderQueryWrapper.eq("type", type);
+        mainStakeholderQueryWrapper.orderByAsc("id");
         List<DesignMainStakeholder> mainStakeholders = designMainStakeholderService.list(mainStakeholderQueryWrapper);
         List<Integer> stakeholderIds = mainStakeholders != null ? mainStakeholders.stream().map(DesignMainStakeholder::getStakeholderId).collect(Collectors.toList()) : new ArrayList<>();
 

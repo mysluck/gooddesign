@@ -82,9 +82,11 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
             return Lists.newArrayList();
         }
         Set<Integer> dictIds = new HashSet<>();
+        Map<Integer, Date> cityTimeMap = new HashMap<>();
         designMains.forEach(data -> {
             dictIds.add(data.getCityId());
             dictIds.add(data.getYearId());
+            cityTimeMap.put(data.getCityId(), data.getCreateTime());
         });
         QueryWrapper<DesignExtraDict> dictQueryWrapper = new QueryWrapper<>();
         dictQueryWrapper.in("id", dictIds);
@@ -92,12 +94,15 @@ public class DesignExtraDictServiceImpl extends ServiceImpl<DesignExtraDictMappe
         List<DesignExtraDictVO> collect = designExtraDictList.stream().map(data -> {
             DesignExtraDictVO vo = new DesignExtraDictVO();
             BeanUtils.copyProperties(data, vo);
+            vo.setSortTime(cityTimeMap.get(vo.getId()));
             return vo;
         }).collect(Collectors.toList());
 
         List<DesignExtraDictVO> rootList = parseTree(collect, 0);
         rootList.forEach(data -> {
-            data.setChild(parseTree(collect, data.getId()));
+            List<DesignExtraDictVO> designExtraDictVOS = parseTree(collect, data.getId());
+            Collections.sort(designExtraDictVOS, Comparator.comparing(DesignExtraDictVO::getSortTime).reversed());
+            data.setChild(designExtraDictVOS);
         });
         rootList.sort(Comparator.comparing(DesignExtraDictVO::getValue).reversed());
         return rootList;

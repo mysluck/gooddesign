@@ -4,40 +4,32 @@ import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.constant.CommonConstant;
-import org.jeecg.common.constant.SymbolConstant;
 import org.jeecg.common.system.util.JwtUtil;
 import org.jeecg.common.system.vo.LoginUser;
 import org.jeecg.common.util.*;
-import org.jeecg.common.util.encryption.EncryptedString;
 import org.jeecg.config.JeecgBaseConfig;
 import org.jeecg.modules.base.service.BaseCommonService;
 import org.jeecg.modules.gooddesign.entity.DesignEnrollJudges;
-import org.jeecg.modules.gooddesign.entity.DesignTopJudges;
 import org.jeecg.modules.gooddesign.entity.vo.LoginVO;
 import org.jeecg.modules.gooddesign.entity.vo.WxAccessTokenVO;
 import org.jeecg.modules.gooddesign.service.IDesignEnrollJudgesService;
 import org.jeecg.modules.gooddesign.service.IDesignTopJudgesService;
 import org.jeecg.modules.gooddesign.service.WeChatAuthService;
 import org.jeecg.modules.system.entity.SysDepart;
-import org.jeecg.modules.system.entity.SysRoleIndex;
 import org.jeecg.modules.system.entity.SysUser;
 import org.jeecg.modules.system.model.SysLoginModel;
 import org.jeecg.modules.system.service.*;
 import org.jeecg.modules.system.service.impl.SysBaseApiImpl;
-import org.jeecg.modules.system.util.RandImageUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +37,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * @Author scott
@@ -383,6 +376,7 @@ public class DesignLoginController {
     public Result<LoginVO> wechatLogin(@RequestParam @ApiParam("微信跳转后code码") String code) {
         //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
         LoginVO loginVO = new LoginVO();
+        log.info("登陆code码为：{}", code);
         //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
         WxAccessTokenVO wxAccessTokenVO = weChatAuthService.assess_token(code);
         if (wxAccessTokenVO == null || wxAccessTokenVO.getOpenid() == null) {

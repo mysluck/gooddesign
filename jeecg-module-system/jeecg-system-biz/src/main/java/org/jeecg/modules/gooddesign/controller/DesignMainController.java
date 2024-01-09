@@ -153,10 +153,10 @@ public class DesignMainController extends JeecgController<DesignMain, IDesignMai
         if (sysUser != null) {
             designContent.setCreateBy(sysUser.getUsername());
         }
-        designContent.setCreateTime(new Date());
         if (designMainBasicVO.getId() != null && designMainBasicVO.getId() != 0) {
             designMainService.updateById(designContent);
         } else {
+            designContent.setCreateTime(new Date());
             designMainService.save(designContent);
         }
         return Result.OK(designContent);
