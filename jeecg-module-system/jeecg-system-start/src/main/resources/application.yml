@@ -3,3 +3,4 @@ spring:
     name: jeecg-system
   profiles:
     active: '@profile.name@'
+#    active: dev

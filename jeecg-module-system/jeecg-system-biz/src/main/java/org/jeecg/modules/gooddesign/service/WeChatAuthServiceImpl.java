@@ -2,14 +2,10 @@ package org.jeecg.modules.gooddesign.service;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.jeecg.common.util.RedisUtil;
 import org.jeecg.modules.gooddesign.entity.vo.WeChatUserInfo;
 import org.jeecg.modules.gooddesign.entity.vo.WxAccessTokenVO;
-import org.jeecg.modules.monitor.service.RedisService;
-import org.jeecg.modules.monitor.service.impl.RedisServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -46,14 +42,16 @@ public class WeChatAuthServiceImpl implements WeChatAuthService {
 
     public WxAccessTokenVO assess_token(String code, String appId, String secret) {
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + secret + "&code=" + code + "&grant_type=authorization_code";
+        log.info("请求URL：{}", url);
         String forObject = restTemplate.getForObject(url, String.class);
         log.info("微信登录返回内容为：{}", forObject);
         WxAccessTokenVO wxAccessTokenVO = JSONObject.parseObject(forObject, WxAccessTokenVO.class);
 //        wxAccessTokenVO = restTemplate.getForObject(url, WxAccessTokenVO.class);
-        if (wxAccessTokenVO == null) {
+        if (wxAccessTokenVO == null || wxAccessTokenVO.getOpenid() == null) {
             return null;
         }
-        redisUtil.set("code", wxAccessTokenVO, 600);
+        redisUtil.set(code, wxAccessTokenVO, 7200);
+        redisUtil.set("refresh_token:" + code, wxAccessTokenVO.getRefresh_token(), 2592000);
         return wxAccessTokenVO;
     }
 
