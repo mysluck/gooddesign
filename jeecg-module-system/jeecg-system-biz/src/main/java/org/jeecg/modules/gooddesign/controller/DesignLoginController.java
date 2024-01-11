@@ -373,14 +373,22 @@ public class DesignLoginController {
 
     @ApiOperation(value = "微信登录接口", notes = "返回openID（用户唯一标志）")
     @GetMapping("/wechatLogin")
-    public Result<LoginVO> wechatLogin(@RequestParam @ApiParam("微信跳转后code码") String code) {
+    public Result<LoginVO> wechatLogin(HttpServletRequest request,@RequestParam @ApiParam("微信跳转后code码") String code) {
+        String h5Header = request.getHeader("X-Access-H5");
         //update-begin-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
         LoginVO loginVO = new LoginVO();
         log.info("登陆code码为：{}", code);
         //update-end-author:taoyan date:2022-11-7 for: issues/4109 平台用户登录失败锁定用户
-        WxAccessTokenVO wxAccessTokenVO = weChatAuthService.assess_token(code);
-        if (wxAccessTokenVO == null || wxAccessTokenVO.getOpenid() == null) {
+        WxAccessTokenVO wxAccessTokenVO = weChatAuthService.assess_token(code,StringUtils.isNotEmpty(h5Header));
 
+        if (wxAccessTokenVO != null && ("10029".equals(wxAccessTokenVO.getErrcode()) || "40029".equals(wxAccessTokenVO.getErrcode()))) {
+            String cacheKey = "refresh_token:" + code;
+            if (redisUtil.hasKey(cacheKey)) {
+                wxAccessTokenVO = weChatAuthService.refresh_token(redisUtil.get(cacheKey).toString());
+            }
+        }
+        if (wxAccessTokenVO == null || wxAccessTokenVO.getOpenid() == null) {
+            return Result.error(0, "微信登录失败或登陆过期，请重新登陆！");
         }
 
         String openid = wxAccessTokenVO.getOpenid();
